@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard1.4</TargetFramework>
+    <AssemblyName>DCEMV_SPDHProtocol</AssemblyName>
+    <PackageId>SPDHProtocol</PackageId>
+    <NetStandardImplicitPackageVersion>1.6.1</NetStandardImplicitPackageVersion>
+    <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
+    <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+    <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
+    <GenerateNeutralResourcesLanguageAttribute>false</GenerateNeutralResourcesLanguageAttribute>
+    <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
+    <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
+    <RootNamespace>DCEMV.SPDHProtocol</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DCEMV_Shared\DCEMV_Shared.csproj" />
+    <ProjectReference Include="..\DCEMV_EMVProtocol\DCEMV_EMVProtocol.csproj" />
+    <ProjectReference Include="..\DCEMV_FormattingUtils\DCEMV_FormattingUtils.csproj" />
+    <ProjectReference Include="..\DCEMV_TCPIPDriver\DCEMV_TCPIPDriver.csproj" />
+    <ProjectReference Include="..\DCEMV_TLVProtocol\DCEMV_TLVProtocol.csproj" />
+  </ItemGroup>
+
+</Project>

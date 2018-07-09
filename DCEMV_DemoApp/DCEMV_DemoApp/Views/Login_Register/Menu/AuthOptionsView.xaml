@@ -1,0 +1,77 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!--
+*************************************************************************
+DC EMV
+Open Source EMV
+Copyright (C) 2018  Vicente Da Silva
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published
+by the Free Software Foundation, either version 3 of the License, or
+any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see http://www.gnu.org/licenses/
+*************************************************************************
+-->
+<local:ModalPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="DCEMV.DemoApp.AuthOptionsView"
+            xmlns:local="clr-namespace:DCEMV.DemoApp" xmlns:common="clr-namespace:DCEMV.TerminalCommon;assembly=DCEMV_TerminalCommon"  >
+
+
+    <local:ModalPage.Content>
+
+        <Grid HorizontalOptions="FillAndExpand">
+
+            <Grid Margin="50" HorizontalOptions="Center" VerticalOptions="Center">
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <Label Grid.Row="0" Text="..." FontSize="Large" HorizontalTextAlignment="Center"/>
+
+                <Label Grid.Row="1" Text="existing customers" FontSize="Medium" HorizontalTextAlignment="Center"/>
+
+                <Grid Grid.Row="2" x:Name="gridLogin" HorizontalOptions="CenterAndExpand">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <Button Grid.Row="0" x:Name="cmdLogin" Clicked="cmdLogin_Clicked" Text="login" Style="{StaticResource styleButtonAuth}"></Button>
+                    <Button Grid.Row="1" x:Name="cmdForgotPassword" Clicked="cmdForgotPassword_Clicked"  Text="request password reset" Style="{StaticResource styleButtonAuth}"></Button>
+                    <Button Grid.Row="2" x:Name="cmdResetPassword" Clicked="cmdResetPassword_Clicked"  Text="confirm password reset" Style="{StaticResource styleButtonAuth}"></Button>
+
+                </Grid>
+
+                <Label Grid.Row="3" Text="new customers" FontSize="Medium" HorizontalTextAlignment="Center"/>
+
+                <Grid Grid.Row="4" x:Name="gridRegister" HorizontalOptions="CenterAndExpand">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <Button Grid.Row="0" x:Name="cmdRegister" Clicked="cmdRegister_Clicked" Text="register" Style="{StaticResource styleButtonAuth}"></Button>
+                    <Button Grid.Row="1" x:Name="cmdConfirmEmail" Clicked="cmdConfirmEmail_Clicked"  Text="confirm code for registration" Style="{StaticResource styleButtonAuth}"></Button>
+                    <Button Grid.Row="2" x:Name="cmdResendConfirmEmail" Clicked="cmdResendConfirmEmail_Clicked"  Text="resend confirm code for registration" Style="{StaticResource styleButtonAuth}"></Button>
+
+                </Grid>
+            </Grid>
+            
+        </Grid>
+    </local:ModalPage.Content>
+</local:ModalPage>

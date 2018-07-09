@@ -1,0 +1,196 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!--
+*************************************************************************
+DC EMV
+Open Source EMV
+Copyright (C) 2018  Vicente Da Silva
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published
+by the Free Software Foundation, either version 3 of the License, or
+any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see http://www.gnu.org/licenses/
+*************************************************************************
+-->
+<local:ModalPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="DCEMV.DemoApp.POSView"
+             xmlns:local="clr-namespace:DCEMV.DemoApp" 
+             xmlns:common="clr-namespace:DCEMV.TerminalCommon;assembly=DCEMV_TerminalCommon"   
+             Title="POS">
+
+    <local:ModalPage.Content>
+        <Grid HorizontalOptions="FillAndExpand">
+            <Grid Margin="50" x:Name="gridPOS" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <Grid Grid.Row="0" Grid.Column="0" HorizontalOptions="FillAndExpand">
+                    <Entry Placeholder="Barcode" Keyboard="Numeric" x:Name="txtBarcode"  Completed="txtBarcode_Completed"/>
+                </Grid>
+
+                <Grid Grid.Row="1" Grid.Column="0" HorizontalOptions="FillAndExpand">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+
+                    <Button Grid.Column="0" x:Name="cmdClear"  Clicked="cmdClear_Clicked"  Text="clear basket" Style="{StaticResource styleButton}" />
+                    <Button Grid.Column="1" x:Name="cmdRemove" Clicked="cmdRemove_Clicked" Text="remove item" Style="{StaticResource styleButton}" />
+                    <Button Grid.Column="2" x:Name="cmdSearch" Clicked="cmdSearch_Clicked" Text="search" Style="{StaticResource styleButton}" />
+                    <Button Grid.Column="3" x:Name="cmdUpQ" Clicked="cmdUpQ_Clicked" Text="up Q" Style="{StaticResource styleButton}" />
+                    <Button Grid.Column="4" x:Name="cmdDownQ" Clicked="cmdDownQ_Clicked" Text="dwn Q" Style="{StaticResource styleButton}" />
+                </Grid>
+
+                <ListView Grid.Row="2" Grid.Column="0" x:Name="lstBasketItems"  SeparatorColor="Black" >
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                                <Grid Padding="3">
+                                    <Grid BackgroundColor="LightGray">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition />
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <Label Grid.Column="0" VerticalTextAlignment="Center" Text="{Binding Quantity}"  />
+                                        <Label Grid.Column="1" VerticalTextAlignment="Center" Text="{Binding Description}"  />
+                                        <Label Grid.Column="2" VerticalTextAlignment="Center" Text="{Binding Amount, Converter={StaticResource currencyConverter}}" />
+                                        <Label Grid.Column="3" VerticalTextAlignment="Center" Text="{Binding Total, Converter={StaticResource currencyConverter}}" />
+                                    </Grid>
+                                </Grid>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+
+                <Grid Grid.Row="3" Grid.Column="0" x:Name="gridTotal" HorizontalOptions="End">
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"></ColumnDefinition>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+
+                    <Label Grid.Column="0" Text="Total:" FontSize="Large"></Label>
+                    <Label Grid.Column="1" x:Name="lblTotal" Text="{Binding Total, Converter={StaticResource currencyConverter}}" FontAttributes="Bold" FontSize="Large"></Label>
+                </Grid>
+
+                <Button Grid.Row="4" Grid.Column="0" x:Name="cmdTakePayment" Clicked="cmdTakePayment_Clicked" Text="take payment" Style="{StaticResource styleButton}" />
+
+                <ScrollView Grid.Row="0" Grid.Column="1" Grid.RowSpan="5" BackgroundColor="LightGray" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                    <StackLayout Orientation="Vertical" x:Name="gridItemNavigator"/>
+                </ScrollView>
+
+            </Grid>
+
+            <Grid Margin="50">
+                <common:EMVTxCtl x:Name="emvTxCtl" />
+            </Grid>
+            
+            <Grid Margin="50" x:Name="gridTransactSummary" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="200"></ColumnDefinition>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+
+                <Label x:Name="lblTransactSummary" Grid.ColumnSpan="3"/>
+
+            </Grid>
+
+            <Grid Margin="50" x:Name="gridSearch" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition />
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <Entry Placeholder="Search String" x:Name="txtSearch" TextChanged="txtSearch_TextChanged"/>
+
+                <ListView ItemSelected="lstInventoryItems_ItemSelected" Grid.Row="1" x:Name="lstInventoryItems" SeparatorColor="Black" >
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                                <Grid Padding="3">
+                                    <Grid BackgroundColor="LightGray">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+
+                                        <Grid Grid.Row="0">
+
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition />
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition />
+                                            </Grid.ColumnDefinitions>
+
+                                            <Label Grid.Row="0" Grid.Column="0" Text="Name:" />
+                                            <Label Grid.Row="0" Grid.Column="2" Text="Description:" />
+
+                                            <Label Grid.Row="0" Grid.Column="1" Text="{Binding Name}" />
+                                            <Label Grid.Row="0" Grid.Column="3" Text="{Binding Description}" />
+                                        </Grid>
+
+                                        <Grid Grid.Row="1">
+
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition />
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition />
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition />
+                                            </Grid.ColumnDefinitions>
+
+                                            <Label Grid.Row="0" Grid.Column="0" Text="Barcode:"  />
+                                            <Label Grid.Row="0" Grid.Column="2" Text="Price:" />
+                                            <Label Grid.Row="0" Grid.Column="4" Text="Group:" />
+
+                                            <Label Grid.Row="0" Grid.Column="1" Text="{Binding Barcode}" />
+                                            <Label Grid.Row="0" Grid.Column="3" Text="{Binding Price, Converter={StaticResource currencyConverter}}" />
+                                            <Label Grid.Row="0" Grid.Column="5" Text="{Binding Group.Name}" />
+
+                                        </Grid>
+                                    </Grid>
+                                </Grid>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+
+                <Grid Grid.Row="2" >
+                    <Button x:Name="cmdCancel" Clicked="cmdCancel_Clicked" Text="cancel" Style="{StaticResource styleButton}" />
+                </Grid>
+            </Grid>
+
+            <common:WaitControl x:Name="gridProgress"/>
+
+        </Grid>
+    </local:ModalPage.Content>
+</local:ModalPage>

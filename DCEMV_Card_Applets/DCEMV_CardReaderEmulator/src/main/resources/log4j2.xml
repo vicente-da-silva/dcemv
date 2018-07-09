@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+    <Appenders>
+        <Console name="STDOUT" target="SYSTEM_OUT">
+            <PatternLayout pattern="%highlight{[%d{dd.MM.yyyy | HH:mm:ss} | %-5p | %-15t %-30M (%F:%L)] %m%n}"/>
+        </Console>
+        <!--<RollingFile name="rollingFile" fileName="/var/log/TDiEcommerce.log"-->
+        <!--filePattern="/var/log/TDiEcommerce-%d{yyyy-MM-dd}-%i.log" >-->
+        <!--<PatternLayout>-->
+        <!--<pattern>[%d{dd.MM.yyyy | HH:mm:ss} | %-5p | %-35t %-35M (%-35F:%-4L)] %m%n</pattern>-->
+        <!--</PatternLayout>-->
+        <!--<Policies>-->
+        <!--<SizeBasedTriggeringPolicy size="512 KB" />-->
+        <!--</Policies>-->
+        <!--<DefaultRolloverStrategy max="10"/>-->
+        <!--</RollingFile>-->
+        <!--<Syslog name="SYSLOG" format="RFC5424" port="514" facility="LOCAL0" host="localhost" appname="td" mdcId="mdc"-->
+                <!--protocol="UDP" includeMDC="true" newLine="true" exceptionPattern="%throwable{full}">-->
+            <!--<PatternLayout>-->
+                <!--<pattern>[%d{dd.MM.yyyy | HH:mm:ss} | %-5p | %-35t %-35M (%-35F:%-4L)] %m%n</pattern>-->
+            <!--</PatternLayout>-->
+            <!--<LoggerFields>-->
+                <!--<KeyValuePair key="x" value="%-5p | %t-%M (%F:%L)" />-->
+                <!--<KeyValuePair key="LEVEL" value="%p" />-->
+                <!--<KeyValuePair key="FILE" value="(%F:%L)" />-->
+                <!--<KeyValuePair key="THREAD" value="%t-%M" />-->
+            <!--</LoggerFields>-->
+        <!--</Syslog>-->
+    </Appenders>
+    <Loggers>
+        <Logger name="org.apache.log4j.xml" level="INFO">
+            <AppenderRef ref="STDOUT" />
+        </Logger>
+        <Logger name="org.hibernate" level="WARN">
+            <AppenderRef ref="STDOUT" />
+        </Logger>
+        <Logger name="com.mchange" level="WARN">
+            <AppenderRef ref="STDOUT" />
+        </Logger>
+        <Logger name="org.apache.commons" level="ERROR">
+            <AppenderRef ref="STDOUT" />
+        </Logger>
+        <Logger name="org.hornetq" level="WARN">
+            <AppenderRef ref="STDOUT" />
+        </Logger>
+        <Root level="DEBUG">
+            <AppenderRef ref="STDOUT"/>
+        </Root>
+    </Loggers>
+</Configuration>

@@ -1,0 +1,254 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProjectGuid>{5A573DCA-0BBA-4917-9113-4EF805F39B17}</ProjectGuid>
+    <OutputType>AppContainerExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>DCEMV.DemoApp.UWP</RootNamespace>
+    <AssemblyName>DCEMV_DemoApp.UWP</AssemblyName>
+    <DefaultLanguage>en-US</DefaultLanguage>
+    <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
+    <TargetPlatformVersion>10.0.15063.0</TargetPlatformVersion>
+    <TargetPlatformMinVersion>10.0.10586.0</TargetPlatformMinVersion>
+    <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
+    <EnableDotNetNativeCompatibleProfile>true</EnableDotNetNativeCompatibleProfile>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <PackageCertificateKeyFile>XPayTerminal.UWP_TemporaryKey.pfx</PackageCertificateKeyFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\ARM\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;NETFX_CORE;WINDOWS_UWP;CODE_ANALYSIS;Pi</DefineConstants>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>full</DebugType>
+    <PlatformTarget>ARM</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|ARM'">
+    <OutputPath>bin\ARM\Release\</OutputPath>
+    <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP;CODE_ANALYSIS;Pi</DefineConstants>
+    <Optimize>true</Optimize>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>ARM</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+    <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <Optimize>true</Optimize>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+    <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;NETFX_CORE;WINDOWS_UWP;CODE_ANALYSIS;</DefineConstants>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <Optimize>true</Optimize>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+    <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MainPage.xaml.cs">
+      <DependentUpon>MainPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TCPIPImp\TCPClientStreamUWP.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <AppxManifest Include="Package.appxmanifest">
+      <SubType>Designer</SubType>
+    </AppxManifest>
+    <None Include="XPayTerminal.UWP_TemporaryKey.pfx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\LargeTile.scale-100.png" />
+    <Content Include="Assets\LargeTile.scale-125.png" />
+    <Content Include="Assets\LargeTile.scale-150.png" />
+    <Content Include="Assets\LargeTile.scale-200.png" />
+    <Content Include="Assets\LargeTile.scale-400.png" />
+    <Content Include="Assets\SmallTile.scale-100.png" />
+    <Content Include="Assets\SmallTile.scale-125.png" />
+    <Content Include="Assets\SmallTile.scale-150.png" />
+    <Content Include="Assets\SmallTile.scale-200.png" />
+    <Content Include="Assets\SmallTile.scale-400.png" />
+    <Content Include="Assets\Square44x44Logo.targetsize-16.png" />
+    <Content Include="Assets\Square44x44Logo.targetsize-24.png" />
+    <Content Include="Assets\Square44x44Logo.targetsize-256.png" />
+    <Content Include="Assets\Square44x44Logo.targetsize-32.png" />
+    <Content Include="Assets\Square44x44Logo.targetsize-48.png" />
+    <Content Include="Assets\StoreLogo.scale-100.png" />
+    <Content Include="Assets\StoreLogo.scale-125.png" />
+    <Content Include="Assets\StoreLogo.scale-150.png" />
+    <Content Include="Assets\StoreLogo.scale-200.png" />
+    <Content Include="Assets\StoreLogo.scale-400.png" />
+    <Content Include="Properties\Default.rd.xml" />
+    <Content Include="Assets\LockScreenLogo.scale-100.png" />
+    <Content Include="Assets\LockScreenLogo.scale-125.png" />
+    <Content Include="Assets\LockScreenLogo.scale-150.png" />
+    <Content Include="Assets\LockScreenLogo.scale-200.png" />
+    <Content Include="Assets\LockScreenLogo.scale-400.png" />
+    <Content Include="Assets\SplashScreen.scale-100.png" />
+    <Content Include="Assets\SplashScreen.scale-125.png" />
+    <Content Include="Assets\SplashScreen.scale-150.png" />
+    <Content Include="Assets\SplashScreen.scale-200.png" />
+    <Content Include="Assets\SplashScreen.scale-400.png" />
+    <Content Include="Assets\Square150x150Logo.scale-100.png" />
+    <Content Include="Assets\Square150x150Logo.scale-125.png" />
+    <Content Include="Assets\Square150x150Logo.scale-150.png" />
+    <Content Include="Assets\Square150x150Logo.scale-200.png" />
+    <Content Include="Assets\Square150x150Logo.scale-400.png" />
+    <Content Include="Assets\Square44x44Logo.scale-100.png" />
+    <Content Include="Assets\Square44x44Logo.scale-125.png" />
+    <Content Include="Assets\Square44x44Logo.scale-150.png" />
+    <Content Include="Assets\Square44x44Logo.scale-200.png" />
+    <Content Include="Assets\Square44x44Logo.scale-400.png" />
+    <Content Include="Assets\Square44x44Logo.targetsize-16_altform-unplated.png" />
+    <Content Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
+    <Content Include="Assets\Square44x44Logo.targetsize-32_altform-unplated.png" />
+    <Content Include="Assets\Square44x44Logo.targetsize-48_altform-unplated.png" />
+    <Content Include="Assets\Square44x44Logo.targetsize-256_altform-unplated.png" />
+    <Content Include="Assets\Wide310x150Logo.scale-100.png" />
+    <Content Include="Assets\Wide310x150Logo.scale-125.png" />
+    <Content Include="Assets\Wide310x150Logo.scale-150.png" />
+    <Content Include="Assets\Wide310x150Logo.scale-200.png" />
+    <Content Include="Assets\Wide310x150Logo.scale-400.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Page Include="MainPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="IdentityModel">
+      <Version>3.0.0</Version>
+    </PackageReference>
+    <PackageReference Include="Portable.DataAnnotations">
+      <Version>1.0.0</Version>
+    </PackageReference>
+    <PackageReference Include="Xamarin.Auth">
+      <Version>1.5.0.3</Version>
+    </PackageReference>
+    <PackageReference Include="Xamarin.Forms" Version="2.5.0.121934" />
+    <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform" Version="6.0.5" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\DCEMV_ServerShared\DCEMV_ServerShared.csproj">
+      <Project>{9b565d57-e501-4c71-a3d8-681d1a40ffa2}</Project>
+      <Name>DCEMV_ServerShared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\DCEMV_Shared\DCEMV_Shared.csproj">
+      <Project>{611383da-d8c9-4939-938f-c1055b0040fd}</Project>
+      <Name>DCEMV_Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\DCEMV_ConfigurationManager\DCEMV_ConfigurationManager.csproj">
+      <Project>{cf70f1eb-daa1-404f-a083-e39482828ac2}</Project>
+      <Name>DCEMV_ConfigurationManager</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\DCEMV_EMVProtocol\DCEMV_EMVProtocol.csproj">
+      <Project>{5b6efe29-0a89-4017-9623-e50b5475a731}</Project>
+      <Name>DCEMV_EMVProtocol</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\DCEMV_FileDriver\DCEMV_UWPFileDriver\DCEMV_UWPFileDriver.csproj">
+      <Project>{f2c3096a-fced-449c-a412-d967abaa2278}</Project>
+      <Name>DCEMV_UWPFileDriver</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\DCEMV_FormattingUtils\DCEMV_FormattingUtils.csproj">
+      <Project>{c84a404f-4bbb-4e57-9496-c895f171321d}</Project>
+      <Name>DCEMV_FormattingUtils</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\DCEMV_I2CRPi3NXPOM5577Driver\DCEMV_I2CRPi3NXPOM5577Driver.csproj">
+      <Project>{8af91105-a08f-47d4-88d6-2d66bfd84932}</Project>
+      <Name>DCEMV_I2CRPi3NXPOM5577Driver</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\DCEMV_ISO7816Protocol\DCEMV_ISO7816Protocol.csproj">
+      <Project>{795ad1d0-cc27-4bfc-b86e-6910e978ea5d}</Project>
+      <Name>DCEMV_ISO7816Protocol</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\DCEMV_NCIDriver\DCEMV_NCIDriver.csproj">
+      <Project>{0be72c29-f644-4be0-b9a4-9b9bb3a456e7}</Project>
+      <Name>DCEMV_NCIDriver</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\DCEMV_SimulatedPaymentProvider\DCEMV_SimulatedPaymentProvider.csproj">
+      <Project>{CA134D29-45A6-4AA1-9A6F-027277764A19}</Project>
+      <Name>DCEMV_SimulatedPaymentProvider</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\DCEMV_SPDHProtocol\DCEMV_SPDHProtocol.csproj">
+      <Project>{8d29958e-aaec-440d-85f7-0a7f881ff120}</Project>
+      <Name>DCEMV_SPDHProtocol</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\DCEMV_TCPIPDriver\DCEMV_TCPIPDriver.csproj">
+      <Project>{39b80fb0-8427-4f63-9617-f39d83e48e43}</Project>
+      <Name>DCEMV_TCPIPDriver</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\DCEMV_TLVProtocol\DCEMV_TLVProtocol.csproj">
+      <Project>{dddbfc8d-a231-4185-a8c2-7460156c67c3}</Project>
+      <Name>DCEMV_TLVProtocol</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\DCEMV_WindowsCardEmulatorProxyDriver\DCEMV_WindowsCardEmulatorProxyDriver.csproj">
+      <Project>{41ce5693-53ae-45e3-86db-dba73e28f5b1}</Project>
+      <Name>DCEMV_WindowsCardEmulatorProxyDriver</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\DCEMV_WindowsDevicesSmartCardsDriver\DCEMV_WindowsDevicesSmartCardsDriver.csproj">
+      <Project>{ba7748e1-3970-4889-b859-07c710f9351d}</Project>
+      <Name>DCEMV_WindowsDevicesSmartCardsDriver</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\DCEMV_TerminalCommon\DCEMV_TerminalCommon.csproj">
+      <Project>{e9da6055-deec-4167-9a15-6002de715828}</Project>
+      <Name>DCEMV_TerminalCommon</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="..\DCEMV_DemoApp\DCEMV_DemoApp.projitems" Label="Shared" />
+  <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
+    <VisualStudioVersion>14.0</VisualStudioVersion>
+  </PropertyGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
+</Project>

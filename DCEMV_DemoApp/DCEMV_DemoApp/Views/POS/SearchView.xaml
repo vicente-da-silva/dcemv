@@ -1,0 +1,92 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<local:ModalPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="XTerminal.SearchView"
+             xmlns:local="clr-namespace:XTerminal" xmlns:common="clr-namespace:XTerminalCommon;assembly=XTerminalCommon"  >
+
+    <local:ModalPage.Content>
+        <Grid HorizontalOptions="FillAndExpand">
+
+            <Grid Margin="50" x:Name="gridMain" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition />
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <Entry Placeholder="Search String" x:Name="txtSearch" TextChanged="txtSearch_TextChanged"/>
+
+                <ListView ItemSelected="lstInventoryItems_ItemSelected" Grid.Row="1" x:Name="lstInventoryItems" SeparatorColor="Black" >
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                                <Grid Padding="3">
+                                    <Grid BackgroundColor="LightGray">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+
+                                        <Grid Grid.Row="0">
+
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition />
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition />
+                                            </Grid.ColumnDefinitions>
+
+                                            <Label Grid.Row="0" Grid.Column="0" Text="Name:" />
+                                            <Label Grid.Row="0" Grid.Column="2" Text="Description:" />
+
+                                            <Label Grid.Row="0" Grid.Column="1" Text="{Binding Name}" />
+                                            <Label Grid.Row="0" Grid.Column="3" Text="{Binding Description}" />
+                                        </Grid>
+
+                                        <Grid Grid.Row="1">
+
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition />
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition />
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition />
+                                            </Grid.ColumnDefinitions>
+
+                                            <Label Grid.Row="0" Grid.Column="0" Text="Barcode:"  />
+                                            <Label Grid.Row="0" Grid.Column="2" Text="Price:" />
+                                            <Label Grid.Row="0" Grid.Column="4" Text="Group:" />
+
+                                            <Label Grid.Row="0" Grid.Column="1" Text="{Binding Barcode}" />
+                                            <Label Grid.Row="0" Grid.Column="3" Text="{Binding Price, Converter={StaticResource currencyConverter}}" />
+                                            <Label Grid.Row="0" Grid.Column="5" Text="{Binding Group.Name}" />
+
+                                        </Grid>
+                                    </Grid>
+                                </Grid>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+
+                <Grid Grid.Row="2" >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Button Grid.Column="1" x:Name="cmdCancel" Clicked="cmdCancel_Clicked" Text="cancel" Style="{StaticResource styleButton}" />
+                </Grid>
+            </Grid>
+
+            <common:WaitControl x:Name="gridProgress">
+
+            </common:WaitControl>
+
+
+        </Grid>
+    </local:ModalPage.Content>
+</local:ModalPage>
+
+

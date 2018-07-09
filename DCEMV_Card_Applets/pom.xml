@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>dcemv.emvcard</groupId>
+    <artifactId>DCEMV_RootPOM</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+	
+	<modules>
+	    <module>jcardsim</module>
+        <module>DCEMV_CardApplets</module>
+        <module>DCEMV_CardReaderEmulator</module>
+    </modules>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <junit.version>4.8.2</junit.version>
+        <jcardSimVersion>3.0.5-SNAPSHOT</jcardSimVersion>
+        <globalplatformVersion>2.1.1</globalplatformVersion>
+        <globalplatformPathToJar>${project.basedir}/ext/globalplatform-2_1_1/gp211.jar</globalplatformPathToJar>
+        <javaCardVersion>1.5</javaCardVersion>
+        <javaCardPathToJDK>C:/Program Files (x86)/Oracle/Java Card Development Kit 3.0.5u1b</javaCardPathToJDK>
+    </properties>
+
+</project>

@@ -1,0 +1,125 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!--
+*************************************************************************
+DC EMV
+Open Source EMV
+Copyright (C) 2018  Vicente Da Silva
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published
+by the Free Software Foundation, either version 3 of the License, or
+any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see http://www.gnu.org/licenses/
+*************************************************************************
+-->
+<local:ModalPage xmlns="http://xamarin.com/schemas/2014/forms" 
+			 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+             x:Class="DCEMV.PersoApp.AppsView"
+             xmlns:local="clr-namespace:DCEMV.PersoApp" 
+             xmlns:common="clr-namespace:DCEMV.TerminalCommon;assembly=DCEMV_TerminalCommon"
+                 Title="Manage CAP Applications">
+    <local:ModalPage.Content>
+        <Grid Margin="50" HorizontalOptions="FillAndExpand">
+
+            <Grid HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition  />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <Label Grid.Row="0" Text="Manage/Remove Apps" FontSize="Large" HorizontalOptions="FillAndExpand"/>
+
+                <Grid Grid.Row="1" x:Name="gridMain"  HorizontalOptions="FillAndExpand" >
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="200"></ColumnDefinition>
+                        <ColumnDefinition Width="Auto"></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+
+                    <Label Grid.Row="0" Grid.Column="0" Text="Security Domain AID"  />
+                    <Entry Grid.Row="0" Grid.Column="1" Text="{Binding SecurityDomainAID, Mode=TwoWay}"  Placeholder="AID of Security Domain" x:Name="txtSecurityDomain" HorizontalOptions="FillAndExpand" />
+                    <Label Grid.Row="1" Grid.Column="0" Text="Security Domain Master Key"  />
+                    <Entry Grid.Row="1" Grid.Column="1" Text="{Binding SecurityDomainMasterKey, Mode=TwoWay}" Placeholder="Security Domain Master Key" x:Name="txtMasterKey" HorizontalOptions="FillAndExpand" />
+                </Grid>
+
+                <Grid Grid.Row="2" x:Name="gridFunctions"  HorizontalOptions="FillAndExpand" >
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <StackLayout Grid.Row="0" Orientation="Horizontal">
+                        <Button x:Name="cmdRemove" Clicked="cmdRemove_Clicked"  Text="remove" Style="{StaticResource smallStyleButton}"/>
+                        <Button x:Name="cmdLock" Clicked="cmdLock_Clicked"  Text="lock" Style="{StaticResource smallStyleButton}"/>
+                        <Button x:Name="cmdUnLock" Clicked="cmdUnLock_Clicked"  Text="unlock" Style="{StaticResource smallStyleButton}"/>
+                    </StackLayout>
+
+                    <ScrollView Grid.Row="1"  Grid.ColumnSpan="3">
+                        <Label x:Name="lblStatus" />
+                    </ScrollView>
+
+                </Grid>
+
+                <Grid Grid.Row="3" x:Name="gridAppList" HorizontalOptions="FillAndExpand" >
+                    <ListView x:Name="lstApps"  SeparatorColor="Black" >
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <ViewCell>
+                                    <Grid Padding="3">
+                                        <Grid BackgroundColor="LightGray">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                            </Grid.RowDefinitions>
+
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition />
+                                            </Grid.ColumnDefinitions>
+
+                                            <Label Grid.Column="0" Text="{Binding Type}"  />
+                                            <Label Grid.Column="1" Text="{Binding AID}"  />
+                                            <Label Grid.Column="0" Grid.Row="1" Text="{Binding Version}"  />
+                                            <Label Grid.Column="1" Grid.Row="1" Text="{Binding LifeCycle}"  />
+                                            <Label Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="2" Text="{Binding Privileges}"  />
+                                        </Grid>
+                                    </Grid>
+                                </ViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </Grid>
+
+                <Grid Grid.Row="4" VerticalOptions="End" HorizontalOptions="FillAndExpand">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Button Grid.Column="0" x:Name="cmdOK" Style="{StaticResource styleButton}" Clicked="cmdOK_Clicked"  Text="ok" HorizontalOptions="Center" />
+                    <Button Grid.Column="1" x:Name="cmdCancel" Style="{StaticResource styleButton}" Clicked="cmdCancel_Clicked"  Text="cancel" HorizontalOptions="Center" />
+                </Grid>
+            </Grid>
+
+            <common:WaitControl x:Name="gridProgress">
+
+            </common:WaitControl>
+
+        </Grid>
+    </local:ModalPage.Content>
+</local:ModalPage>

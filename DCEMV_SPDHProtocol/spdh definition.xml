@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+*************************************************************************
+DC EMV
+Open Source EMV
+Copyright (C) 2018  Vicente Da Silva
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published
+by the Free Software Foundation, either version 3 of the License, or
+any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see http://www.gnu.org/licenses/
+*************************************************************************
+-->
+<spdh>
+	<transactions>
+		<transaction type="F00" name="Normal purchase" mandatoryfields="Bq6(EIO)" />
+		<transaction type="F01" name="Preauthorization purchase" mandatoryfields="Biq6(EIO)" />
+		<transaction type="F02" name="Preauthorization purchase completion" mandatoryfields="Biq6(EIO)" />
+		<transaction type="F03" name="Mail or telephone order" mandatoryfields="Bq6(EIO)" />
+		<transaction type="F04" name="Merchandise return" mandatoryfields="Bq6(EIO)" />
+		<transaction type="F05" name="Cash advance" mandatoryfields="Bq6(EIO)" />
+		<transaction type="F06" name="Card verification" mandatoryfields="q6(EIO)" />
+		<transaction type="F07" name="Balance inquiry" mandatoryfields="q6(EIO)" />
+		<transaction type="F08" name="Purchase with cash back" mandatoryfields="BCq6(EIO)" />
+		<transaction type="F11" name="Purchase adjustment" mandatoryfields="BCq6(EIO)" />
+		<transaction type="F12" name="Merchandise return adjustment" mandatoryfields="BCq6(EIO)" />
+		<transaction type="F13" name="Cash advance adjustment" mandatoryfields="BCq6(EIO)" />
+		<transaction type="F14" name="Cash back adjustment" mandatoryfields="BCq6(EIO)" />
+	</transactions>
+	<fidheader>
+		<entry start="1" end="2" length="2" type="Hex" name="Device Type" />
+		<entry start="3" end="4" length="2" type="Numeric" name="Transmission Number" />
+		<entry start="5" end="20" length="16" type="Hex" name="Terminal ID" />
+		<entry start="21" end="26" length="6" type="Hex" name="Employee ID" />
+		<entry start="27" end="32" length="6" type="Numeric" name="Current Date" />
+		<entry start="33" end="38" length="6" type="Numeric" name="Current Time" />
+		<entry start="39" end="" length="1" type="Hex" name="Message Type" />
+		<entry start="40" end="" length="1" type="Hex" name="Message Subtype" />
+		<entry start="41" end="42" length="2" type="Numeric" name="Transaction Code" />
+		<entry start="43" end="" length="1" type="Numeric" name="Processing Flag 1" />
+		<entry start="44" end="" length="1" type="Numeric" name="Processing Flag 2" />
+		<entry start="45" end="" length="1" type="Numeric" name="Processing Flag 3" />
+		<entry start="46" end="48" length="3" type=" numeric" name="Response Code" />
+	</fidheader>
+	<fids>
+		<fid id="A " subfid="" description="Customer Billing Address " min="1" max="20" format="Hex"/>
+		<fid id="B " subfid="" description="Amount 1 " min="1" max="18" format="Numeric"/>
+		<fid id="C " subfid="" description="Amount 2 " min="1" max="18" format="Numeric"/>
+		<fid id="D " subfid="" description="Application Account Type " min="1" max="1" format="Numeric"/>
+		<fid id="E " subfid="" description="Application Account Number " min="1" max="19" format="Numeric"/>
+		<fid id="F " subfid="" description="Approval Code " min="8" max="8" format="Hex"/>
+		<fid id="G " subfid="" description="Authentication Code " min="8" max="8" format="Hex"/>
+		<fid id="H " subfid="" description="Authentication Key " min="16" max="48" format="Hex"/>
+		<fid id="I " subfid="" description="Data Encryption Key " min="16" max="48" format="Hex"/>
+		<fid id="J " subfid="" description="Available Balance " min="18" max="18" format="Numeric"/>
+		<fid id="K " subfid="" description="Business Date " min="6" max="6" format="Numeric"/>
+		<fid id="L " subfid="" description="Check Type " min="1" max="1" format="Numeric"/>
+		<fid id="M " subfid="" description="Communications Key " min="16" max="48" format="Hex"/>
+		<fid id="N " subfid="" description="Customer ID " min="1" max="40" format="Hex"/>
+		<fid id="O " subfid="" description="Customer ID Type " min="2" max="2" format="Numeric"/>
+		<fid id="P " subfid="" description="Draft Capture Flag " min="1" max="1" format="Numeric"/>
+		<fid id="Q " subfid="" description="Echo Data " min="1" max="16" format="Hex"/>
+		<fid id="R " subfid="" description="Card Type " min="1" max="1" format="Hex"/>
+		<fid id="S " subfid="" description="Invoice Number " min="1" max="10" format="Hex"/>
+		<fid id="T " subfid="" description="Invoice Number/Original " min="1" max="10" format="Hex"/>
+		<fid id="U " subfid="" description="Language Code " min="1" max="1" format="Hex"/>
+		<fid id="V " subfid="" description="Mail/Download Key " min="15" max="15" format="Hex"/>
+		<fid id="W " subfid="" description="Mail Text/Download Data " min="1" max="957" format="Hex"/>
+		<fid id="X " subfid="" description="ISO Response Code " min="3" max="3" format="Numeric"/>
+		<fid id="Y " subfid="" description="Customer ZIP Code " min="1" max="9" format="Hex"/>
+		<fid id="Z " subfid="" description="Address Verification Status Code" min="1" max="1" format="Hex"/>
+		<fid id="a " subfid="" description="Optional Data " min="1" max="250" format="Hex"/>
+		<fid id="b " subfid="" description="PIN/Customer " min="16" max="16" format="Hex"/>
+		<fid id="c " subfid="" description="PIN/Supervisor " min="16" max="16" format="Hex"/>
+		<fid id="d " subfid="" description="Retailer ID " min="1" max="12" format="Numeric"/>
+		<fid id="e " subfid="" description="POS Condition Code " min="2" max="2" format="Numeric"/>
+		<fid id="f " subfid="" description="PIN Length or Receipt Data " min="1" max="200" format="Hex"/>
+		<fid id="g " subfid="" description="Response Display " min="1" max="48" format="Hex"/>
+		<fid id="h " subfid="" description="Sequence Number " min="10" max="10" format="Hex"/>
+		<fid id="i " subfid="" description="Sequence Number/Original " min="9" max="9" format="Hex"/>
+		<fid id="j " subfid="" description="State Code " min="2" max="2" format="Hex"/>
+		<fid id="k " subfid="" description="Birth Date/Drivers License Expiration Date / Terminal Location" min="0" max="25" format="Hex"/>
+		<fid id="l " subfid="" description="Totals/Batch " min="75" max="75" format="Hex"/>
+		<fid id="m " subfid="" description="Totals/Day " min="75" max="75" format="Hex"/>
+		<fid id="n " subfid="" description="Totals/Employee " min="75" max="75" format="Hex"/>
+		<fid id="o " subfid="" description="Totals/Shift " min="75" max="75" format="Hex"/>
+		<fid id="q " subfid="" description="Track 2/Customer " min="1" max="40" format="Hex"/>
+		<fid id="r " subfid="" description="Track 2/Supervisor " min="1" max="40" format="Hex"/>
+		<fid id="s " subfid="" description="Transaction Description " min="1" max="24" format="Hex"/>
+		<fid id="t " subfid="" description="PIN Pad Identifier " min="16" max="16" format="Hex"/>
+		<fid id="u " subfid="" description="Acceptor Posting Date " min="6" max="6" format="Hex"/>
+		<fid id="0" subfid="" description="American Express Data Collection" min="46" max="118" format="Hex"/>
+		<fid id="1" subfid="" description="PS2000 Data " min="24" max="24" format="Hex"/>
+		<fid id="2" subfid="" description="Track 1/Customer " min="1" max="82" format="Hex"/>
+		<fid id="3" subfid="" description="Track 1/Supervisor " min="1" max="82" format="Hex"/>
+		<fid id="4" subfid="" description="Industry Data " min="156" max="171" format="Hex"/>
+		<fid id="6" subfid="A " description="Host original data " min="12" max="12" format="Hex"/>
+		<fid id="6" subfid="B " description="Manual card verification data 1" min="4" max="4" format="Hex"/>
+		<fid id="6" subfid="C " description="Manual card verification data 2" min="4" max="4" format="Hex"/>
+		<fid id="6" subfid="D " description="Purchasing card/fleet card data" min="30" max="876" format="Hex"/>
+		<fid id="6" subfid="E " description="POS entry mode " min="3" max="3" format="Numeric"/>
+		<fid id="6" subfid="F " description="Electronic commerce data " min="1" max="2" format="Hex"/>
+		<fid id="6" subfid="G " description="Visa commercial card type indicator" min="1" max="1" format="Hex"/>
+		<fid id="6" subfid="H " description="CVD presence indicator and CVD result" min="2" max="2" format="Hex"/>
+		<fid id="6" subfid="I " description="Transaction currency code " min="3" max="3" format="Numeric"/>
+		<fid id="6" subfid="J " description="Cardholder certificate serial number" min="32" max="32" format="Hex"/>
+		<fid id="6" subfid="K " description="Merchant certificate serial number" min="32" max="32" format="Hex"/>
+		<fid id="6" subfid="L " description="XID/trans stain " min="80" max="80" format="Hex"/>
+		<fid id="6" subfid="N " description="Message reason code " min="4" max="4" format="Numeric"/>
+		<fid id="6" subfid="O " description="EMV request data " min="1" max="136" format="Hex"/>
+		<fid id="6" subfid="P " description="EMV additional request data " min="1" max="64" format="Hex"/>
+		<fid id="6" subfid="Q " description="EMV response data " min="1" max="64" format="Hex"/>
+		<fid id="6" subfid="R " description="EMV additional response data" min="1" max="258" format="Hex"/>
+		<fid id="6" subfid="S " description="Stored value data " min="63" max="63" format="Hex"/>
+		<fid id="6" subfid="T " description="Key serial number and descriptor" min="23" max="23" format="Hex"/>
+		<fid id="6" subfid="U " description="Transaction subtype data " min="16" max="16" format="Hex"/>
+		<fid id="6" subfid="V " description="Authentication collection indicator" min="1" max="1" format="Hex"/>
+		<fid id="6" subfid="W " description="CAVV/AAV result code " min="1" max="1" format="Hex"/>
+		<fid id="6" subfid="X " description="Point of service data " min="6" max="6" format="Hex"/>
+		<fid id="6" subfid="Y " description="Authentication data " min="2" max="202" format="Hex"/>
+		<fid id="6" subfid="Z " description="Card verification flag 2 " min="1" max="1" format="Hex"/>
+		<fid id="6" subfid="b " description="Electronic check conversion data" min="39" max="39" format="Hex"/>
+		<fid id="6" subfid="c " description="MICR data " min="64" max="64" format="Hex"/>
+		<fid id="6" subfid="d " description="Electronic check callback information" min="115" max="115" format="Hex"/>
+		<fid id="6" subfid="e " description="Interchange compliance data " min="21" max="21" format="Hex"/>
+		<fid id="6" subfid="f " description="Response source or reason code" min="1" max="1" format="Hex"/>
+		<fid id="6" subfid="g " description="POS merchant data " min="4" max="4" format="Hex"/>
+		<fid id="6" subfid="h " description="System Trace Audit Number (STAN)" min="6" max="6" format="Hex"/>
+		<fid id="6" subfid="i " description="Retrieval Reference Number " min="12" max="12" format="Hex"/>
+		<fid id="6" subfid="j " description="Debit Network/Sharing Group ID" min="4" max="4" format="Hex"/>
+		<fid id="6" subfid="k " description="Card Level Results " min="2" max="2" format="Hex"/>
+		<fid id="6" subfid="l " description="Healthcare/Transit Data " min="20" max="120" format="Hex"/>
+		<fid id="6" subfid="m " description="Healthcare Service Data " min="19" max="95" format="Hex"/>
+		<fid id="6" subfid="n " description="Error Flag " min="1" max="1" format="Hex"/>
+		<fid id="6" subfid="o " description="American Express Additional Data" min="3" max="300" format="Hex"/>
+		<fid id="7" subfid="a " description="Mobile Top-Up Track 2 " min="1" max="40" format="Hex"/>
+		<fid id="7" subfid="b " description="Original Mobile Top-Up Reference Number" min="15" max="15" format="Hex"/>
+		<fid id="7" subfid="c " description="Mobile Top-Up Response " min="65" max="65" format="Hex"/>
+		<fid id="8" subfid="A " description="EBT Voucher Number " min="18" max="24" format="Hex"/>
+		<fid id="8" subfid="B " description="EBT Available Balance " min="18" max="18" format="Numeric"/>
+		<fid id="9" subfid="E " description="FNB Terminal Type" min="2" max="2" format="Hex"/>
+		<fid id="9" subfid="I " description="FNB Multilane additional data" min="44" max="44" format="Hex"/>
+		<fid id="9" subfid="A " description="FNB Auth Entity/Pin Pad Serial Number" min="1" max="1" format="Hex"/>
+	</fids>
+</spdh>

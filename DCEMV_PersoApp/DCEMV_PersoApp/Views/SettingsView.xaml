@@ -1,0 +1,73 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!--
+*************************************************************************
+DC EMV
+Open Source EMV
+Copyright (C) 2018  Vicente Da Silva
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published
+by the Free Software Foundation, either version 3 of the License, or
+any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see http://www.gnu.org/licenses/
+*************************************************************************
+-->
+<local:ModalPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="DCEMV.PersoApp.SettingsView"
+             xmlns:local="clr-namespace:DCEMV.PersoApp" 
+             xmlns:common="clr-namespace:DCEMV.TerminalCommon;assembly=DCEMV_TerminalCommon"   Title="Settings">
+
+    <local:ModalPage.Resources>
+
+    </local:ModalPage.Resources>
+
+    <local:ModalPage.Content>
+        <Grid HorizontalOptions="FillAndExpand">
+
+            <Grid Margin="50" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition />
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="200"></ColumnDefinition>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+
+                <Label Grid.Row="0" Grid.ColumnSpan="3" Text="Settings" FontSize="Large"/>
+
+                <Label Grid.Row="1" Grid.ColumnSpan="3" Text="Card Reader:"/>
+
+                <Picker x:Name="pickCardReaders" SelectedIndexChanged="pickCardReaders_SelectedIndexChanged" Grid.Row="2" Grid.ColumnSpan="3" ></Picker>
+
+                <Grid Grid.Row="4" HorizontalOptions="Center" VerticalOptions="Center">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Button Grid.Column="0" x:Name="cmdOk" Clicked="cmdOk_Clicked" Text="back" Style="{StaticResource styleButton}">
+                    </Button>
+                </Grid>
+            </Grid>
+            
+            <common:WaitControl x:Name="gridProgress">
+
+            </common:WaitControl>
+
+        </Grid>
+    </local:ModalPage.Content>
+</local:ModalPage>

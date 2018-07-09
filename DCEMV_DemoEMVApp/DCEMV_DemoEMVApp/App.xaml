@@ -1,0 +1,273 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!--
+*************************************************************************
+DC EMV
+Open Source EMV
+Copyright (C) 2018  Vicente Da Silva
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published
+by the Free Software Foundation, either version 3 of the License, or
+any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see http://www.gnu.org/licenses/
+*************************************************************************
+-->
+<Application xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:DCEMV.DemoEMVApp" 
+             xmlns:common="clr-namespace:DCEMV.TerminalCommon;assembly=DCEMV_TerminalCommon" 
+             x:Class="DCEMV.DemoEMVApp.App">
+    <Application.Resources>
+
+        <ResourceDictionary>
+
+            <local:CurrencyConverter x:Key="currencyConverter"></local:CurrencyConverter>
+            <local:CurrencyConverterNoDiv x:Key="currencyConverterNoDiv"></local:CurrencyConverterNoDiv>
+            <local:DateTimeConverter x:Key="dateTimeConverter"></local:DateTimeConverter>
+
+
+            <Style x:Key="styleButton"  TargetType="Button">
+                <Setter Property="WidthRequest" Value="120"/>
+            </Style>
+
+            <Style x:Key="styleButtonPOS"  TargetType="Button">
+                <Setter Property="WidthRequest" Value="80"/>
+                <Setter Property="Margin" Value="-3"/>
+                <Setter Property="HeightRequest" Value="80"/>
+            </Style>
+
+            <Style x:Key="styleButtonAuth"  TargetType="Button">
+                <Setter Property="WidthRequest" Value="220"/>
+            </Style>
+
+            <Style x:Key="baseStyle" TargetType="Label">
+                <Setter Property="HorizontalTextAlignment" Value="Start" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+                <!--<Setter Property="FontSize" Value="Micro" />
+                <Setter Property="FontAttributes" Value="Italic" />-->
+            </Style>
+
+            <common:BooleanToObjectConverter x:Key="boolToStyleDataPresent" x:TypeArguments="Style">
+                <common:BooleanToObjectConverter.FalseObject>
+                    <Style TargetType="Label" BasedOn="{StaticResource baseStyle}">
+                        <Setter Property="TextColor" Value="#F44336" />
+                        <Setter Property="Text" Value="The data is invalid" />
+                    </Style>
+                </common:BooleanToObjectConverter.FalseObject>
+
+                <common:BooleanToObjectConverter.TrueObject>
+                    <Style TargetType="Label" BasedOn="{StaticResource baseStyle}">
+                        <Setter Property="TextColor" Value="#4CAF50" />
+                        <Setter Property="Text" Value="The data is valid" />
+                    </Style>
+                </common:BooleanToObjectConverter.TrueObject>
+            </common:BooleanToObjectConverter>
+
+            <common:BooleanToObjectConverter x:Key="boolToStyleAmount" x:TypeArguments="Style">
+                <common:BooleanToObjectConverter.FalseObject>
+                    <Style TargetType="Label" BasedOn="{StaticResource baseStyle}">
+                        <Setter Property="TextColor" Value="#F44336" />
+                        <Setter Property="Text" Value="The amount is invalid" />
+                    </Style>
+                </common:BooleanToObjectConverter.FalseObject>
+
+                <common:BooleanToObjectConverter.TrueObject>
+                    <Style TargetType="Label" BasedOn="{StaticResource baseStyle}">
+                        <Setter Property="TextColor" Value="#4CAF50" />
+                        <Setter Property="Text" Value="The amount is valid" />
+                    </Style>
+                </common:BooleanToObjectConverter.TrueObject>
+            </common:BooleanToObjectConverter>
+
+            <common:BooleanToObjectConverter x:Key="boolToStyleName" x:TypeArguments="Style">
+                <common:BooleanToObjectConverter.FalseObject>
+                    <Style TargetType="Label" BasedOn="{StaticResource baseStyle}">
+                        <Setter Property="TextColor" Value="#F44336" />
+                        <Setter Property="Text" Value="The text is invalid" />
+                    </Style>
+                </common:BooleanToObjectConverter.FalseObject>
+
+                <common:BooleanToObjectConverter.TrueObject>
+                    <Style TargetType="Label" BasedOn="{StaticResource baseStyle}">
+                        <Setter Property="TextColor" Value="#4CAF50" />
+                        <Setter Property="Text" Value="The text is valid" />
+                    </Style>
+                </common:BooleanToObjectConverter.TrueObject>
+            </common:BooleanToObjectConverter>
+
+            <common:BooleanToObjectConverter x:Key="boolToStylePicker" x:TypeArguments="Style">
+                <common:BooleanToObjectConverter.FalseObject>
+                    <Style TargetType="Label" BasedOn="{StaticResource baseStyle}">
+                        <Setter Property="TextColor" Value="#F44336" />
+                        <Setter Property="Text" Value="The selected item is invalid" />
+                    </Style>
+                </common:BooleanToObjectConverter.FalseObject>
+
+                <common:BooleanToObjectConverter.TrueObject>
+                    <Style TargetType="Label" BasedOn="{StaticResource baseStyle}">
+                        <Setter Property="TextColor" Value="#4CAF50" />
+                        <Setter Property="Text" Value="The selected item is valid" />
+                    </Style>
+                </common:BooleanToObjectConverter.TrueObject>
+            </common:BooleanToObjectConverter>
+
+            <common:BooleanToObjectConverter x:Key="boolToStyleNumber" x:TypeArguments="Style">
+                <common:BooleanToObjectConverter.FalseObject>
+                    <Style TargetType="Label" BasedOn="{StaticResource baseStyle}">
+                        <Setter Property="TextColor" Value="#F44336" />
+                        <Setter Property="Text" Value="The number is invalid" />
+                    </Style>
+                </common:BooleanToObjectConverter.FalseObject>
+
+                <common:BooleanToObjectConverter.TrueObject>
+                    <Style TargetType="Label" BasedOn="{StaticResource baseStyle}">
+                        <Setter Property="TextColor" Value="#4CAF50" />
+                        <Setter Property="Text" Value="The number is valid" />
+                    </Style>
+                </common:BooleanToObjectConverter.TrueObject>
+            </common:BooleanToObjectConverter>
+
+            <common:BooleanToObjectConverter x:Key="boolToStylePhoneNumber" x:TypeArguments="Style">
+                <common:BooleanToObjectConverter.FalseObject>
+                    <Style TargetType="Label" BasedOn="{StaticResource baseStyle}">
+                        <Setter Property="TextColor" Value="#F44336" />
+                        <Setter Property="Text" Value="The phone number is invalid" />
+                    </Style>
+                </common:BooleanToObjectConverter.FalseObject>
+
+                <common:BooleanToObjectConverter.TrueObject>
+                    <Style TargetType="Label" BasedOn="{StaticResource baseStyle}">
+                        <Setter Property="TextColor" Value="#4CAF50" />
+                        <Setter Property="Text" Value="The phone number is valid" />
+                    </Style>
+                </common:BooleanToObjectConverter.TrueObject>
+            </common:BooleanToObjectConverter>
+
+
+            <common:TxFlowToObjectConverter x:Key="txFlowToStyleImage" x:TypeArguments="Style">
+                <common:TxFlowToObjectConverter.Out>
+                    <Style TargetType="Image">
+                        <Setter Property="HeightRequest" Value="40" />
+                        <Setter Property="Source" Value="{local:ImageResource error.png}" />
+                        <Setter Property="HorizontalOptions" Value="End" />
+                        <Setter Property="VerticalOptions" Value="Center" />
+                    </Style>
+                </common:TxFlowToObjectConverter.Out>
+
+                <common:TxFlowToObjectConverter.In>
+                    <Style TargetType="Image">
+                        <Setter Property="HeightRequest" Value="40" />
+                        <Setter Property="Source" Value="{local:ImageResource success.png}" />
+                        <Setter Property="HorizontalOptions" Value="End" />
+                        <Setter Property="VerticalOptions" Value="Center" />
+                    </Style>
+                </common:TxFlowToObjectConverter.In>
+            </common:TxFlowToObjectConverter>
+
+            <common:CardStateToObjectConverter x:Key="cardStateToStyleImage" x:TypeArguments="Style">
+                <common:CardStateToObjectConverter.Cancelled>
+                    <Style TargetType="Image">
+                        <Setter Property="HeightRequest" Value="40" />
+                        <Setter Property="Source" Value="{local:ImageResource error.png}" />
+                        <Setter Property="HorizontalOptions" Value="End" />
+                        <Setter Property="VerticalOptions" Value="Center" />
+                    </Style>
+                </common:CardStateToObjectConverter.Cancelled>
+
+                <common:CardStateToObjectConverter.Locked>
+                    <Style TargetType="Image">
+                        <Setter Property="HeightRequest" Value="40" />
+                        <Setter Property="Source" Value="{local:ImageResource warn.png}" />
+                        <Setter Property="HorizontalOptions" Value="End" />
+                        <Setter Property="VerticalOptions" Value="Center" />
+                    </Style>
+                </common:CardStateToObjectConverter.Locked>
+
+                <common:CardStateToObjectConverter.Active>
+                    <Style TargetType="Image">
+                        <Setter Property="HeightRequest" Value="40" />
+                        <Setter Property="Source" Value="{local:ImageResource success.png}" />
+                        <Setter Property="HorizontalOptions" Value="End" />
+                        <Setter Property="VerticalOptions" Value="Center" />
+                    </Style>
+                </common:CardStateToObjectConverter.Active>
+            </common:CardStateToObjectConverter>
+
+            <common:BooleanToObjectConverter x:Key="boolToStyleImage" x:TypeArguments="Style">
+                <common:BooleanToObjectConverter.FalseObject>
+                    <Style TargetType="Image">
+                        <Setter Property="HeightRequest" Value="20" />
+                        <Setter Property="Source" Value="{local:ImageResource error.png}" />
+                        <Setter Property="HorizontalOptions" Value="Center" />
+                        <Setter Property="VerticalOptions" Value="Center" />
+                    </Style>
+                </common:BooleanToObjectConverter.FalseObject>
+
+                <common:BooleanToObjectConverter.TrueObject>
+                    <Style TargetType="Image">
+                        <Setter Property="HeightRequest" Value="20" />
+                        <Setter Property="Source" Value="{local:ImageResource success.png}" />
+                        <Setter Property="HorizontalOptions" Value="Center" />
+                        <Setter Property="VerticalOptions" Value="Center" />
+                    </Style>
+                </common:BooleanToObjectConverter.TrueObject>
+            </common:BooleanToObjectConverter>
+
+            <common:BooleanToObjectConverter x:Key="boolToStyleEmail" x:TypeArguments="Style">
+                <common:BooleanToObjectConverter.FalseObject>
+                    <Style TargetType="Label" BasedOn="{StaticResource baseStyle}">
+                        <Setter Property="TextColor" Value="#F44336" />
+                        <Setter Property="Text" Value="The email address is invalid" />
+                    </Style>
+                </common:BooleanToObjectConverter.FalseObject>
+
+                <common:BooleanToObjectConverter.TrueObject>
+                    <Style TargetType="Label" BasedOn="{StaticResource baseStyle}">
+                        <Setter Property="TextColor" Value="#4CAF50" />
+                        <Setter Property="Text" Value="The email address is valid" />
+                    </Style>
+                </common:BooleanToObjectConverter.TrueObject>
+            </common:BooleanToObjectConverter>
+
+            <common:BooleanToObjectConverter x:Key="boolToStylePassword" x:TypeArguments="Style">
+                <common:BooleanToObjectConverter.FalseObject>
+                    <Style TargetType="Label" BasedOn="{StaticResource baseStyle}">
+                        <Setter Property="TextColor" Value="#F44336" />
+                        <Setter Property="Text" Value="The password does not meet the requirements" />
+                    </Style>
+                </common:BooleanToObjectConverter.FalseObject>
+
+                <common:BooleanToObjectConverter.TrueObject>
+                    <Style TargetType="Label" BasedOn="{StaticResource baseStyle}">
+                        <Setter Property="TextColor" Value="#4CAF50" />
+                        <Setter Property="Text" Value="The password meets the requirements" />
+                    </Style>
+                </common:BooleanToObjectConverter.TrueObject>
+            </common:BooleanToObjectConverter>
+
+            <common:BooleanToObjectConverter x:Key="boolToStyleConfirmPassword" x:TypeArguments="Style">
+                <common:BooleanToObjectConverter.FalseObject>
+                    <Style TargetType="Label" BasedOn="{StaticResource baseStyle}">
+                        <Setter Property="TextColor" Value="#F44336" />
+                        <Setter Property="Text" Value="The passwords do not match" />
+                    </Style>
+                </common:BooleanToObjectConverter.FalseObject>
+
+                <common:BooleanToObjectConverter.TrueObject>
+                    <Style TargetType="Label" BasedOn="{StaticResource baseStyle}">
+                        <Setter Property="TextColor" Value="#4CAF50" />
+                        <Setter Property="Text" Value="The passwords match" />
+                    </Style>
+                </common:BooleanToObjectConverter.TrueObject>
+            </common:BooleanToObjectConverter>
+        </ResourceDictionary>
+
+    </Application.Resources>
+</Application>

@@ -1,0 +1,260 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!--
+*************************************************************************
+DC EMV
+Open Source EMV
+Copyright (C) 2018  Vicente Da Silva
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published
+by the Free Software Foundation, either version 3 of the License, or
+any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see http://www.gnu.org/licenses/
+*************************************************************************
+-->
+<local:ModalPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="DCEMV.DemoApp.UpdateAccountDetailsView"
+             xmlns:local="clr-namespace:DCEMV.DemoApp" xmlns:common="clr-namespace:DCEMV.TerminalCommon;assembly=DCEMV_TerminalCommon"   Title="Account Admin">
+
+    <local:ModalPage.Content>
+        <Grid HorizontalOptions="FillAndExpand">
+
+            <Grid Margin="50" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" x:Name="gridMain">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition />
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+              
+
+                <Picker x:Name="pickAccountType" Grid.Row="0" SelectedIndexChanged="pickAccountType_SelectedIndexChanged"></Picker>
+
+                <Grid x:Name="gridInd" Grid.Row="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="200"></ColumnDefinition>
+                        <ColumnDefinition Width="Auto"></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    
+                    <Entry Grid.Row="0" Grid.Column="0" Placeholder="First Name" Text="{Binding Path=FirstName, Mode=TwoWay}" x:Name="txtFirstName" >
+                        <Entry.Behaviors>
+                            <common:NameValidatorBehavior x:Name="nameValidatorFirstName"/>
+                        </Entry.Behaviors>
+                    </Entry>
+                    <Image Grid.Row="0" Grid.Column="1" Style="{Binding Source={x:Reference nameValidatorFirstName}, Path=IsValid, Converter={StaticResource boolToStyleImage}}">
+                        <Image.Triggers>
+                            <MultiTrigger TargetType="Image">
+                                <MultiTrigger.Conditions>
+                                    <BindingCondition Binding="{Binding Source={x:Reference txtFirstName}, Path=Text }" Value="" />
+                                </MultiTrigger.Conditions>
+                                <MultiTrigger.Setters>
+                                    <Setter Property="IsVisible" Value="False" />
+                                </MultiTrigger.Setters>
+                            </MultiTrigger>
+                        </Image.Triggers>
+                    </Image>
+                    <Label Grid.Row="0" Grid.Column="2" Style="{Binding Source={x:Reference nameValidatorFirstName}, Path=IsValid, Converter={StaticResource boolToStyleName}}">
+                        <Label.Triggers>
+                            <MultiTrigger TargetType="Label">
+                                <MultiTrigger.Conditions>
+                                    <BindingCondition Binding="{Binding Source={x:Reference txtFirstName}, Path=Text }" Value="" />
+                                </MultiTrigger.Conditions>
+                                <MultiTrigger.Setters>
+                                    <Setter Property="IsVisible" Value="False" />
+                                </MultiTrigger.Setters>
+                            </MultiTrigger>
+                        </Label.Triggers>
+                    </Label>
+
+                    <Entry Grid.Row="1" Grid.Column="0" Placeholder="Last Name" Text="{Binding Path=LastName, Mode=TwoWay}" x:Name="txtLastName" >
+                        <Entry.Behaviors>
+                            <common:NameValidatorBehavior x:Name="nameValidatorLastName"/>
+                        </Entry.Behaviors>
+                    </Entry>
+                    <Image Grid.Row="1" Grid.Column="1" Style="{Binding Source={x:Reference nameValidatorLastName}, Path=IsValid, Converter={StaticResource boolToStyleImage}}">
+                        <Image.Triggers>
+                            <MultiTrigger TargetType="Image">
+                                <MultiTrigger.Conditions>
+                                    <BindingCondition Binding="{Binding Source={x:Reference txtLastName}, Path=Text }" Value="" />
+                                </MultiTrigger.Conditions>
+                                <MultiTrigger.Setters>
+                                    <Setter Property="IsVisible" Value="False" />
+                                </MultiTrigger.Setters>
+                            </MultiTrigger>
+                        </Image.Triggers>
+                    </Image>
+                    <Label Grid.Row="1" Grid.Column="2" Style="{Binding Source={x:Reference nameValidatorLastName}, Path=IsValid, Converter={StaticResource boolToStyleName}}">
+                        <Label.Triggers>
+                            <MultiTrigger TargetType="Label">
+                                <MultiTrigger.Conditions>
+                                    <BindingCondition Binding="{Binding Source={x:Reference txtLastName}, Path=Text }" Value="" />
+                                </MultiTrigger.Conditions>
+                                <MultiTrigger.Setters>
+                                    <Setter Property="IsVisible" Value="False" />
+                                </MultiTrigger.Setters>
+                            </MultiTrigger>
+                        </Label.Triggers>
+                    </Label>
+
+                </Grid>
+
+                <Grid x:Name="gridBus" Grid.Row="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="200"></ColumnDefinition>
+                        <ColumnDefinition Width="Auto"></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    
+                    <Entry Grid.Row="0" Grid.Column="0" Placeholder="Business Name" Text="{Binding Path=BusinessName, Mode=TwoWay}" x:Name="txtBusinessName" >
+                        <Entry.Behaviors>
+                            <common:NameValidatorBehavior x:Name="nameValidatorBusinessName"/>
+                        </Entry.Behaviors>
+                    </Entry>
+                    <Image Grid.Row="0" Grid.Column="1" Style="{Binding Source={x:Reference nameValidatorBusinessName}, Path=IsValid, Converter={StaticResource boolToStyleImage}}">
+                        <Image.Triggers>
+                            <MultiTrigger TargetType="Image">
+                                <MultiTrigger.Conditions>
+                                    <BindingCondition Binding="{Binding Source={x:Reference txtBusinessName}, Path=Text }" Value="" />
+                                </MultiTrigger.Conditions>
+                                <MultiTrigger.Setters>
+                                    <Setter Property="IsVisible" Value="False" />
+                                </MultiTrigger.Setters>
+                            </MultiTrigger>
+                        </Image.Triggers>
+                    </Image>
+                    <Label Grid.Row="0" Grid.Column="2" Style="{Binding Source={x:Reference nameValidatorBusinessName}, Path=IsValid, Converter={StaticResource boolToStyleName}}">
+                        <Label.Triggers>
+                            <MultiTrigger TargetType="Label">
+                                <MultiTrigger.Conditions>
+                                    <BindingCondition Binding="{Binding Source={x:Reference txtBusinessName}, Path=Text }" Value="" />
+                                </MultiTrigger.Conditions>
+                                <MultiTrigger.Setters>
+                                    <Setter Property="IsVisible" Value="False" />
+                                </MultiTrigger.Setters>
+                            </MultiTrigger>
+                        </Label.Triggers>
+                    </Label>
+
+                    <Entry Grid.Row="1" Grid.Column="0" Placeholder="Company Reg Number" Text="{Binding Path=CompanyRegNumber, Mode=TwoWay}" x:Name="txtCompanyRegNumber" >
+                        <Entry.Behaviors>
+                            <common:NameValidatorBehavior x:Name="nameValidatorCompanyRegNumber"/>
+                        </Entry.Behaviors>
+                    </Entry>
+                    <Image Grid.Row="1" Grid.Column="1" Style="{Binding Source={x:Reference nameValidatorCompanyRegNumber}, Path=IsValid, Converter={StaticResource boolToStyleImage}}">
+                        <Image.Triggers>
+                            <MultiTrigger TargetType="Image">
+                                <MultiTrigger.Conditions>
+                                    <BindingCondition Binding="{Binding Source={x:Reference txtCompanyRegNumber}, Path=Text }" Value="" />
+                                </MultiTrigger.Conditions>
+                                <MultiTrigger.Setters>
+                                    <Setter Property="IsVisible" Value="False" />
+                                </MultiTrigger.Setters>
+                            </MultiTrigger>
+                        </Image.Triggers>
+                    </Image>
+                    <Label Grid.Row="1" Grid.Column="2" Style="{Binding Source={x:Reference nameValidatorCompanyRegNumber}, Path=IsValid, Converter={StaticResource boolToStyleName}}">
+                        <Label.Triggers>
+                            <MultiTrigger TargetType="Label">
+                                <MultiTrigger.Conditions>
+                                    <BindingCondition Binding="{Binding Source={x:Reference txtCompanyRegNumber}, Path=Text }" Value="" />
+                                </MultiTrigger.Conditions>
+                                <MultiTrigger.Setters>
+                                    <Setter Property="IsVisible" Value="False" />
+                                </MultiTrigger.Setters>
+                            </MultiTrigger>
+                        </Label.Triggers>
+                    </Label>
+
+                    <Entry Grid.Row="2" Grid.Column="0" Placeholder="Tax Number" Text="{Binding Path=TaxNumber, Mode=TwoWay}" x:Name="txtTaxNumber" >
+                        <Entry.Behaviors>
+                            <common:AlphaNumericValidatorBehavior x:Name="anValidatorTaxNumber"/>
+                        </Entry.Behaviors>
+                    </Entry>
+                    <Image Grid.Row="2" Grid.Column="1" Style="{Binding Source={x:Reference anValidatorTaxNumber}, Path=IsValid, Converter={StaticResource boolToStyleImage}}">
+                        <Image.Triggers>
+                            <MultiTrigger TargetType="Image">
+                                <MultiTrigger.Conditions>
+                                    <BindingCondition Binding="{Binding Source={x:Reference txtTaxNumber}, Path=Text }" Value="" />
+                                </MultiTrigger.Conditions>
+                                <MultiTrigger.Setters>
+                                    <Setter Property="IsVisible" Value="False" />
+                                </MultiTrigger.Setters>
+                            </MultiTrigger>
+                        </Image.Triggers>
+                    </Image>
+                    <Label Grid.Row="2" Grid.Column="2" Style="{Binding Source={x:Reference anValidatorTaxNumber}, Path=IsValid, Converter={StaticResource boolToStyleName}}">
+                        <Label.Triggers>
+                            <MultiTrigger TargetType="Label">
+                                <MultiTrigger.Conditions>
+                                    <BindingCondition Binding="{Binding Source={x:Reference txtTaxNumber}, Path=Text }" Value="" />
+                                </MultiTrigger.Conditions>
+                                <MultiTrigger.Setters>
+                                    <Setter Property="IsVisible" Value="False" />
+                                </MultiTrigger.Setters>
+                            </MultiTrigger>
+                        </Label.Triggers>
+                    </Label>
+
+                </Grid>
+
+                <Grid Grid.Row="3">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <Button Grid.Column="0" x:Name="cmdOk" Clicked="cmdOk_Clicked" Text="ok" Style="{StaticResource styleButton}" IsEnabled="False" >
+                        <Button.Triggers>
+                            <MultiTrigger TargetType="Button">
+                                <MultiTrigger.Conditions>
+                                    <BindingCondition Binding="{Binding Source={x:Reference nameValidatorFirstName}, Path=IsValid }" Value="true" />
+                                    <BindingCondition Binding="{Binding Source={x:Reference nameValidatorLastName}, Path=IsValid }" Value="true" />
+                                </MultiTrigger.Conditions>
+                                <MultiTrigger.Setters>
+                                    <Setter Property="IsEnabled" Value="True" />
+                                </MultiTrigger.Setters>
+                            </MultiTrigger>
+                            <MultiTrigger TargetType="Button">
+                                <MultiTrigger.Conditions>
+                                    <BindingCondition Binding="{Binding Source={x:Reference nameValidatorBusinessName}, Path=IsValid }" Value="true" />
+                                    <BindingCondition Binding="{Binding Source={x:Reference nameValidatorCompanyRegNumber}, Path=IsValid }" Value="true" />
+                                    <BindingCondition Binding="{Binding Source={x:Reference anValidatorTaxNumber}, Path=IsValid }" Value="true" />
+                                </MultiTrigger.Conditions>
+                                <MultiTrigger.Setters>
+                                    <Setter Property="IsEnabled" Value="True" />
+                                </MultiTrigger.Setters>
+                            </MultiTrigger>
+                        </Button.Triggers>
+                    </Button>
+                </Grid>
+            </Grid>
+
+            <common:WaitControl x:Name="gridProgress">
+
+            </common:WaitControl>
+
+
+        </Grid>
+    </local:ModalPage.Content>
+</local:ModalPage>
+
+

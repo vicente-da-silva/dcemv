@@ -1,0 +1,254 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!--
+*************************************************************************
+DC EMV
+Open Source EMV
+Copyright (C) 2018  Vicente Da Silva
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published
+by the Free Software Foundation, either version 3 of the License, or
+any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see http://www.gnu.org/licenses/
+*************************************************************************
+-->
+<local:ModalPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="DCEMV.DemoApp.CardAdminView"
+             xmlns:local="clr-namespace:DCEMV.DemoApp" 
+                 xmlns:common="clr-namespace:DCEMV.TerminalCommon;assembly=DCEMV_TerminalCommon"  
+                 Title="Card Admin">
+
+    <local:ModalPage.Content>
+        <Grid HorizontalOptions="FillAndExpand">
+            
+            <Grid Margin="50" x:Name="gridCardList" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                </Grid.RowDefinitions>
+
+                <Label Grid.Row="0" Text="Cards linked to this account"></Label>
+
+                <ListView Grid.Row="1" x:Name="viewCardList" BackgroundColor="LightGray" SeparatorColor="Black" >
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition />
+                                        <ColumnDefinition />
+                                        <ColumnDefinition />
+                                        <ColumnDefinition />
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding CardSerialNumberId}" />
+                                    <Label Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" Text="{Binding FreindlyName}"/>
+
+                                    <Label Grid.Row="1" Grid.Column="0" Text="Daily Spend Limit:" />
+                                    <Label Grid.Row="1" Grid.Column="1" Text="{Binding DailySpendLimit, Converter={StaticResource currencyConverter}}"/>
+
+                                    <Label Grid.Row="1" Grid.Column="2" Text="Monthly Spend Limit:" />
+                                    <Label Grid.Row="1" Grid.Column="3" Text="{Binding MonthlySpendLimit, Converter={StaticResource currencyConverter}}"/>
+
+                                    <Image Grid.Row="0" Grid.RowSpan="2" Grid.Column="4" Style="{Binding CardState, Converter={StaticResource cardStateToStyleImage}}" />
+                                </Grid>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+
+                <Grid Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+
+                    <Button Grid.Column="0" x:Name="cmdAddCard" Clicked="cmdAddCard_Clicked" Text="add" Style="{StaticResource styleButton}"/>
+                    <Button Grid.Column="1" x:Name="cmdEdit" Clicked="cmdEdit_Clicked" Text="edit"  Style="{StaticResource styleButton}"/>
+                    <Button Grid.Column="2" x:Name="cmdUnlink" Clicked="cmdUnlink_Clicked"  Text="unlink" Style="{StaticResource styleButton}"/>
+                </Grid>
+
+            </Grid>
+
+            <Grid Margin="50">
+                <common:EMVTxCtl x:Name="emvTxCtl" />
+            </Grid>
+
+            <Grid  Margin="50"  x:Name="gridCardStatus">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition />
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="200"></ColumnDefinition>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+
+                <Label Grid.Row="0" x:Name="lblStatusCard"  Grid.ColumnSpan="3"/>
+
+                <Grid Grid.Row="2" Grid.ColumnSpan="3">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Button x:Name="cmdCardStatusCompleted" Style="{StaticResource styleButton}" Clicked="cmdCardStatusCompleted_Clicked"  Text="back"  />
+                </Grid>
+            </Grid>
+
+            <Grid Margin="50" x:Name="gridEditCard" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition />
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="200"></ColumnDefinition>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+
+                <Label Grid.Row="0" Text="Update Card Details" FontSize="Large"/>
+
+                <Entry Grid.Row="1" Grid.Column="0" Placeholder="Freindly Name" Text="{Binding Path=FreindlyName, Mode=TwoWay}" x:Name="txtFreindlyName" >
+                    <Entry.Behaviors>
+                        <common:NameValidatorBehavior x:Name="nameValidator"/>
+                    </Entry.Behaviors>
+                </Entry>
+                <Image Grid.Row="1" Grid.Column="1" Style="{Binding Source={x:Reference nameValidator}, Path=IsValid, Converter={StaticResource boolToStyleImage}}">
+                    <Image.Triggers>
+                        <MultiTrigger TargetType="Image">
+                            <MultiTrigger.Conditions>
+                                <BindingCondition Binding="{Binding Source={x:Reference txtFreindlyName}, Path=Text }" Value="" />
+                            </MultiTrigger.Conditions>
+                            <MultiTrigger.Setters>
+                                <Setter Property="IsVisible" Value="False" />
+                            </MultiTrigger.Setters>
+                        </MultiTrigger>
+                    </Image.Triggers>
+                </Image>
+                <Label Grid.Row="1" Grid.Column="2" Style="{Binding Source={x:Reference nameValidator}, Path=IsValid, Converter={StaticResource boolToStyleName}}">
+                    <Label.Triggers>
+                        <MultiTrigger TargetType="Label">
+                            <MultiTrigger.Conditions>
+                                <BindingCondition Binding="{Binding Source={x:Reference txtFreindlyName}, Path=Text }" Value="" />
+                            </MultiTrigger.Conditions>
+                            <MultiTrigger.Setters>
+                                <Setter Property="IsVisible" Value="False" />
+                            </MultiTrigger.Setters>
+                        </MultiTrigger>
+                    </Label.Triggers>
+                </Label>
+
+                <Entry Grid.Row="2" Grid.Column="0" Placeholder="Daily Spend Amount" Text="{Binding Path=DailySpendLimit, Mode=TwoWay}" x:Name="txtDailySpendLimit" >
+                    <Entry.Behaviors>
+                        <common:AmountValidatorBehavior x:Name="dailySpendValidator"/>
+                    </Entry.Behaviors>
+                </Entry>
+                <Image Grid.Row="2" Grid.Column="1" Style="{Binding Source={x:Reference dailySpendValidator}, Path=IsValid, Converter={StaticResource boolToStyleImage}}">
+                    <Image.Triggers>
+                        <MultiTrigger TargetType="Image">
+                            <MultiTrigger.Conditions>
+                                <BindingCondition Binding="{Binding Source={x:Reference txtDailySpendLimit}, Path=Text }" Value="" />
+                            </MultiTrigger.Conditions>
+                            <MultiTrigger.Setters>
+                                <Setter Property="IsVisible" Value="False" />
+                            </MultiTrigger.Setters>
+                        </MultiTrigger>
+                    </Image.Triggers>
+                </Image>
+                <Label Grid.Row="2" Grid.Column="2" Style="{Binding Source={x:Reference dailySpendValidator}, Path=IsValid, Converter={StaticResource boolToStyleAmount}}">
+                    <Label.Triggers>
+                        <MultiTrigger TargetType="Label">
+                            <MultiTrigger.Conditions>
+                                <BindingCondition Binding="{Binding Source={x:Reference txtDailySpendLimit}, Path=Text }" Value="" />
+                            </MultiTrigger.Conditions>
+                            <MultiTrigger.Setters>
+                                <Setter Property="IsVisible" Value="False" />
+                            </MultiTrigger.Setters>
+                        </MultiTrigger>
+                    </Label.Triggers>
+                </Label>
+
+                <Entry Grid.Row="3" Grid.Column="0" Placeholder="Monthly Spend Amount" Text="{Binding Path=MonthlySpendLimit, Mode=TwoWay}" x:Name="txtMonthlySpendLimit" >
+                    <Entry.Behaviors>
+                        <common:AmountValidatorBehavior x:Name="monthlySpendValidator"/>
+                    </Entry.Behaviors>
+                </Entry>
+                <Image Grid.Row="3" Grid.Column="1" Style="{Binding Source={x:Reference monthlySpendValidator}, Path=IsValid, Converter={StaticResource boolToStyleImage}}">
+                    <Image.Triggers>
+                        <MultiTrigger TargetType="Image">
+                            <MultiTrigger.Conditions>
+                                <BindingCondition Binding="{Binding Source={x:Reference txtMonthlySpendLimit}, Path=Text }" Value="" />
+                            </MultiTrigger.Conditions>
+                            <MultiTrigger.Setters>
+                                <Setter Property="IsVisible" Value="False" />
+                            </MultiTrigger.Setters>
+                        </MultiTrigger>
+                    </Image.Triggers>
+                </Image>
+                <Label Grid.Row="3" Grid.Column="2" Style="{Binding Source={x:Reference monthlySpendValidator}, Path=IsValid, Converter={StaticResource boolToStyleAmount}}">
+                    <Label.Triggers>
+                        <MultiTrigger TargetType="Label">
+                            <MultiTrigger.Conditions>
+                                <BindingCondition Binding="{Binding Source={x:Reference txtMonthlySpendLimit}, Path=Text }" Value="" />
+                            </MultiTrigger.Conditions>
+                            <MultiTrigger.Setters>
+                                <Setter Property="IsVisible" Value="False" />
+                            </MultiTrigger.Setters>
+                        </MultiTrigger>
+                    </Label.Triggers>
+                </Label>
+
+                <Grid Grid.Row="5" Grid.ColumnSpan="3">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <Button Grid.Column="0" x:Name="cmdOk" Clicked="cmdEditCardOk_Clicked" Text="ok" Style="{StaticResource styleButton}" IsEnabled="False" >
+                        <Button.Triggers>
+                            <MultiTrigger TargetType="Button">
+                                <MultiTrigger.Conditions>
+                                    <BindingCondition Binding="{Binding Source={x:Reference nameValidator}, Path=IsValid }" Value="true" />
+                                    <BindingCondition Binding="{Binding Source={x:Reference dailySpendValidator}, Path=IsValid }" Value="true" />
+                                    <BindingCondition Binding="{Binding Source={x:Reference monthlySpendValidator}, Path=IsValid }" Value="true" />
+                                </MultiTrigger.Conditions>
+                                <MultiTrigger.Setters>
+                                    <Setter Property="IsEnabled" Value="True" />
+                                </MultiTrigger.Setters>
+                            </MultiTrigger>
+                        </Button.Triggers>
+                    </Button>
+                    <Button Grid.Column="1" x:Name="cmdEditCardCancel" Clicked="cmdEditCardCancel_Clicked" Text="cancel" Style="{StaticResource styleButton}" />
+                </Grid>
+            </Grid>
+
+            <common:WaitControl x:Name="gridProgress">
+
+            </common:WaitControl>
+
+        </Grid>
+    </local:ModalPage.Content>
+</local:ModalPage>

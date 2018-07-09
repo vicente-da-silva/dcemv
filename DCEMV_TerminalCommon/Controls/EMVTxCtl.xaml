@@ -1,0 +1,181 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!--
+*************************************************************************
+DC EMV
+Open Source EMV
+Copyright (C) 2018  Vicente Da Silva
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published
+by the Free Software Foundation, either version 3 of the License, or
+any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see http://www.gnu.org/licenses/
+*************************************************************************
+-->
+<Grid xmlns="http://xamarin.com/schemas/2014/forms"
+      xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+      xmlns:common="clr-namespace:DCEMV.TerminalCommon;assembly=DCEMV_TerminalCommon"
+      x:Class="DCEMV.TerminalCommon.EMVTxCtl">
+
+    <Grid x:Name="gridTapInsertCard" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition />
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200"></ColumnDefinition>
+            <ColumnDefinition Width="Auto"></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+
+        <Label Grid.Row="0" x:Name="lblStatusTapPaymentCard" Grid.ColumnSpan="3"  />
+        <Label Grid.Row="1" x:Name="lblTotal" FontSize="Large"  Grid.ColumnSpan="3" Text="{Binding Total, Converter={StaticResource currencyConverter}}" />
+        <Label Grid.Row="2" x:Name="lblStatusPaymentApp"  Grid.ColumnSpan="3" />
+        <Label Grid.Row="3" x:Name="lblStatusFinalResult" FontSize="Large" Grid.ColumnSpan="3"/>
+
+        <Grid Grid.Row="5" Grid.ColumnSpan="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Button x:Name="cmdCancelTx" Style="{StaticResource styleButton}" Clicked="cmdCancelTx_Clicked"  Text="Cancel" />
+        </Grid>
+    </Grid>
+
+    <Grid x:Name="gridAppList" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <Label Grid.Row="0" Text="Apps on this card"></Label>
+
+        <ListView Grid.Row="1" x:Name="viewAppList" BackgroundColor="LightGray" SeparatorColor="Black" >
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding AppName}" />
+
+                        </Grid>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+            <Button Grid.Column="0" x:Name="cmdOk" Clicked="CmdOk_ApppList_Clicked" Text="ok" Style="{StaticResource styleButton}"/>
+            <Button Grid.Column="1" x:Name="cmdCancel" Clicked="CmdCancel_ApppList_Clicked" Text="cancel"  Style="{StaticResource styleButton}"/>
+        </Grid>
+
+    </Grid>
+
+    <Grid x:Name="gridPin" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition />
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="200"></ColumnDefinition>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+
+            <Label Grid.Row="0" Text="Pin:"/>
+
+            <Entry Grid.Row="1" Placeholder="Pin" Keyboard="Numeric" x:Name="txtPin">
+                <Entry.Behaviors>
+                    <common:NumberValidatorBehavior x:Name="numberValidator"/>
+                </Entry.Behaviors>
+            </Entry>
+            <Image Grid.Row="1" Grid.Column="1" Style="{Binding Source={x:Reference numberValidator}, Path=IsValid, Converter={StaticResource boolToStyleImage}}">
+                <Image.Triggers>
+                    <MultiTrigger TargetType="Image">
+                        <MultiTrigger.Conditions>
+                            <BindingCondition Binding="{Binding Source={x:Reference txtPin}, Path=Text }" Value="" />
+                        </MultiTrigger.Conditions>
+                        <MultiTrigger.Setters>
+                            <Setter Property="IsVisible" Value="False" />
+                        </MultiTrigger.Setters>
+                    </MultiTrigger>
+                </Image.Triggers>
+            </Image>
+            <Label Grid.Row="1" Grid.Column="2" Style="{Binding Source={x:Reference numberValidator}, Path=IsValid, Converter={StaticResource boolToStyleAmount}}">
+                <Label.Triggers>
+                    <MultiTrigger TargetType="Label">
+                        <MultiTrigger.Conditions>
+                            <BindingCondition Binding="{Binding Source={x:Reference txtPin}, Path=Text }" Value="" />
+                        </MultiTrigger.Conditions>
+                        <MultiTrigger.Setters>
+                            <Setter Property="IsVisible" Value="False" />
+                        </MultiTrigger.Setters>
+                    </MultiTrigger>
+                </Label.Triggers>
+            </Label>
+
+            <Grid Grid.Row="3" Grid.ColumnSpan="3">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <Button Grid.Column="0" x:Name="cmdPinOk" Clicked="CmdOk_Pin_Clicked" Text="ok" Style="{StaticResource styleButton}" IsEnabled="False" >
+                    <Button.Triggers>
+                        <MultiTrigger TargetType="Button">
+                            <MultiTrigger.Conditions>
+                                <BindingCondition Binding="{Binding Source={x:Reference numberValidator}, Path=IsValid }" Value="true" />
+                            </MultiTrigger.Conditions>
+                            <MultiTrigger.Setters>
+                                <Setter Property="IsEnabled" Value="True" />
+                            </MultiTrigger.Setters>
+                        </MultiTrigger>
+                    </Button.Triggers>
+                </Button>
+                <Button Grid.Column="1" x:Name="cmdPinCancel" Clicked="CmdCancel_Pin_Clicked" Text="cancel" Style="{StaticResource styleButton}" />
+            </Grid>
+        </Grid>
+
+        <common:WaitControl x:Name="gridProgress">
+
+        </common:WaitControl>
+
+    </Grid>
+
+</Grid>

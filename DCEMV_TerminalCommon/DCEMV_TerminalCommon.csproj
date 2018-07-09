@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard1.4</TargetFramework>
+    <RootNamespace>DCEMV.TerminalCommon</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Xamarin.Forms" Version="2.5.0.121934" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DCEMV_EMVProtocol\DCEMV_EMVProtocol.csproj" />
+    <ProjectReference Include="..\DCEMV_FormattingUtils\DCEMV_FormattingUtils.csproj" />
+    <ProjectReference Include="..\DCEMV_ISO7816Protocol\DCEMV_ISO7816Protocol.csproj" />
+    <ProjectReference Include="..\DCEMV_ServerShared\DCEMV_ServerShared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Controls\ConfirmCodeView.xaml.cs">
+      <DependentUpon>ConfirmCodeView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Controls\WaitControl.xaml.cs">
+      <SubType>Code</SubType>
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+</Project>

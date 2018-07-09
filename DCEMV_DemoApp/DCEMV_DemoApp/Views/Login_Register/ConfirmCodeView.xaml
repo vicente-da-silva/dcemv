@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!--
+*************************************************************************
+DC EMV
+Open Source EMV
+Copyright (C) 2018  Vicente Da Silva
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published
+by the Free Software Foundation, either version 3 of the License, or
+any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see http://www.gnu.org/licenses/
+*************************************************************************
+-->
+<local:ModalPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="DCEMV.DemoApp.ConfirmCodeView"
+             xmlns:local="clr-namespace:DCEMV.DemoApp" 
+                 xmlns:common="clr-namespace:DCEMV.TerminalCommon;assembly=DCEMV_TerminalCommon"  >
+
+    <local:ModalPage.Content>
+        <Grid HorizontalOptions="FillAndExpand">
+
+            <Grid x:Name="gridConfirmCode" Margin="50" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                <common:ConfirmCodeCtl Grid.Row="0" x:Name="ctlConfirmCode"></common:ConfirmCodeCtl>
+            </Grid>
+           
+            <common:WaitControl x:Name="gridProgress">
+
+            </common:WaitControl>
+
+        </Grid>
+    </local:ModalPage.Content>
+</local:ModalPage>

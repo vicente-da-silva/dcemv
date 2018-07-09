@@ -1,0 +1,54 @@
+﻿@*
+*************************************************************************
+DC EMV
+Open Source EMV
+Copyright (C) 2018  Vicente Da Silva
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published
+by the Free Software Foundation, either version 3 of the License, or
+any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see http://www.gnu.org/licenses/
+*************************************************************************
+*@
+@model ScopeViewModel
+
+<li class="list-group-item">
+    <label>
+        <input class="consent-scopecheck"
+               type="checkbox"
+               name="ScopesConsented"
+               id="scopes_@Model.Name"
+               value="@Model.Name"
+               checked="@Model.Checked"
+               disabled="@Model.Required" />
+        @if (Model.Required)
+        {
+            <input type="hidden"
+                   name="ScopesConsented"
+                   value="@Model.Name" />
+        }
+        <strong>@Model.DisplayName</strong>
+        @if (Model.Emphasize)
+        {
+            <span class="glyphicon glyphicon-exclamation-sign"></span>
+        }
+    </label>
+    @if (Model.Required)
+    {
+        <span><em>(required)</em></span>
+    }
+    @if (Model.Description != null)
+    {
+        <div class="consent-description">
+            <label for="scopes_@Model.Name">@Model.Description</label>
+        </div>
+    }
+</li>

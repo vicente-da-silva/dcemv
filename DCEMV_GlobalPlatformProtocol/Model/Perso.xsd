@@ -1,0 +1,168 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+*************************************************************************
+DC EMV
+Open Source EMV
+Copyright (C) 2018  Vicente Da Silva
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published
+by the Free Software Foundation, either version 3 of the License, or
+any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see http://www.gnu.org/licenses/
+*************************************************************************
+-->
+<xs:schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+           elementFormDefault="qualified" 
+           targetNamespace="http://www.dcemv.com/perso" 
+           xmlns="http://www.dcemv.com/perso"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  
+  <xs:element name="perso">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element type="keysType" name="keys"  minOccurs="1"></xs:element>
+        <xs:element type="applicationType" name="application"  minOccurs="1" maxOccurs="unbounded"></xs:element>      
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:complexType name="keysType">
+    <xs:sequence>
+      <xs:element type="keyType" name="key" minOccurs="1" maxOccurs="unbounded"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="keyType">
+    <xs:sequence>
+    </xs:sequence>
+    <xs:attribute name="Value" type="xs:string"/>
+    <xs:attribute name="Type" type="KeyTypesEnum"/>
+  </xs:complexType>
+
+  <xs:complexType name="applicationType">
+    <xs:sequence>
+      <xs:element type="commandsType" name="commands" minOccurs="1"></xs:element>
+    </xs:sequence>
+    <xs:attribute name="type" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="commandsType">
+    <xs:sequence>
+      <xs:element type="installType" name="install" minOccurs="1"></xs:element>
+      <xs:element type="storeDataType" name="storeData" minOccurs="1" maxOccurs="unbounded"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="installType">
+    <xs:sequence>
+      <xs:element type="tokensType" name="tokens" minOccurs="1"></xs:element>
+    </xs:sequence>
+    <xs:attribute name="ExecutableLoadFileAID" type="xs:string"/>
+    <xs:attribute name="ExecutableModuleAID" type="xs:string"/>
+    <xs:attribute name="ApplicationAID" type="xs:string"/>
+    <xs:attribute name="Privileges" type="xs:string"/>
+    <xs:attribute name="InstallToken" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="storeDataType">
+    <xs:sequence>
+      <xs:element type="tlvXMLType" name="tlvxml" minOccurs="0" maxOccurs="unbounded"></xs:element>
+      <xs:element type="xs:string" name="data" minOccurs="0" ></xs:element>
+    </xs:sequence>
+    <xs:attribute name="DGI" type="xs:string"/>
+    <xs:attribute name="Description" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="tokensType">
+    <xs:sequence>
+      <xs:element type="tlvXMLType" name="tlvxml" minOccurs="0"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="tlvXMLType">
+    <xs:sequence>
+      <xs:element type="tagType" name="tag" minOccurs="1"></xs:element>
+      <xs:element type="childrenType" name="children" minOccurs="0"></xs:element>
+      <xs:element type="valueType" name="value" minOccurs="0"></xs:element>
+      <xs:element type="valueC9Type" name="valueC9" minOccurs="0"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="valueType">
+    <xs:sequence>
+    </xs:sequence>
+    <xs:attribute name="Formatting" type="FormattingEnum" default="HEX"/>
+    <xs:attribute name="Value" type="xs:string" />
+  </xs:complexType>
+
+
+  <xs:complexType name="tagType">
+    <xs:sequence>
+    </xs:sequence>
+    <xs:attribute name="Name" type="xs:string"/>
+    <xs:attribute name="Description" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="childrenType">
+    <xs:sequence>
+      <xs:element type="tlvXMLType" name="tlvxml" minOccurs="0" maxOccurs="unbounded"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:simpleType name="FormattingEnum">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="HEX" />
+      <xs:enumeration value="ASCII"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:complexType name="valueC9Type">
+    <xs:sequence>
+    </xs:sequence>
+    <xs:attribute name="C9_ApplicationInstance" type="C9_ApplicationInstanceEnum"/>
+    <xs:attribute name="C9_PinSharing" type="C9_PinSharingEnum"/>
+    <xs:attribute name="C9_InterfacesAvailable" type="C9_InterfacesAvailableEnum"/>
+  </xs:complexType>
+
+  <xs:simpleType name="C9_PinSharingEnum">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="NoPinSharingOrAliasNotApplicable"/>
+      <xs:enumeration value="PinSharingBetweenInstances"/>
+      <xs:enumeration value="GlobalPinSharing"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="C9_ApplicationInstanceEnum">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Main"/>
+      <xs:enumeration value="Alias"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="C9_InterfacesAvailableEnum">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="DualInterfaceContactOnly"/>
+      <xs:enumeration value="DualInterfaceContactAndContactless"/>
+      <xs:enumeration value="DualInterfaceContactlessOnly"/>
+      <xs:enumeration value="ContactOnly"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="KeyTypesEnum">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="CardMasterKey"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+
+
+
+</xs:schema>

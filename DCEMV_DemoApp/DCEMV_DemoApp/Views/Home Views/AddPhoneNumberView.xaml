@@ -1,0 +1,81 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<local:ModalPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="XTerminal.AddPhoneNumberView"
+             xmlns:local="clr-namespace:XTerminal" 
+             xmlns:common="clr-namespace:XTerminalCommon;assembly=XTerminalCommon" 
+                 Title="Add Phone Number">
+
+    <local:ModalPage.Content>
+        <Grid HorizontalOptions="FillAndExpand">
+
+           <Grid Margin="50" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="200"></ColumnDefinition>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+
+                <Entry Grid.Column="0" Grid.Row="0" Keyboard="Numeric" Placeholder="Phone Number" Text="" x:Name="txtPhoneNumber">
+                    <Entry.Behaviors>
+                        <local:PhoneNumberValidatorBehavior x:Name="phoneNumberValidator"/>
+                    </Entry.Behaviors>
+                </Entry>
+                <Image Grid.Row="0" Grid.Column="1" Style="{Binding Source={x:Reference phoneNumberValidator}, Path=IsValid, Converter={StaticResource boolToStyleImage}}">
+                    <Image.Triggers>
+                        <MultiTrigger TargetType="Image">
+                            <MultiTrigger.Conditions>
+                                <BindingCondition Binding="{Binding Source={x:Reference txtPhoneNumber}, Path=Text }" Value="" />
+                            </MultiTrigger.Conditions>
+                            <MultiTrigger.Setters>
+                                <Setter Property="IsVisible" Value="False" />
+                            </MultiTrigger.Setters>
+                        </MultiTrigger>
+                    </Image.Triggers>
+                </Image>
+                <Label Grid.Row="0" Grid.Column="2" Style="{Binding Source={x:Reference phoneNumberValidator}, Path=IsValid, Converter={StaticResource boolToStylePhoneNumber}}">
+                    <Label.Triggers>
+                        <MultiTrigger TargetType="Label">
+                            <MultiTrigger.Conditions>
+                                <BindingCondition Binding="{Binding Source={x:Reference txtPhoneNumber}, Path=Text }" Value="" />
+                            </MultiTrigger.Conditions>
+                            <MultiTrigger.Setters>
+                                <Setter Property="IsVisible" Value="False" />
+                            </MultiTrigger.Setters>
+                        </MultiTrigger>
+                    </Label.Triggers>
+                </Label>
+
+                <Grid Grid.Row="1" Grid.ColumnSpan="3">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+
+                    <Button Grid.Column="0" x:Name="cmdOk" Clicked="cmdOk_Clicked" Text="ok" Style="{StaticResource styleButton}" IsEnabled="False">
+                        <Button.Triggers>
+                            <MultiTrigger TargetType="Button">
+                                <MultiTrigger.Conditions>
+                                    <BindingCondition Binding="{Binding Source={x:Reference phoneNumberValidator}, Path=IsValid }" Value="true" />
+                                </MultiTrigger.Conditions>
+                                <MultiTrigger.Setters>
+                                    <Setter Property="IsEnabled" Value="True" />
+                                </MultiTrigger.Setters>
+                            </MultiTrigger>
+                        </Button.Triggers>
+                    </Button>
+                </Grid>
+
+            </Grid>
+
+            <common:WaitControl x:Name="gridProgress">
+
+            </common:WaitControl>
+
+        </Grid>
+    </local:ModalPage.Content>
+</local:ModalPage>

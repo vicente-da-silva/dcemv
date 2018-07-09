@@ -1,0 +1,128 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<TabbedPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:XTerminal" xmlns:common="clr-namespace:XTerminalCommon;assembly=XTerminalCommon"  
+             x:Class="XTerminal.EMVMain"
+             Title="EMV">
+
+
+    <ContentPage Title="Transaction" >
+        <Grid Margin="0" Padding="0,0,0,0" HorizontalOptions="FillAndExpand">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+
+            <Grid x:Name="gridMain" Grid.RowSpan="2" Margin="3" HorizontalOptions="Center" VerticalOptions="Center" BackgroundColor="White">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="100"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <Label Grid.Row="0" Grid.Column="0" Text="Transaction Type" WidthRequest="200" HorizontalOptions="Center" HorizontalTextAlignment="Center" Margin="0,3" />
+                <Picker Grid.Row="1" Grid.Column="0" x:Name="cmbTransactionType"  ItemsSource="{Binding TransactionTypes}"  HorizontalOptions="Center" Margin="0,3"/>
+
+                <Label Grid.Row="2" Grid.Column="0" Text="Amount" x:Name="lblAmount" WidthRequest="200" HorizontalOptions="Center" HorizontalTextAlignment="Center" Margin="0,3" />
+                <Entry Grid.Row="3" Grid.Column="0" x:Name="txtAmount"  Text="{Binding Amount, Mode=TwoWay}" WidthRequest="200"  HorizontalOptions="Center" Margin="0,3" />
+
+                <Label Grid.Row="4" Grid.Column="0" Text="AmountOther" x:Name="lblAmountOther" WidthRequest="200" HorizontalOptions="Center" HorizontalTextAlignment="Center" Margin="0,3" />
+                <Entry Grid.Row="5" Grid.Column="0" x:Name="txtAmountOther"  Text="{Binding AmountOther, Mode=TwoWay}" WidthRequest="200"  HorizontalOptions="Center" Margin="0,3" />
+
+                <Grid Grid.Row="6" HorizontalOptions="Center">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Button Grid.Column="0" x:Name="cmdProcess"  Clicked="CmdProcess_Click" Text="Process" HorizontalOptions="Center" WidthRequest="100" Margin="0,3"/>
+                    <Button Grid.Column="1" x:Name="cmdCancel" Clicked="CmdCancel_Click"  Text="Cancel" HorizontalOptions="Center" WidthRequest="100" Margin="0,3"/>
+                </Grid>
+
+                <Label Grid.Row="7" Grid.Column="0" x:Name="lblStatus" HorizontalOptions="Center" HorizontalTextAlignment="Center" Margin="0,3" />
+            </Grid>
+
+            <Grid x:Name="dlgPin" Grid.RowSpan="2" Margin="3" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" BackgroundColor="LightGray">
+                <Grid Margin="3" HorizontalOptions="Center" VerticalOptions="Center">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <Label Text="Enter Pin" Grid.Row="0" HorizontalOptions="Center" />
+                    <Entry x:Name="txtPin" Grid.Row="1" WidthRequest="200"  HorizontalOptions="Center" Margin="3" />
+
+                    <Grid Grid.Row="2" HorizontalOptions="Center" VerticalOptions="Center" >
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Button Grid.Row="0" Grid.Column="0" x:Name="cmd1"  Text="1" WidthRequest="50" HeightRequest="50" Margin="-3"  HorizontalOptions="End"/>
+                        <Button Grid.Row="0" Grid.Column="1" x:Name="cmd2"  Text="2" WidthRequest="50" HeightRequest="50" Margin="-3"  HorizontalOptions="Center"/>
+                        <Button Grid.Row="0" Grid.Column="2" x:Name="cmd3"  Text="3" WidthRequest="50" HeightRequest="50" Margin="-3"  HorizontalOptions="Start"/>
+                        <Button Grid.Row="1" Grid.Column="0" x:Name="cmd4"  Text="4" WidthRequest="50" HeightRequest="50" Margin="-3"  HorizontalOptions="End"/>
+                        <Button Grid.Row="1" Grid.Column="1" x:Name="cmd5"  Text="5" WidthRequest="50" HeightRequest="50" Margin="-3"  HorizontalOptions="Center"/>
+                        <Button Grid.Row="1" Grid.Column="2" x:Name="cmd6"  Text="6" WidthRequest="50" HeightRequest="50" Margin="-3"  HorizontalOptions="Start"/>
+                        <Button Grid.Row="2" Grid.Column="0" x:Name="cmd7"  Text="7" WidthRequest="50" HeightRequest="50" Margin="-3"  HorizontalOptions="End"/>
+                        <Button Grid.Row="2" Grid.Column="1" x:Name="cmd8"  Text="8" WidthRequest="50" HeightRequest="50" Margin="-3"  HorizontalOptions="Center"/>
+                        <Button Grid.Row="2" Grid.Column="2" x:Name="cmd9"  Text="9" WidthRequest="50" HeightRequest="50" Margin="-3"  HorizontalOptions="Start"/>
+                        <Button Grid.Row="3" Grid.Column="1" x:Name="cmd0"  Text="0" WidthRequest="50" HeightRequest="50" Margin="-3"  HorizontalOptions="Center"/>
+                    </Grid>
+                    
+                    <Grid Grid.Row="3" HorizontalOptions="Center">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"></RowDefinition>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"></ColumnDefinition>
+                            <ColumnDefinition Width="Auto"></ColumnDefinition>
+                            <ColumnDefinition></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <Button Grid.Row="0" Grid.Column="0" x:Name="cmdPinOK" Text="OK" HorizontalOptions="Center" WidthRequest="80" HeightRequest="40" Margin="3"/>
+                        <Button Grid.Row="0" Grid.Column="1" x:Name="cmdPinCancel"  Text="Cancel" HorizontalOptions="Center" WidthRequest="80" HeightRequest="40" Margin="3"/>
+                    </Grid>
+                </Grid>
+            </Grid>
+
+        </Grid>
+    </ContentPage>
+
+    <ContentPage Title="Card Details">
+        <ScrollView Orientation="Both">
+            <Grid>
+                <Label x:Name="lblCardDetails" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+                    <Label.FontFamily>
+                        <OnPlatform x:TypeArguments="x:String">
+                            <OnPlatform.iOS>Consolas</OnPlatform.iOS>
+                            <OnPlatform.Android>serif-monospace</OnPlatform.Android>
+                            <OnPlatform.WinPhone>Consolas</OnPlatform.WinPhone>
+                        </OnPlatform>
+                    </Label.FontFamily>
+                </Label>
+            </Grid>
+        </ScrollView>
+    </ContentPage>
+
+</TabbedPage>

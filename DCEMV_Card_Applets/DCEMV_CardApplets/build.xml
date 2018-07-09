@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." name="ant-openemv build">
+
+    <!--<property name="JC212" value="sdks/jc212_kit"/>-->
+    <property name="JC221" value="C:/Program Files (x86)/Oracle/java_card_kit-2_2_1"/>
+    <!--<property name="JC222" value="sdks/jc222_kit"/>-->
+    <!--<property name="JC303" value="sdks/jc303_kit"/>-->
+    <!--<property name="JC304" value="sdks/jc304_kit"/>-->
+    <property name="JC305" value="C:/Program Files (x86)/Oracle/Java Card Development Kit 3.0.5u1b"/>
+    <property name="GP211" value="ext/globalplatform-2_1_1"/>
+
+    <taskdef name="javacard" classname="pro.javacard.ant.JavaCard" classpath="ant-javacard.jar"/>
+
+    <target name="build">
+        <javacard>
+            <cap jckit="${JC221}" output="DCEMVCard.cap" aid="A000000050" sources="src/main/java/dcemv/emvcard">
+                <applet class="dcemv.emvcard.EMVCard" aid="A0000000500101"/>
+                <import exps="${GP211}" jar="${GP211}/gp211.jar"/>
+            </cap>
+            <cap jckit="${JC221}" output="DCEMVPPSE.cap" aid="A000000060" sources="src/main/java/dcemv/pse">
+                <applet class="dcemv.pse.PPSE" aid="A0000000600101"/>
+            </cap>
+            <!--2PAY.SYS.DDF01 325041592E5359532E4444463031-->
+            <!--<cap debug="true" jckit="${JC305}" output="GlobalPlatform.cap"
+                    sources="src/main/java/za/co/xserver/gpsim">-->
+                <!--<applet class="za.co.xserver.gpsim.GlobalPlatform" aid="0102030405060708"/>-->
+            <!--</cap>-->
+        </javacard>
+    </target>
+</project>

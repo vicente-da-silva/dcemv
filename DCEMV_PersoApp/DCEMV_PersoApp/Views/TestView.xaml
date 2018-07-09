@@ -1,0 +1,83 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!--
+*************************************************************************
+DC EMV
+Open Source EMV
+Copyright (C) 2018  Vicente Da Silva
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published
+by the Free Software Foundation, either version 3 of the License, or
+any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see http://www.gnu.org/licenses/
+*************************************************************************
+-->
+<local:ModalPage xmlns="http://xamarin.com/schemas/2014/forms" 
+			 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+             x:Class="DCEMV.PersoApp.TestView"
+             xmlns:local="clr-namespace:DCEMV.PersoApp" 
+             xmlns:common="clr-namespace:DCEMV.TerminalCommon;assembly=DCEMV_TerminalCommon"
+                 Title="Test Transaction">
+    <local:ModalPage.Content>
+        <Grid Margin="50" HorizontalOptions="FillAndExpand">
+
+            <Grid HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition  />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <Label Grid.Row="0" Text="Test App" FontSize="Large" HorizontalOptions="FillAndExpand"/>
+
+                <Grid Grid.Row="1" x:Name="gridTestApp" HorizontalOptions="FillAndExpand" >
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="200"></ColumnDefinition>
+                        <ColumnDefinition Width="Auto"></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                   
+                    <Label Grid.Row="0" Grid.Column="0" Text="Applet AID"  />
+                    <Entry Grid.Row="0" Grid.Column="1"  Placeholder="Applet AID" Text="" x:Name="txtAppletAID" HorizontalOptions="FillAndExpand" />
+
+                    <ScrollView Grid.Row="1"  Grid.ColumnSpan="3">
+                        <Label x:Name="lblStatus" />
+                    </ScrollView>
+                </Grid>
+                
+                <Grid Grid.Row="2" x:Name="gridCardData" HorizontalOptions="FillAndExpand" >
+                    <ScrollView Orientation="Both" >
+                        <Label x:Name="lblCardData" FontFamily="Consolas" LineBreakMode="NoWrap" />
+                    </ScrollView>
+                </Grid>
+
+                <Grid Grid.Row="3" VerticalOptions="End" HorizontalOptions="FillAndExpand">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Button Grid.Column="0" x:Name="cmdOK" Style="{StaticResource styleButton}" Clicked="cmdOK_Clicked"  Text="ok" HorizontalOptions="Center" />
+                    <Button Grid.Column="1" x:Name="cmdCancel" Style="{StaticResource styleButton}" Clicked="cmdCancel_Clicked"  Text="cancel" HorizontalOptions="Center" />
+                </Grid>
+            </Grid>
+
+            <common:WaitControl x:Name="gridProgress">
+
+            </common:WaitControl>
+
+        </Grid>
+    </local:ModalPage.Content>
+</local:ModalPage>

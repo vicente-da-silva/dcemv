@@ -1,0 +1,187 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!--
+*************************************************************************
+DC EMV
+Open Source EMV
+Copyright (C) 2018  Vicente Da Silva
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published
+by the Free Software Foundation, either version 3 of the License, or
+any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see http://www.gnu.org/licenses/
+*************************************************************************
+-->
+<local:ModalPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="DCEMV.DemoApp.InventoryGroupAdminView"
+             xmlns:local="clr-namespace:DCEMV.DemoApp" xmlns:common="clr-namespace:DCEMV.TerminalCommon;assembly=DCEMV_TerminalCommon"   Title="Inventory Group Admin">
+
+    <local:ModalPage.Content>
+        <Grid HorizontalOptions="FillAndExpand">
+            
+            <Grid Margin="50" x:Name="gridInventoryItemList" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" >
+
+                <Grid.RowDefinitions>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                </Grid.RowDefinitions>
+
+                <ListView Grid.Row="0" x:Name="lstInventoryGroups" SeparatorColor="Black" >
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                                <Grid Padding="3">
+                                    <Grid BackgroundColor="LightGray">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition />
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition />
+                                        </Grid.ColumnDefinitions>
+
+                                        <Label Grid.Row="0" Grid.Column="0" Text="Name:" />
+                                        <Label Grid.Row="0" Grid.Column="2" Text="Description:" />
+
+
+                                        <Label Grid.Row="0" Grid.Column="1" Text="{Binding Name}" />
+                                        <Label Grid.Row="0" Grid.Column="3" Text="{Binding Description}"/>
+                                    </Grid>
+                                </Grid>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+
+                <Grid Grid.Row="1" >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Button Grid.Column="0" x:Name="cmdAdd" Clicked="cmdAdd_Clicked" Text="add" Style="{StaticResource styleButton}"/>
+                    <Button Grid.Column="1" x:Name="cmdEdit" Clicked="cmdEdit_Clicked" Text="edit"   Style="{StaticResource styleButton}"/>
+                    <Button Grid.Column="2" x:Name="cmdRemove" Clicked="cmdRemove_Clicked"  Text="remove" Style="{StaticResource styleButton}"/>
+                </Grid>
+
+
+            </Grid>
+
+            <Grid x:Name="gridAddEdit" Margin="50" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition />
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="200"></ColumnDefinition>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+
+                <Label Grid.Row="0" Text="Add/Update Inventory Group" FontSize="Large" Grid.ColumnSpan="3" />
+
+                <Entry Grid.Row="1" Grid.Column="0" Placeholder="Name" Text="{Binding Path=Name, Mode=TwoWay}" x:Name="txtName" >
+                    <Entry.Behaviors>
+                        <common:NameValidatorBehavior x:Name="nameValidator"/>
+                    </Entry.Behaviors>
+                </Entry>
+                <Image Grid.Row="1" Grid.Column="1" Style="{Binding Source={x:Reference nameValidator}, Path=IsValid, Converter={StaticResource boolToStyleImage}}">
+                    <Image.Triggers>
+                        <MultiTrigger TargetType="Image">
+                            <MultiTrigger.Conditions>
+                                <BindingCondition Binding="{Binding Source={x:Reference txtName}, Path=Text }" Value="" />
+                            </MultiTrigger.Conditions>
+                            <MultiTrigger.Setters>
+                                <Setter Property="IsVisible" Value="False" />
+                            </MultiTrigger.Setters>
+                        </MultiTrigger>
+                    </Image.Triggers>
+                </Image>
+                <Label Grid.Row="1" Grid.Column="2" Style="{Binding Source={x:Reference nameValidator}, Path=IsValid, Converter={StaticResource boolToStyleName}}">
+                    <Label.Triggers>
+                        <MultiTrigger TargetType="Label">
+                            <MultiTrigger.Conditions>
+                                <BindingCondition Binding="{Binding Source={x:Reference txtName}, Path=Text }" Value="" />
+                            </MultiTrigger.Conditions>
+                            <MultiTrigger.Setters>
+                                <Setter Property="IsVisible" Value="False" />
+                            </MultiTrigger.Setters>
+                        </MultiTrigger>
+                    </Label.Triggers>
+                </Label>
+
+                <Entry Grid.Row="2" Grid.Column="0" Placeholder="Description" Text="{Binding Path=Description, Mode=TwoWay}" x:Name="txtDescription" >
+                    <Entry.Behaviors>
+                        <common:NameValidatorBehavior x:Name="descriptionValidator"/>
+                    </Entry.Behaviors>
+                </Entry>
+                <Image Grid.Row="2" Grid.Column="1" Style="{Binding Source={x:Reference descriptionValidator}, Path=IsValid, Converter={StaticResource boolToStyleImage}}">
+                    <Image.Triggers>
+                        <MultiTrigger TargetType="Image">
+                            <MultiTrigger.Conditions>
+                                <BindingCondition Binding="{Binding Source={x:Reference txtDescription}, Path=Text }" Value="" />
+                            </MultiTrigger.Conditions>
+                            <MultiTrigger.Setters>
+                                <Setter Property="IsVisible" Value="False" />
+                            </MultiTrigger.Setters>
+                        </MultiTrigger>
+                    </Image.Triggers>
+                </Image>
+                <Label Grid.Row="2" Grid.Column="2" Style="{Binding Source={x:Reference descriptionValidator}, Path=IsValid, Converter={StaticResource boolToStyleName}}">
+                    <Label.Triggers>
+                        <MultiTrigger TargetType="Label">
+                            <MultiTrigger.Conditions>
+                                <BindingCondition Binding="{Binding Source={x:Reference txtDescription}, Path=Text }" Value="" />
+                            </MultiTrigger.Conditions>
+                            <MultiTrigger.Setters>
+                                <Setter Property="IsVisible" Value="False" />
+                            </MultiTrigger.Setters>
+                        </MultiTrigger>
+                    </Label.Triggers>
+                </Label>
+
+                <Grid Grid.Row="4" Grid.ColumnSpan="3">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <Button Grid.Column="0" x:Name="cmdOk" Clicked="cmdAddEditOk_Clicked" Text="ok" Style="{StaticResource styleButton}" IsEnabled="False">
+                        <Button.Triggers>
+                            <MultiTrigger TargetType="Button">
+                                <MultiTrigger.Conditions>
+                                    <BindingCondition Binding="{Binding Source={x:Reference nameValidator}, Path=IsValid }" Value="true" />
+                                    <BindingCondition Binding="{Binding Source={x:Reference descriptionValidator}, Path=IsValid }" Value="true" />
+                                </MultiTrigger.Conditions>
+                                <MultiTrigger.Setters>
+                                    <Setter Property="IsEnabled" Value="True" />
+                                </MultiTrigger.Setters>
+                            </MultiTrigger>
+                        </Button.Triggers>
+                    </Button>
+                    <Button Grid.Column="1" x:Name="CmdCancel" Clicked="cmdCancel_Clicked" Text="cancel" Style="{StaticResource styleButton}" />
+                </Grid>
+            </Grid>
+
+            <common:WaitControl x:Name="gridProgress">
+
+            </common:WaitControl>
+
+        </Grid>
+    </local:ModalPage.Content>
+</local:ModalPage>

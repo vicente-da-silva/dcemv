@@ -1,0 +1,52 @@
+# *************************************************************************
+# DC EMV
+# Open Source EMV
+# Copyright (C) 2018  Vicente Da Silva
+# 
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published
+# by the Free Software Foundation, either version 3 of the License, or
+# any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+# 
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see http://www.gnu.org/licenses/
+# *************************************************************************
+
+version: '3'
+
+services:
+  dcemvdemoserver:
+    image: dcemvdemoserver
+    environment:
+    # the link below must direct to the reverseproxy on port 80, which in turn
+    # directs, via nginx.conf to the identity server on its port (44359).
+    # It must also match the value specified on the client side, so token authentication will
+    # work
+      - ID_SERVER_URL=https://192.168.0.100
+      - DB_SERVER_NAME=192.168.0.100 
+      #- ID_SERVER_URL=https://www.payloola.com
+      #- DB_SERVER_NAME=paylooladbserver.database.windows.net 
+    build:
+      context: .
+      dockerfile: DCEMV_DemoServer/Dockerfile
+      # change tp ports to have a host port auto allocated and have this auto allocated port exposed publically
+      # expose only allows access from other containers that have the link property set to this service
+    ports:
+      # this should not be enabled for production
+      - "31050:44359"
+
+  reverseproxy: 
+    image: reverseproxy
+    build:
+      context: .
+      dockerfile: DCEMV_DemoServer/ScriptsReverseProxy/Dockerfile
+    ports: # host:container
+      - "80:80"
+      - "443:443"
+    links:
+      - dcemvdemoserver

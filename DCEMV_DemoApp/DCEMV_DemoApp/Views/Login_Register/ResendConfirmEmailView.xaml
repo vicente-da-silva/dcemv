@@ -1,0 +1,110 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!--
+*************************************************************************
+DC EMV
+Open Source EMV
+Copyright (C) 2018  Vicente Da Silva
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published
+by the Free Software Foundation, either version 3 of the License, or
+any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see http://www.gnu.org/licenses/
+*************************************************************************
+-->
+<local:ModalPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="DCEMV.DemoApp.ResendConfirmEmailView"
+             xmlns:local="clr-namespace:DCEMV.DemoApp" 
+                 xmlns:common="clr-namespace:DCEMV.TerminalCommon;assembly=DCEMV_TerminalCommon"  >
+
+    <local:ModalPage.Resources>
+       
+    </local:ModalPage.Resources>
+
+    <local:ModalPage.Content>
+        <Grid HorizontalOptions="FillAndExpand">
+
+            <Grid Margin="50" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition />
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="200"></ColumnDefinition>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+
+                <Label Grid.Row="0" Grid.ColumnSpan="3" Text="Resend Confirm Email" FontSize="Large"/>
+
+                <Entry Grid.Row="1" Grid.Column="0" Keyboard="Email" Placeholder="Email" Text="" x:Name="txtEmail">
+                    <Entry.Behaviors>
+                        <common:EmailValidatorBehavior x:Name="emailValidator"/>
+                    </Entry.Behaviors>
+                </Entry>
+                <Image Grid.Row="1" Grid.Column="1" Style="{Binding Source={x:Reference emailValidator}, Path=IsValid, Converter={StaticResource boolToStyleImage}}">
+                    <Image.Triggers>
+                        <MultiTrigger TargetType="Image">
+                            <MultiTrigger.Conditions>
+                                <BindingCondition Binding="{Binding Source={x:Reference txtEmail}, Path=Text }" Value="" />
+                            </MultiTrigger.Conditions>
+                            <MultiTrigger.Setters>
+                                <Setter Property="IsVisible" Value="False" />
+                            </MultiTrigger.Setters>
+                        </MultiTrigger>
+                    </Image.Triggers>
+                </Image>
+                <Label Grid.Row="1" Grid.Column="2" Style="{Binding Source={x:Reference emailValidator}, Path=IsValid, Converter={StaticResource boolToStyleEmail}}">
+                    <Label.Triggers>
+                        <MultiTrigger TargetType="Label">
+                            <MultiTrigger.Conditions>
+                                <BindingCondition Binding="{Binding Source={x:Reference txtEmail}, Path=Text }" Value="" />
+                            </MultiTrigger.Conditions>
+                            <MultiTrigger.Setters>
+                                <Setter Property="IsVisible" Value="False" />
+                            </MultiTrigger.Setters>
+                        </MultiTrigger>
+                    </Label.Triggers>
+                </Label>
+
+
+                <Grid Grid.Row="3" Grid.ColumnSpan="3">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <Button Grid.Column="0" x:Name="cmdOk" Clicked="cmdOk_Clicked" Text="ok" Style="{StaticResource styleButton}" IsEnabled="False">
+                        <Button.Triggers>
+                            <MultiTrigger TargetType="Button">
+                                <MultiTrigger.Conditions>
+                                    <BindingCondition Binding="{Binding Source={x:Reference emailValidator}, Path=IsValid }" Value="true" />
+                                </MultiTrigger.Conditions>
+                                <MultiTrigger.Setters>
+                                    <Setter Property="IsEnabled" Value="True" />
+                                </MultiTrigger.Setters>
+                            </MultiTrigger>
+                        </Button.Triggers>
+                    </Button>
+                    <Button Grid.Column="1" x:Name="cmdCancel" Clicked="cmdCancel_Clicked" Text="cancel" Style="{StaticResource styleButton}"></Button>
+                </Grid>
+            </Grid>
+
+            <common:WaitControl x:Name="gridProgress">
+
+            </common:WaitControl>
+
+        </Grid>
+    </local:ModalPage.Content>
+</local:ModalPage>

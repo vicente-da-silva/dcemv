@@ -1,0 +1,184 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\..\packages\Xamarin.Forms.2.5.0.121934\build\netstandard1.0\Xamarin.Forms.props" Condition="Exists('..\..\packages\Xamarin.Forms.2.5.0.121934\build\netstandard1.0\Xamarin.Forms.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{32021276-3CDE-496E-B532-6E4827957EF0}</ProjectGuid>
+    <ProjectTypeGuids>{EFBA0AD7-5A72-4C68-AF49-83D382785DCF};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>DCEMV.DemoEMVApp.Android</RootNamespace>
+    <AssemblyName>DCEMV_DemoEMVApp.Android</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+    <AndroidApplication>true</AndroidApplication>
+    <AndroidResgenFile>Resources\Resource.Designer.cs</AndroidResgenFile>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+    <AndroidManifest>Properties\AndroidManifest.xml</AndroidManifest>
+    <AndroidUseLatestPlatformSdk>true</AndroidUseLatestPlatformSdk>
+    <TargetFrameworkVersion>v7.1</TargetFrameworkVersion>
+    <AndroidStoreUncompressedFileExtensions />
+    <MandroidI18n />
+    <JavaMaximumHeapSize />
+    <JavaOptions />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AndroidUseSharedRuntime>True</AndroidUseSharedRuntime>
+    <AndroidLinkMode>None</AndroidLinkMode>
+    <AndroidSupportedAbis>armeabi,armeabi-v7a,x86</AndroidSupportedAbis>
+    <AotAssemblies>false</AotAssemblies>
+    <EnableLLVM>false</EnableLLVM>
+    <BundleAssemblies>false</BundleAssemblies>
+    <AndroidHttpClientHandlerType>Xamarin.Android.Net.AndroidClientHandler</AndroidHttpClientHandlerType>
+    <AndroidTlsProvider>btls</AndroidTlsProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AndroidUseSharedRuntime>False</AndroidUseSharedRuntime>
+    <AndroidLinkMode>SdkOnly</AndroidLinkMode>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Mono.Android" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="MainActivity.cs" />
+    <Compile Include="Resources\Resource.Designer.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TCPClientStreamAndroid.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\AboutResources.txt" />
+    <None Include="Assets\AboutAssets.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\icon.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\icon.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\icon.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\AndroidManifest.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\layout\Tabbar.axml" />
+    <AndroidResource Include="Resources\layout\Toolbar.axml" />
+    <AndroidResource Include="Resources\values\styles.xml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\DCEMV_ServerShared\DCEMV_ServerShared.csproj">
+      <Project>{9b565d57-e501-4c71-a3d8-681d1a40ffa2}</Project>
+      <Name>DCEMV_ServerShared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\DCEMV_AndroidNFCDriver\DCEMV_AndroidNFCDriver.csproj">
+      <Project>{5680aefa-3300-4985-89d1-a53d50c82526}</Project>
+      <Name>DCEMV_AndroidNFCDriver</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\DCEMV_Shared\DCEMV_Shared.csproj">
+      <Project>{611383da-d8c9-4939-938f-c1055b0040fd}</Project>
+      <Name>DCEMV_Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\DCEMV_BTACS1255Driver\DCEMV_BTACS1255Driver.csproj">
+      <Project>{75FA6113-B22D-47D5-A688-D46C79D1DBF8}</Project>
+      <Name>DCEMV_BTACS1255Driver</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\DCEMV_ConfigurationManager\DCEMV_ConfigurationManager.csproj">
+      <Project>{cf70f1eb-daa1-404f-a083-e39482828ac2}</Project>
+      <Name>DCEMV_ConfigurationManager</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\DCEMV_EMVProtocol\DCEMV_EMVProtocol.csproj">
+      <Project>{5b6efe29-0a89-4017-9623-e50b5475a731}</Project>
+      <Name>DCEMV_EMVProtocol</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\DCEMV_FileDriver\DCEMV_AndroidFileDriver\DCEMV_AndroidFileDriver.csproj">
+      <Project>{9a232c80-75d7-4144-bc94-3d88c8bddb3b}</Project>
+      <Name>DCEMV_AndroidFileDriver</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\DCEMV_FormattingUtils\DCEMV_FormattingUtils.csproj">
+      <Project>{c84a404f-4bbb-4e57-9496-c895f171321d}</Project>
+      <Name>DCEMV_FormattingUtils</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\DCEMV_ISO7816Protocol\DCEMV_ISO7816Protocol.csproj">
+      <Project>{795ad1d0-cc27-4bfc-b86e-6910e978ea5d}</Project>
+      <Name>DCEMV_ISO7816Protocol</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\DCEMV_SimulatedPaymentProvider\DCEMV_SimulatedPaymentProvider.csproj">
+      <Project>{CA134D29-45A6-4AA1-9A6F-027277764A19}</Project>
+      <Name>DCEMV_SimulatedPaymentProvider</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\DCEMV_SPDHProtocol\DCEMV_SPDHProtocol.csproj">
+      <Project>{8d29958e-aaec-440d-85f7-0a7f881ff120}</Project>
+      <Name>DCEMV_SPDHProtocol</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\DCEMV_TCPIPDriver\DCEMV_TCPIPDriver.csproj">
+      <Project>{39b80fb0-8427-4f63-9617-f39d83e48e43}</Project>
+      <Name>DCEMV_TCPIPDriver</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\DCEMV_TLVProtocol\DCEMV_TLVProtocol.csproj">
+      <Project>{dddbfc8d-a231-4185-a8c2-7460156c67c3}</Project>
+      <Name>DCEMV_TLVProtocol</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\DCEMV_TerminalCommon\DCEMV_TerminalCommon.csproj">
+      <Project>{e9da6055-deec-4167-9a15-6002de715828}</Project>
+      <Name>DCEMV_TerminalCommon</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Xamarin.Android.Support.CustomTabs">
+      <Version>25.4.0.2</Version>
+    </PackageReference>
+    <PackageReference Include="Xamarin.Forms">
+      <Version>2.5.0.121934</Version>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\splashscreen.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\splash_centered.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable-xxxhdpi\icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable-xxxhdpi\splashscreen.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable-xxhdpi\splashscreen.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable-xhdpi\splashscreen.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable-hdpi\splashscreen.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable-mdpi\icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable-mdpi\splashscreen.png" />
+  </ItemGroup>
+  <Import Project="..\DCEMV_DemoEMVApp\DCEMV_DemoEMVApp.projitems" Label="Shared" />
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
+</Project>

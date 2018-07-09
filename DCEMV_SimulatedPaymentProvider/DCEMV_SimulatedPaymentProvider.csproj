@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard1.4</TargetFramework>
+    <RootNamespace>DCEMV.SimulatedPaymentProvider</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DCEMV_EMVProtocol\DCEMV_EMVProtocol.csproj" />
+    <ProjectReference Include="..\DCEMV_EMVSecurity\DCEMV_EMVSecurity.csproj" />
+    <ProjectReference Include="..\DCEMV_FormattingUtils\DCEMV_FormattingUtils.csproj" />
+    <ProjectReference Include="..\DCEMV_TLVProtocol\DCEMV_TLVProtocol.csproj" />
+  </ItemGroup>
+
+</Project>

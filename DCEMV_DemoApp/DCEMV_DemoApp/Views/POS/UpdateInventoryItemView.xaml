@@ -1,0 +1,215 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<local:ModalPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="XTerminal.UpdateInventoryItemView"
+             xmlns:local="clr-namespace:XTerminal" xmlns:common="clr-namespace:XTerminalCommon;assembly=XTerminalCommon"  >
+
+    <local:ModalPage.Content>
+        <Grid HorizontalOptions="FillAndExpand">
+
+            <Grid Margin="50" x:Name="gridMain" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition />
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="200"></ColumnDefinition>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+
+                <Label Grid.Row="0" Text="Add/Update Inventory Item" FontSize="Large" Grid.ColumnSpan="3"/>
+
+                <Entry Grid.Row="1" Grid.Column="0" Placeholder="Name" Text="{Binding Path=Name, Mode=TwoWay}" x:Name="txtName" >
+                    <Entry.Behaviors>
+                        <common:NameValidatorBehavior x:Name="nameValidator"/>
+                    </Entry.Behaviors>
+                </Entry>
+                <Image Grid.Row="1" Grid.Column="1" Style="{Binding Source={x:Reference nameValidator}, Path=IsValid, Converter={StaticResource boolToStyleImage}}">
+                    <Image.Triggers>
+                        <MultiTrigger TargetType="Image">
+                            <MultiTrigger.Conditions>
+                                <BindingCondition Binding="{Binding Source={x:Reference txtName}, Path=Text }" Value="" />
+                            </MultiTrigger.Conditions>
+                            <MultiTrigger.Setters>
+                                <Setter Property="IsVisible" Value="False" />
+                            </MultiTrigger.Setters>
+                        </MultiTrigger>
+                    </Image.Triggers>
+                </Image>
+                <Label Grid.Row="1" Grid.Column="2" Style="{Binding Source={x:Reference nameValidator}, Path=IsValid, Converter={StaticResource boolToStyleName}}">
+                    <Label.Triggers>
+                        <MultiTrigger TargetType="Label">
+                            <MultiTrigger.Conditions>
+                                <BindingCondition Binding="{Binding Source={x:Reference txtName}, Path=Text }" Value="" />
+                            </MultiTrigger.Conditions>
+                            <MultiTrigger.Setters>
+                                <Setter Property="IsVisible" Value="False" />
+                            </MultiTrigger.Setters>
+                        </MultiTrigger>
+                    </Label.Triggers>
+                </Label>
+
+                <Entry Grid.Row="2" Grid.Column="0" Placeholder="Description" Text="{Binding Path=Description, Mode=TwoWay}" x:Name="txtDescription" >
+                    <Entry.Behaviors>
+                        <common:NameValidatorBehavior x:Name="descriptionValidator"/>
+                    </Entry.Behaviors>
+                </Entry>
+                <Image Grid.Row="2" Grid.Column="1" Style="{Binding Source={x:Reference descriptionValidator}, Path=IsValid, Converter={StaticResource boolToStyleImage}}">
+                    <Image.Triggers>
+                        <MultiTrigger TargetType="Image">
+                            <MultiTrigger.Conditions>
+                                <BindingCondition Binding="{Binding Source={x:Reference txtDescription}, Path=Text }" Value="" />
+                            </MultiTrigger.Conditions>
+                            <MultiTrigger.Setters>
+                                <Setter Property="IsVisible" Value="False" />
+                            </MultiTrigger.Setters>
+                        </MultiTrigger>
+                    </Image.Triggers>
+                </Image>
+                <Label Grid.Row="2" Grid.Column="2" Style="{Binding Source={x:Reference descriptionValidator}, Path=IsValid, Converter={StaticResource boolToStyleName}}">
+                    <Label.Triggers>
+                        <MultiTrigger TargetType="Label">
+                            <MultiTrigger.Conditions>
+                                <BindingCondition Binding="{Binding Source={x:Reference txtDescription}, Path=Text }" Value="" />
+                            </MultiTrigger.Conditions>
+                            <MultiTrigger.Setters>
+                                <Setter Property="IsVisible" Value="False" />
+                            </MultiTrigger.Setters>
+                        </MultiTrigger>
+                    </Label.Triggers>
+                </Label>
+
+                <Entry Grid.Row="3" Grid.Column="0" Placeholder="Barcode" Text="{Binding Path=Barcode, Mode=TwoWay}" x:Name="txtBarcode" >
+                    <Entry.Behaviors>
+                        <common:NumberValidatorBehavior x:Name="barcodeValidator"/>
+                    </Entry.Behaviors>
+                </Entry>
+                <Image Grid.Row="3" Grid.Column="1" Style="{Binding Source={x:Reference barcodeValidator}, Path=IsValid, Converter={StaticResource boolToStyleImage}}">
+                    <Image.Triggers>
+                        <MultiTrigger TargetType="Image">
+                            <MultiTrigger.Conditions>
+                                <BindingCondition Binding="{Binding Source={x:Reference txtBarcode}, Path=Text }" Value="" />
+                            </MultiTrigger.Conditions>
+                            <MultiTrigger.Setters>
+                                <Setter Property="IsVisible" Value="False" />
+                            </MultiTrigger.Setters>
+                        </MultiTrigger>
+                    </Image.Triggers>
+                </Image>
+                <Label Grid.Row="3" Grid.Column="2" Style="{Binding Source={x:Reference barcodeValidator}, Path=IsValid, Converter={StaticResource boolToStyleNumber}}">
+                    <Label.Triggers>
+                        <MultiTrigger TargetType="Label">
+                            <MultiTrigger.Conditions>
+                                <BindingCondition Binding="{Binding Source={x:Reference txtBarcode}, Path=Text }" Value="" />
+                            </MultiTrigger.Conditions>
+                            <MultiTrigger.Setters>
+                                <Setter Property="IsVisible" Value="False" />
+                            </MultiTrigger.Setters>
+                        </MultiTrigger>
+                    </Label.Triggers>
+                </Label>
+
+                <Entry Grid.Row="4" Grid.Column="0" Placeholder="Price" Text="{Binding Path=Price, Mode=TwoWay}" x:Name="txtPrice" >
+                    <Entry.Behaviors>
+                        <common:AmountValidatorBehavior x:Name="priceValidator"/>
+                    </Entry.Behaviors>
+                </Entry>
+                <Image Grid.Row="4" Grid.Column="1" Style="{Binding Source={x:Reference priceValidator}, Path=IsValid, Converter={StaticResource boolToStyleImage}}">
+                    <Image.Triggers>
+                        <MultiTrigger TargetType="Image">
+                            <MultiTrigger.Conditions>
+                                <BindingCondition Binding="{Binding Source={x:Reference txtPrice}, Path=Text }" Value="" />
+                            </MultiTrigger.Conditions>
+                            <MultiTrigger.Setters>
+                                <Setter Property="IsVisible" Value="False" />
+                            </MultiTrigger.Setters>
+                        </MultiTrigger>
+                    </Image.Triggers>
+                </Image>
+                <Label Grid.Row="4" Grid.Column="2" Style="{Binding Source={x:Reference priceValidator}, Path=IsValid, Converter={StaticResource boolToStyleAmount}}">
+                    <Label.Triggers>
+                        <MultiTrigger TargetType="Label">
+                            <MultiTrigger.Conditions>
+                                <BindingCondition Binding="{Binding Source={x:Reference txtPrice}, Path=Text }" Value="" />
+                            </MultiTrigger.Conditions>
+                            <MultiTrigger.Setters>
+                                <Setter Property="IsVisible" Value="False" />
+                            </MultiTrigger.Setters>
+                        </MultiTrigger>
+                    </Label.Triggers>
+                </Label>
+
+                <Picker ItemDisplayBinding="{Binding Name}" Grid.Row="5" Grid.Column="0" x:Name="pickGroup" >
+                    <Picker.Behaviors>
+                        <common:ItemPickedValidatorBehavior x:Name="groupValidator"/>
+                    </Picker.Behaviors>
+                </Picker>
+                <Image Grid.Row="5" Grid.Column="1" Style="{Binding Source={x:Reference groupValidator}, Path=IsValid, Converter={StaticResource boolToStyleImage}}">
+                    <Image.Triggers>
+                        <MultiTrigger TargetType="Image">
+                            <MultiTrigger.Conditions>
+                                <BindingCondition Binding="{Binding Source={x:Reference pickGroup}, Path=SelectedIndexChanged }" Value="" />
+                            </MultiTrigger.Conditions>
+                            <MultiTrigger.Setters>
+                                <Setter Property="IsVisible" Value="False" />
+                            </MultiTrigger.Setters>
+                        </MultiTrigger>
+                    </Image.Triggers>
+                </Image>
+                <Label Grid.Row="5" Grid.Column="2" Style="{Binding Source={x:Reference groupValidator}, Path=IsValid, Converter={StaticResource boolToStylePicker}}">
+                    <Label.Triggers>
+                        <MultiTrigger TargetType="Label">
+                            <MultiTrigger.Conditions>
+                                <BindingCondition Binding="{Binding Source={x:Reference pickGroup}, Path=SelectedIndexChanged }" Value="" />
+                            </MultiTrigger.Conditions>
+                            <MultiTrigger.Setters>
+                                <Setter Property="IsVisible" Value="False" />
+                            </MultiTrigger.Setters>
+                        </MultiTrigger>
+                    </Label.Triggers>
+                </Label>
+
+                <Grid Grid.Row="7" Grid.ColumnSpan="3">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Button Grid.Column="0" x:Name="cmdOk" Clicked="cmdOk_Clicked" Text="ok" Style="{StaticResource styleButton}" IsEnabled="False">
+                        <Button.Triggers>
+                            <MultiTrigger TargetType="Button">
+                                <MultiTrigger.Conditions>
+                                    <BindingCondition Binding="{Binding Source={x:Reference nameValidator}, Path=IsValid }" Value="true" />
+                                    <BindingCondition Binding="{Binding Source={x:Reference descriptionValidator}, Path=IsValid }" Value="true" />
+                                    <BindingCondition Binding="{Binding Source={x:Reference barcodeValidator}, Path=IsValid }" Value="true" />
+                                    <BindingCondition Binding="{Binding Source={x:Reference priceValidator}, Path=IsValid }" Value="true" />
+                                    <BindingCondition Binding="{Binding Source={x:Reference groupValidator}, Path=IsValid }" Value="true" />
+                                </MultiTrigger.Conditions>
+                                <MultiTrigger.Setters>
+                                    <Setter Property="IsEnabled" Value="True" />
+                                </MultiTrigger.Setters>
+                            </MultiTrigger>
+                        </Button.Triggers>
+                    </Button>
+                    <Button Grid.Column="1" x:Name="CmdCancel" Clicked="cmdCancel_Clicked" Text="cancel" Style="{StaticResource styleButton}" />
+                </Grid>
+            </Grid>
+
+            <common:WaitControl x:Name="gridProgress">
+
+            </common:WaitControl>
+
+
+        </Grid>
+    </local:ModalPage.Content>
+</local:ModalPage>
+
+

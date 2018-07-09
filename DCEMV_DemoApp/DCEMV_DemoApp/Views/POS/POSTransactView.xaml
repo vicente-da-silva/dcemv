@@ -1,0 +1,80 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<local:ModalPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="XTerminal.POSTransactView"
+             xmlns:local="clr-namespace:XTerminal" xmlns:common="clr-namespace:XTerminalCommon;assembly=XTerminalCommon"  
+             Title="Transact">
+
+    <local:ModalPage.Content>
+        <Grid HorizontalOptions="FillAndExpand">
+
+            <Grid Margin="50" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                
+                <Label Grid.Row="0" Text="Transact" FontSize="Large"/>
+                
+                <Grid x:Name="gridTapCard" Grid.Row="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition />
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="200"></ColumnDefinition>
+                        <ColumnDefinition Width="Auto"></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+
+                    <Label Grid.Row="0" x:Name="lblHeaderTapCard" Grid.ColumnSpan="3"  />
+                    <Label Grid.Row="1" x:Name="lblTotal" FontSize="Large"  Text="{Binding Total, Converter={StaticResource currencyConverterNoDiv}}" />
+                    <Label Grid.Row="2" x:Name="lblStatusTapCard"  Grid.ColumnSpan="3" />
+                    <!--<Button Grid.Row="3" x:Name="cmdTapSimulate" Text="tap-sim" Clicked="cmdTapSimulate_Clicked" />-->
+                    
+                    <Grid Grid.Row="5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Button Grid.Column="1" x:Name="cmdCancelTapCard" Style="{StaticResource styleButton}" Clicked="cmdCancel_Clicked" Text="cancel" HorizontalOptions="Center" />
+                    </Grid>
+                </Grid>
+
+                <Grid x:Name="gridTransactSummary" Grid.Row="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition />
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="200"></ColumnDefinition>
+                        <ColumnDefinition Width="Auto"></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+
+                    <Label Grid.Row="0" Grid.ColumnSpan="3"  x:Name="lblTransactSummary" />
+                    
+                    <Grid Grid.Row="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Button x:Name="cmdCompletedTransactSummary" Style="{StaticResource styleButton}" Clicked="cmdCompletedTransactSummary_Clicked"  Text="back" HorizontalOptions="Center" />
+                    </Grid>
+                </Grid>
+
+            </Grid>
+
+            <common:WaitControl x:Name="gridProgress">
+
+            </common:WaitControl>
+
+        </Grid>
+    </local:ModalPage.Content>
+</local:ModalPage>

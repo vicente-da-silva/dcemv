@@ -1,0 +1,146 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!--
+*************************************************************************
+DC EMV
+Open Source EMV
+Copyright (C) 2018  Vicente Da Silva
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published
+by the Free Software Foundation, either version 3 of the License, or
+any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see http://www.gnu.org/licenses/
+*************************************************************************
+-->
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" 
+			 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+			 x:Class="DCEMV.DemoApp.HomeMasterView"
+             xmlns:local="clr-namespace:DCEMV.DemoApp" 
+             xmlns:common="clr-namespace:DCEMV.TerminalCommon;assembly=DCEMV_TerminalCommon"   
+			 Title="Application Options">
+
+    <ScrollView Orientation="Vertical">
+        <Grid>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                
+            </Grid.RowDefinitions>
+
+            <common:WaitControl Grid.RowSpan="10"  x:Name="gridProgress"/>
+
+            <Label Text="Transact" Grid.Row="0" Margin="5,0,0,-10"  FontSize="Large" VerticalTextAlignment="Center" FontAttributes="Bold" ></Label>
+            <ListView Grid.Row="1" x:Name="listViewTransact" Margin="5,0,0,0" SeparatorVisibility="None" >
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <Grid Padding="5,10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="20"/>
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                               
+                                <Image Source="{Binding IconSource}" />
+                                <Label VerticalTextAlignment="Center"  Grid.Column="1" Text="{Binding Title}" />
+                            </Grid>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+
+            <Label Grid.Row="2" Text="Inventory" Margin="5,0,0,-10"   FontSize="Large" VerticalTextAlignment="Center" FontAttributes="Bold"></Label>
+            <ListView Grid.Row="3" x:Name="listViewPOS" Margin="5,0,0,0" SeparatorVisibility="None" >
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <Grid Padding="5,10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="20"/>
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                              
+                                <Image Source="{Binding IconSource}" />
+                                <Label Grid.Column="1" VerticalTextAlignment="Center"  Text="{Binding Title}"  />
+                            </Grid>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+
+            <Label Grid.Row="4" Text="Credentials" Margin="5,0,0,-10"   FontSize="Large" VerticalTextAlignment="Center" FontAttributes="Bold"></Label>
+            <ListView Grid.Row="5" x:Name="listViewCredentials" Margin="5,0,0,0" SeparatorVisibility="None">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <Grid Padding="5,10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="20"/>
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                              
+                                <Image Source="{Binding IconSource}" />
+                                <Label Grid.Column="1" VerticalTextAlignment="Center"  Text="{Binding Title}" />
+                            </Grid>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+
+            <Label Grid.Row="6" Text="Account" Margin="5,0,0,-10"   FontSize="Large" VerticalTextAlignment="Center" FontAttributes="Bold"></Label>
+            <ListView Grid.Row="7" x:Name="listViewAccount" Margin="5,0,0,0" SeparatorVisibility="None" >
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <Grid Padding="5,10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="20"/>
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                              
+                                <Image Source="{Binding IconSource}" />
+                                <Label Grid.Column="1" VerticalTextAlignment="Center"  Text="{Binding Title}" />
+                            </Grid>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+
+            <Label Grid.Row="8" Text="Other" Margin="5,0,0,-10"   FontSize="Large" VerticalTextAlignment="Center" FontAttributes="Bold"></Label>
+            <ListView Grid.Row="9" x:Name="listViewOthers" Margin="5,0,0,0" SeparatorVisibility="None" >
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <Grid Padding="5,10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="20"/>
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                              
+                                <Image  Source="{Binding IconSource}" />
+                                <Label Grid.Column="1"  VerticalTextAlignment="Center"  Text="{Binding Title}" />
+                            </Grid>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+
+        </Grid>
+    </ScrollView>
+</ContentPage>
+    

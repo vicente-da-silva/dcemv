@@ -1,0 +1,76 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!--
+*************************************************************************
+DC EMV
+Open Source EMV
+Copyright (C) 2018  Vicente Da Silva
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published
+by the Free Software Foundation, either version 3 of the License, or
+any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see http://www.gnu.org/licenses/
+*************************************************************************
+-->
+<local:ModalPage xmlns="http://xamarin.com/schemas/2014/forms" 
+			 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+			 x:Class="DCEMV.DemoApp.AccountTransactionsView"
+              xmlns:local="clr-namespace:DCEMV.DemoApp" 
+                  xmlns:common="clr-namespace:DCEMV.TerminalCommon;assembly=DCEMV_TerminalCommon" 
+			 Title="Account Transactions">
+    <ContentPage.Content>
+        <Grid HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+
+            <Grid Margin="50" x:Name="gridTx" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+
+                <Label Grid.Row="0" Grid.Column="0" x:Name="lblBalanceCaption"  Text="Balance:" FontSize="Large" />
+                <Label Grid.Row="0" Grid.Column="1" x:Name="lblBalance"  Text="{Binding Balance, Converter={StaticResource currencyConverter}}" FontSize="Large" />
+
+                <ListView Grid.Row="1" Grid.ColumnSpan="2" x:Name="lstTransactions" CachingStrategy="RecycleElementAndDataTemplate"  BackgroundColor="LightGray" SeparatorColor="Black" >
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition />
+                                        <ColumnDefinition />
+                                    </Grid.ColumnDefinitions>
+
+                                    <Image Grid.Column="0" Style="{Binding TxFlow, Converter={StaticResource txFlowToStyleImage}}" />
+                                    <Image Grid.Column="1" Style="{Binding IsTopUp, Converter={StaticResource boolToStyleImage}}" />
+                                    <Image Grid.Column="2" Style="{Binding HasPosData, Converter={StaticResource boolToStyleImage}}" />
+                                    <Label Grid.Column="3" VerticalTextAlignment="Center" Text="{Binding DateTime, Converter={StaticResource dateTimeConverter}}"/>
+                                    <Label Grid.Column="4" VerticalTextAlignment="Center" HorizontalTextAlignment="End" Text="{Binding Amount, Converter={StaticResource currencyConverter}}" />
+
+                                </Grid>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+
+            </Grid>
+
+            <common:WaitControl x:Name="gridProgress"/>
+        </Grid>
+    </ContentPage.Content>
+</local:ModalPage> 
+    

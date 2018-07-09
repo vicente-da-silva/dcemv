@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:XTerminal" xmlns:common="clr-namespace:XTerminalCommon;assembly=XTerminalCommon"  
+             x:Class="XTerminal.DesFireMain"
+             Title="Desfire">
+
+    <Grid x:Name="gridMain" Grid.RowSpan="2" Margin="3" HorizontalOptions="FillAndExpand" VerticalOptions="Center" BackgroundColor="White">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="100"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+        <Button Grid.Row="0" x:Name="cmdInstallApp"  Clicked="CmdInstall_Click" Text="Install App" HorizontalOptions="Center" WidthRequest="200" Margin="0,3"/>
+        <Button Grid.Row="1" x:Name="cmdProcess" Clicked="CmdProcess_Click"  Text="Process Transaction" HorizontalOptions="Center" WidthRequest="200" Margin="0,3"/>
+        <Button Grid.Row="2" x:Name="cmdCancel" Clicked="CmdCancel_Click"  Text="Cancel" HorizontalOptions="Center" WidthRequest="200" Margin="0,3"/>
+
+        <Label Grid.Row="3" x:Name="lblStatus" HorizontalOptions="Center" HorizontalTextAlignment="Center" Margin="0,3" />
+    </Grid>
+
+</ContentPage>
+

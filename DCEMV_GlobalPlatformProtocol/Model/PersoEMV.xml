@@ -1,0 +1,65 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<!--
+*************************************************************************
+DC EMV
+Open Source EMV
+Copyright (C) 2018  Vicente Da Silva
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published
+by the Free Software Foundation, either version 3 of the License, or
+any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see http://www.gnu.org/licenses/
+*************************************************************************
+-->
+<perso xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+       xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+       xmlns="http://www.dcemv.com/perso" 
+       xsi:schemaLocation="http://www.dcemv.com/perso Perso.xsd">
+  <keys>
+    <key Type="CardMasterKey" Value="12345678901234567890123456789012"/>
+  </keys>
+  <application type="Credit/Debit No SDA/DDA/CDA">
+    <commands>
+      <install ExecutableLoadFileAID="A000000050" ExecutableModuleAID="A0000000500101" ApplicationAID="A000000050010101">
+        <tokens/>
+      </install>
+      <storeData DGI="8001" Description="3DES Key Contactless">
+        <data>8CB9F7D54362B0A240D0AE626780A86B</data>
+      </storeData>
+      <storeData DGI="0101" Description="DGI by SFI and REC">
+        <tlvxml>
+          <tag Name="70" Description="Store Data Template" />
+          <children>
+            <tlvxml>
+              <tag Name="5A" Description="Application Primary Account Number (PAN)" />
+              <value Value="1234567890123456" />
+            </tlvxml>
+            <tlvxml>
+              <tag Name="5F34" Description="Application Primary Account Number (PAN) Sequence Number" />
+              <value Value="01" />
+            </tlvxml>
+          </children>
+        </tlvxml>
+      </storeData>
+      <storeData DGI="0102" Description="DGI by SFI and REC">
+        <tlvxml>
+          <tag Name="70" Description="Store Data Template" />
+          <children>
+            <tlvxml>
+              <tag Name="57" Description="Track 2 Equivalent Data" />
+              <value Value="1234567890123456D2512201" />
+            </tlvxml>
+          </children>
+        </tlvxml>
+      </storeData>
+    </commands>
+  </application>
+</perso>
