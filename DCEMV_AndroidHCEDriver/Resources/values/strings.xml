@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">DCEMV_AndroidHCEDriver</string>
+    <string name="card_title">DC EMV</string>
+    <string name="service_name">DC EMV Pay</string>
+</resources>

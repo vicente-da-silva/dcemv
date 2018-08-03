@@ -41,8 +41,8 @@ using System.Xml.Serialization;
 [System.SerializableAttribute()]
 [System.Diagnostics.DebuggerStepThroughAttribute()]
 [System.ComponentModel.DesignerCategoryAttribute("code")]
-[System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://www.xserver.com/perso")]
-[System.Xml.Serialization.XmlRootAttribute(Namespace="http://www.xserver.com/perso", IsNullable=false)]
+[System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace= "http://www.dcemv.com/perso")]
+[System.Xml.Serialization.XmlRootAttribute(Namespace= "http://www.dcemv.com/perso", IsNullable=false)]
 public partial class perso {
     
     private keyType[] keysField;
@@ -77,7 +77,7 @@ public partial class perso {
 [System.SerializableAttribute()]
 [System.Diagnostics.DebuggerStepThroughAttribute()]
 [System.ComponentModel.DesignerCategoryAttribute("code")]
-[System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.xserver.com/perso")]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace= "http://www.dcemv.com/perso")]
 public partial class keyType {
     
     private string valueField;
@@ -123,7 +123,7 @@ public partial class keyType {
 /// <remarks/>
 [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
 [System.SerializableAttribute()]
-[System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.xserver.com/perso")]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace= "http://www.dcemv.com/perso")]
 public enum KeyTypesEnum {
     
     /// <remarks/>
@@ -135,7 +135,7 @@ public enum KeyTypesEnum {
 [System.SerializableAttribute()]
 [System.Diagnostics.DebuggerStepThroughAttribute()]
 [System.ComponentModel.DesignerCategoryAttribute("code")]
-[System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.xserver.com/perso")]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace= "http://www.dcemv.com/perso")]
 public partial class storeDataType {
     
     private tlvXMLType[] tlvxmlField;
@@ -195,7 +195,7 @@ public partial class storeDataType {
 [System.SerializableAttribute()]
 [System.Diagnostics.DebuggerStepThroughAttribute()]
 [System.ComponentModel.DesignerCategoryAttribute("code")]
-[System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.xserver.com/perso")]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace= "http://www.dcemv.com/perso")]
 public partial class tlvXMLType {
     
     private tagType tagField;
@@ -253,7 +253,7 @@ public partial class tlvXMLType {
 [System.SerializableAttribute()]
 [System.Diagnostics.DebuggerStepThroughAttribute()]
 [System.ComponentModel.DesignerCategoryAttribute("code")]
-[System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.xserver.com/perso")]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace= "http://www.dcemv.com/perso")]
 public partial class tagType {
     
     private string nameField;
@@ -288,7 +288,7 @@ public partial class tagType {
 [System.SerializableAttribute()]
 [System.Diagnostics.DebuggerStepThroughAttribute()]
 [System.ComponentModel.DesignerCategoryAttribute("code")]
-[System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.xserver.com/perso")]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace= "http://www.dcemv.com/perso")]
 public partial class valueType {
     
     private FormattingEnum formattingField;
@@ -326,7 +326,7 @@ public partial class valueType {
 /// <remarks/>
 [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
 [System.SerializableAttribute()]
-[System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.xserver.com/perso")]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace= "http://www.dcemv.com/perso")]
 public enum FormattingEnum {
     
     /// <remarks/>
@@ -341,7 +341,7 @@ public enum FormattingEnum {
 [System.SerializableAttribute()]
 [System.Diagnostics.DebuggerStepThroughAttribute()]
 [System.ComponentModel.DesignerCategoryAttribute("code")]
-[System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.xserver.com/perso")]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace= "http://www.dcemv.com/perso")]
 public partial class valueC9Type {
     
     private C9_ApplicationInstanceEnum c9_ApplicationInstanceField;
@@ -426,7 +426,7 @@ public partial class valueC9Type {
 /// <remarks/>
 [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
 [System.SerializableAttribute()]
-[System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.xserver.com/perso")]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.dcemv.com/perso")]
 public enum C9_ApplicationInstanceEnum {
     
     /// <remarks/>
@@ -439,7 +439,7 @@ public enum C9_ApplicationInstanceEnum {
 /// <remarks/>
 [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
 [System.SerializableAttribute()]
-[System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.xserver.com/perso")]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.dcemv.com/perso")]
 public enum C9_PinSharingEnum {
     
     /// <remarks/>
@@ -455,7 +455,7 @@ public enum C9_PinSharingEnum {
 /// <remarks/>
 [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
 [System.SerializableAttribute()]
-[System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.xserver.com/perso")]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.dcemv.com/perso")]
 public enum C9_InterfacesAvailableEnum {
     
     /// <remarks/>
@@ -476,7 +476,7 @@ public enum C9_InterfacesAvailableEnum {
 [System.SerializableAttribute()]
 [System.Diagnostics.DebuggerStepThroughAttribute()]
 [System.ComponentModel.DesignerCategoryAttribute("code")]
-[System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.xserver.com/perso")]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.dcemv.com/perso")]
 public partial class tokensType {
     
     private tlvXMLType tlvxmlField;
@@ -497,7 +497,7 @@ public partial class tokensType {
 [System.SerializableAttribute()]
 [System.Diagnostics.DebuggerStepThroughAttribute()]
 [System.ComponentModel.DesignerCategoryAttribute("code")]
-[System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.xserver.com/perso")]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.dcemv.com/perso")]
 public partial class installType {
     
     private tokensType tokensField;
@@ -583,7 +583,7 @@ public partial class installType {
 [System.SerializableAttribute()]
 [System.Diagnostics.DebuggerStepThroughAttribute()]
 [System.ComponentModel.DesignerCategoryAttribute("code")]
-[System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.xserver.com/perso")]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.dcemv.com/perso")]
 public partial class commandsType {
     
     private installType installField;
@@ -617,7 +617,7 @@ public partial class commandsType {
 [System.SerializableAttribute()]
 [System.Diagnostics.DebuggerStepThroughAttribute()]
 [System.ComponentModel.DesignerCategoryAttribute("code")]
-[System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.xserver.com/perso")]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.dcemv.com/perso")]
 public partial class applicationType {
     
     private commandsType commandsField;

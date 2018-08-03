@@ -31,7 +31,7 @@ namespace DCEMV.EMVProtocol
     {
         private string aid;
         public EMVSelectApplicationRequest(string aid, bool isNext = false) : 
-            base(EMVInstructionEnum.SelectPPSE, null, 0x04, isNext?(byte)0x02:(byte)0x00)
+            base(EMVInstructionEnum.Select, null, 0x04, isNext?(byte)0x02:(byte)0x00)
         {
             this.aid = aid;
 

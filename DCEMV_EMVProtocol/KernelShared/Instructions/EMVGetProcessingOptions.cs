@@ -28,6 +28,10 @@ namespace DCEMV.EMVProtocol
 {
     public class EMVGetProcessingOptionsRequest : EMVCommand
     {
+        public EMVGetProcessingOptionsRequest() : base(ISO7816Protocol.Cla.ProprietaryCla8x, EMVInstructionEnum.GetProcessingOptions, null, 0x00, 0x00)
+        {
+        }
+
         public EMVGetProcessingOptionsRequest(TLV pdolRelatedData) : base(ISO7816Protocol.Cla.ProprietaryCla8x, EMVInstructionEnum.GetProcessingOptions, null, 0x00, 0x00)
         {
             ApduResponseType = typeof(EMVGetProcessingOptionsResponse);

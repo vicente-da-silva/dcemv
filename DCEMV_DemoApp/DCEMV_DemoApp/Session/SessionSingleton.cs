@@ -191,8 +191,8 @@ namespace DCEMV.DemoApp
 
         private SessionSingleton()
         {
-            //ApiServerURL = "https://192.168.0.100"; 
-            ApiServerURL = "http://localhost:44359";
+            ApiServerURL = "http://192.168.0.100:44359"; 
+            //ApiServerURL = "http://localhost:44359";
             UserName = "testuser@domain.com";
             Password = "Password1!";
 
@@ -222,6 +222,7 @@ namespace DCEMV.DemoApp
         public static async Task LoginResourceOwner(string username, string userpassword)
         {
             DiscoveryClient discoClient = new DiscoveryClient(ApiServerURL);
+            discoClient.Policy.RequireHttps = false;
             DiscoveryResponse disco = await discoClient.GetAsync();
             if (disco.IsError) throw new Exception(disco.Error);
 

@@ -17,7 +17,7 @@
     <AndroidResgenFile>Resources\Resource.Designer.cs</AndroidResgenFile>
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
     <AndroidManifest>Properties\AndroidManifest.xml</AndroidManifest>
-    <AndroidUseLatestPlatformSdk>true</AndroidUseLatestPlatformSdk>
+    <AndroidUseLatestPlatformSdk>false</AndroidUseLatestPlatformSdk>
     <TargetFrameworkVersion>v7.1</TargetFrameworkVersion>
     <AndroidStoreUncompressedFileExtensions />
     <MandroidI18n />
@@ -87,6 +87,10 @@
     </AndroidResource>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\DCEMV_AndroidHCEDriver\DCEMV_AndroidHCEDriver.csproj">
+      <Project>{6db88042-9a1f-45e7-8a02-5b7d9fd3f900}</Project>
+      <Name>DCEMV_AndroidHCEDriver</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\DCEMV_ServerShared\DCEMV_ServerShared.csproj">
       <Project>{9b565d57-e501-4c71-a3d8-681d1a40ffa2}</Project>
       <Name>DCEMV_ServerShared</Name>
@@ -149,7 +153,7 @@
       <Version>25.4.0.2</Version>
     </PackageReference>
     <PackageReference Include="Xamarin.Forms">
-      <Version>2.5.0.121934</Version>
+      <Version>3.1.0.697729</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>

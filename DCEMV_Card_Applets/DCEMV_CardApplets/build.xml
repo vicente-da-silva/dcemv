@@ -6,7 +6,7 @@
     <!--<property name="JC222" value="sdks/jc222_kit"/>-->
     <!--<property name="JC303" value="sdks/jc303_kit"/>-->
     <!--<property name="JC304" value="sdks/jc304_kit"/>-->
-    <property name="JC305" value="C:/Program Files (x86)/Oracle/Java Card Development Kit 3.0.5u1b"/>
+    <!--<property name="JC305" value="C:/Program Files (x86)/Oracle/Java Card Development Kit 3.0.5u1b"/>-->
     <property name="GP211" value="ext/globalplatform-2_1_1"/>
 
     <taskdef name="javacard" classname="pro.javacard.ant.JavaCard" classpath="ant-javacard.jar"/>
@@ -23,7 +23,7 @@
             <!--2PAY.SYS.DDF01 325041592E5359532E4444463031-->
             <!--<cap debug="true" jckit="${JC305}" output="GlobalPlatform.cap"
                     sources="src/main/java/za/co/xserver/gpsim">-->
-                <!--<applet class="za.co.xserver.gpsim.GlobalPlatform" aid="0102030405060708"/>-->
+            <!--<applet class="dcemv.gpsim.GlobalPlatform" aid="0102030405060708"/>-->
             <!--</cap>-->
         </javacard>
     </target>

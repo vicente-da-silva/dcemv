@@ -1,7 +1,7 @@
 # DC EMV Open Source EMV Implementation
-## V1.0
+## V1.1
 
->[DC EMV Decoded Book available on Amazon Kindle](https://www.amazon.com/EMV-Decoded-transaction-switching-Kubernetes-ebook/dp/B07FCXBZDR/ref=sr_1_1?ie=UTF8&qid=1532082668&sr=8-1&keywords=DC+EMV) This will help you to quickly get up and running with the various applications and understand the various capabilities of the system.
+>DC EMV Decoded Book available in DCEMV_Documentation folder This will help you to quickly get up and running with the various applications and understand the various capabilities of the system.
 
 Features:
 * Contactless EMV Kernel 1,2,3 (EMV 2.6)
@@ -9,6 +9,7 @@ Features:
 * EMV Contact and EMV Contactless Terminal Payment Application
 * EMV Payment Application UI Controls
 * DC EMV JavaCard Applet (compatible with kernel 3)
+* DC EMV Android Host Card Emulation Applet (compatible with kernel 3)
 * GlobalPlatform Personalization application
 * Card Reader Drivers 
   * Android Builtin and ACS1255
@@ -37,7 +38,7 @@ Features:
   * In Memory Simulated Payment Provider (ARQC validation / ARPC generation / Script generation (Pin Change))
   * SPDH Driver
 
- # Features / Enhancements planned are as follows
+ # Features / Enhancements planned
 1.	“Pre-certify” the kernels by using certified testing tools such as the test tool from UL along with an Astrex or MasterCard and Visa simulator. If you have access to these tools and want to contribute to the project then please contact me.
 2.	In order to use these kernels in a production environment where association cards are going to be accepted, the kernel needs to be certified on specific hardware. If there are any vendors making EMV level 1 certified hardware and who are interested in integrating this kernel onto their devices, please contact me.
 3.	A magstripe kernel should be added to the code base, for legacy cards, if there is anyone who has had this kind of experience and wishes to contribute to the project, please contact me.
@@ -47,5 +48,4 @@ Features:
 7.	Improve testability to the point where a full regression test can be done in completely automated way, using simulated cards and the switch mentioned above. This automated testing would be able to check card logs, terminal logs and switch logs and report on discrepancies across the entire transaction flow for all test cases in a matter of minutes.
 8.	Certify physical cards for use with the applets. Any card manufacturers interested in having their cards certified for use with the DC EMV payment applets should contact me. I would like to be able to provide users of the DC EMV framework a list of cards certified to work with the applets. This will negate them having to find compatible cards themselves and will shorten their development cycle.
 9.	Enhance the HSM module to do tokenization of cards. This simply requires adding an API, datastore and using the existing HSM crypto functions.
-10.	Create an HCE version of the card applet, this will allow the DC EMV Demo App user to make/receive a payment without needing a physical card (users can tokenize their physical card, or create virtual cards within the Demo app on their NFC capable device) 
-11.	Allow payments in the DC EMV Demo App using QR codes, this will negate the need for NFC hardware but then implies that both devices involved in the transaction must be capable of scanning/presenting a QR code.
+10.	Allow payments in the DC EMV Demo App using QR codes, this will negate the need for NFC hardware but then implies that both devices involved in the transaction must be capable of scanning/presenting a QR code.

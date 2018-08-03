@@ -17,7 +17,7 @@
 # along with this program.  If not, see http://www.gnu.org/licenses/
 # *************************************************************************
 
-version: '3'
+version: '3.4'
 
 services:
   ci-build:

@@ -24,6 +24,7 @@ along with this program.  If not, see http://www.gnu.org/licenses/
        xmlns="http://www.dcemv.com/perso" 
        xsi:schemaLocation="http://www.dcemv.com/perso Perso.xsd">
   <keys>
+    <!--not currently used, system gets key from DCEMV.PersoApp.SessionSingleton-->
     <key Type="CardMasterKey" Value="12345678901234567890123456789012"/>
   </keys>
   <application type="Credit/Debit No SDA/DDA/CDA">
@@ -32,7 +33,10 @@ along with this program.  If not, see http://www.gnu.org/licenses/
         <tokens/>
       </install>
       <storeData DGI="8001" Description="3DES Key Contactless">
+        <!--with emv demo app which uses the hsm-->
         <data>8CB9F7D54362B0A240D0AE626780A86B</data>
+        <!--with simulated provider, standard master ac test key -> 2315208C9110AD402315208C9110AD40 -> derives this key for this pan and this pan sequence number-->
+        <!--<data>3DAD707C897F49895D6D62526297497A</data>-->
       </storeData>
       <storeData DGI="0101" Description="DGI by SFI and REC">
         <tlvxml>

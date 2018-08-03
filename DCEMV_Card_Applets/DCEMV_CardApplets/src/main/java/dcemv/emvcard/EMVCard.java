@@ -24,7 +24,7 @@ import javacard.framework.*;
 import javacard.security.DESKey;
 import javacard.security.Key;
 import javacard.security.KeyBuilder;
-import javacard.security.Signature;
+import javacardx.crypto.Cipher;
 import org.globalplatform.Application;
 
 //use this when testing via the simulator
@@ -52,9 +52,19 @@ public class EMVCard extends Applet implements Application {
     private final byte[] cardHolderNameDefault = new byte[]{0x20,0x2F};
     private final byte[] capDefault = new byte[]{0x00,0x60,(byte)0x80,0x00};
 
-    private final byte[] selectResponse = new byte[]{0x6F,0x20,(byte)0x84,0x07,0x54,0x65,0x73,0x74,0x41,
-            0x70,0x70,(byte)0xA5,0x15,0x50,0x07,0x54,0x65,0x73,0x74,0x41,0x70,0x70,(byte)0x9F,
-            0x38,0x09,(byte)0x9F,0x02,0x06,(byte)0x9F,0x37,0x04,(byte)0x9F,0x66,0x04};
+//    private final byte[] selectResponse = new byte[]{
+//            0x6F,0x20,
+//                (byte)0x84,0x07,0x54,0x65,0x73,0x74,0x41,0x70,0x70,
+//                (byte)0xA5,0x15,
+//                    0x50,0x07,0x54,0x65,0x73,0x74,0x41,0x70,0x70,
+//                    (byte)0x9F,0x38,0x09,(byte)0x9F,0x02,0x06,(byte)0x9F,0x37,0x04,(byte)0x9F,0x66,0x04};
+
+    private final byte[] selectResponse = new byte[]{
+            0x6F,0x21,
+            (byte)0x84,0x08, (byte)0xA0 , 0x00, 0x00, 0x00, 0x50 , 0x01, 0x01, 0x01,
+            (byte)0xA5,0x15,
+            0x50, 0x07, 0x54, 0x65, 0x73, 0x74, 0x41, 0x70, 0x70,
+            (byte)0x9F,0x38,0x09,(byte)0x9F,0x02,0x06,(byte)0x9F,0x37,0x04,(byte)0x9F,0x66,0x04};
 
     private final static byte GPO = (byte) 0xA8;
     private final static byte SELECT_PPSE = (byte) 0xA4;
@@ -154,13 +164,15 @@ public class EMVCard extends Applet implements Application {
     public EMVCard(byte[] bArray, short bOffset, byte bLength) {
         tagBuffer = JCSystem.makeTransientByteArray((short)4,JCSystem.CLEAR_ON_RESET);//buffers called by store data cannot be clear on deselect
 
-        cryptoInput = JCSystem.makeTransientByteArray((short)(MAX_AMOUNT_AUTH__LENGTH + MAX_UNPRED_NUM__LENGTH +
-                MAX_ATC_LENGTH + (short)1),JCSystem.CLEAR_ON_DESELECT); //tm_IAD_9F10 Byte 5
+        short cryptoInputLenghth = (short)(MAX_AMOUNT_AUTH__LENGTH + MAX_UNPRED_NUM__LENGTH + MAX_ATC_LENGTH + (short)1);
+        cryptoInputLenghth = (short)(cryptoInputLenghth + (8 - (cryptoInputLenghth % 8)));
+
+        cryptoInput = JCSystem.makeTransientByteArray(cryptoInputLenghth,JCSystem.CLEAR_ON_DESELECT);
 
         short responseLengthMax =
                 (short)(
                         (short)4 + //0x77 and a max length of length of 3
-                        (short)tag_AIP_82.length + (short)1 + MAX_IAP_LENGTH +
+                                (short)tag_AIP_82.length + (short)1 + MAX_IAP_LENGTH +
                                 (short)tag_Track2_Equiv_57.length + (short)1 + MAX_TRACK2_LENGTH +
                                 (short)tag_CardholderName_5F20.length + (short)1 + MAX_CARDHOLDER_NAME_LENGTH +
                                 (short)tag_PAN_5A.length + (short)1 + MAX_PAN_LENGTH +
@@ -253,7 +265,7 @@ public class EMVCard extends Applet implements Application {
         //MAC not supported
         if(baBuffer[(short)(0+sOffset)] == (byte)0x80 && baBuffer[(short)(1+sOffset)] == (byte)0x01){//data is key
             //data is DES key
-           Util.arrayCopyNonAtomic(baBuffer,(short)(sOffset + (short)3),tm_ICCACMasterKey,(short)0,MAX_ICC_AC_MASTER_KEY_LENGTH);
+            Util.arrayCopyNonAtomic(baBuffer,(short)(sOffset + (short)3),tm_ICCACMasterKey,(short)0,MAX_ICC_AC_MASTER_KEY_LENGTH);
         }
         else if(baBuffer[(short)(0+sOffset)] == (byte)0x01 && baBuffer[(short)(1+sOffset)] == (byte)0x01){//data is TLV List
             //PAN, PSN
@@ -285,7 +297,11 @@ public class EMVCard extends Applet implements Application {
     //do not use this kind of memory allocation code for card apps processing as it allocates memory on the card
     //and eventually the card will run out of memory
     private void doTestPerso(){
-        Util.arrayCopyNonAtomic(Utils.hexStringToByteArray("8CB9F7D54362B0A240D0AE626780A86B"),(short)0,tm_ICCACMasterKey,(short)0,MAX_ICC_AC_MASTER_KEY_LENGTH);
+        //with emv demo app which uses the hsm
+        //8CB9F7D54362B0A240D0AE626780A86B
+        //with simulated provider, standard master ac test key -> 2315208C9110AD402315208C9110AD40 -> derives this key for this pan and this pan sequence number
+        //3DAD707C897F49895D6D62526297497A
+        Util.arrayCopyNonAtomic(Utils.hexStringToByteArray("3DAD707C897F49895D6D62526297497A"),(short)0,tm_ICCACMasterKey,(short)0,MAX_ICC_AC_MASTER_KEY_LENGTH);
         byte[] panBytes = Utils.hexStringToByteArray("1234567890123456");
         tm_PAN_5A_Length[0] = (byte)panBytes.length;
         Util.arrayCopyNonAtomic(panBytes,(short)0, tm_PAN_5A,(short)0,tm_PAN_5A_Length[0]);
@@ -312,6 +328,15 @@ public class EMVCard extends Applet implements Application {
 
     private void doProcessADPU(APDU apdu) {
         byte[] buffer = apdu.getBuffer();
+
+        tm_IAD_9F10[0] = 0x06;//format
+        tm_IAD_9F10[1] = 0x00;//kdi
+        tm_IAD_9F10[2] = 0x11;//cvn , crypto 17
+
+        tm_IAD_9F10[3] = 0x00;//cvr byte 1
+        tm_IAD_9F10[4] = 0x00;//cvr byte 2
+        tm_IAD_9F10[5] = 0x00;//cvr byte 3
+        tm_IAD_9F10[6] = 0x00;//cvr byte 4
 
         short pos = ISO7816.OFFSET_CDATA + 2;
         Util.arrayCopyNonAtomic(buffer, pos, tm_Amount_9F02, (short) 0, MAX_AMOUNT_AUTH__LENGTH);
@@ -535,19 +560,19 @@ public class EMVCard extends Applet implements Application {
         short responseLength =
                 (short)(
                         (short)tag_AIP_82.length + (short)1 + (short)tm_IAP_82.length +
-                        (short)tag_Track2_Equiv_57.length + (short)1 + tm_Track2_Equivalent_57_Length[0] +
-                        (short)tag_CardholderName_5F20.length + (short)1 + tm_Cardholder_Name_5F20.length +
-                        (short)tag_PAN_5A.length+ (short)1 + tm_PAN_5A_Length[0] +
-                        (short)tag_PSN_5F34.length+ (short)1 + tm_PanSequenceNumber_5F34.length +
-                        (short)tag_IAD_9F10.length+ (short)1 + tm_IAD_9F10.length +
-                        (short)tag_AC_9F26.length+ (short)1 + tm_AC_9F26.length +
-                        (short)tag_CID_9F27.length+ (short)1 + tm_CID_9F27.length +
-                        (short)tag_ATC_9F36.length+ (short)1 + tm_ATC_9F36.length +
-                        sdadLength +
-                        (short)tag_CTQ_9F6C.length+ (short)1 + tm_CTQ_9F6C.length +
-                        (short)tag_FFI_9F6E.length+ (short)1 + tm_FFI_9F6E.length +
-                        (short)tag_CED_9F7C.length+ (short)1 + tm_CED_9F7C.length
-                        );
+                                (short)tag_Track2_Equiv_57.length + (short)1 + tm_Track2_Equivalent_57_Length[0] +
+                                (short)tag_CardholderName_5F20.length + (short)1 + tm_Cardholder_Name_5F20.length +
+                                (short)tag_PAN_5A.length+ (short)1 + tm_PAN_5A_Length[0] +
+                                (short)tag_PSN_5F34.length+ (short)1 + tm_PanSequenceNumber_5F34.length +
+                                (short)tag_IAD_9F10.length+ (short)1 + tm_IAD_9F10.length +
+                                (short)tag_AC_9F26.length+ (short)1 + tm_AC_9F26.length +
+                                (short)tag_CID_9F27.length+ (short)1 + tm_CID_9F27.length +
+                                (short)tag_ATC_9F36.length+ (short)1 + tm_ATC_9F36.length +
+                                sdadLength +
+                                (short)tag_CTQ_9F6C.length+ (short)1 + tm_CTQ_9F6C.length +
+                                (short)tag_FFI_9F6E.length+ (short)1 + tm_FFI_9F6E.length +
+                                (short)tag_CED_9F7C.length+ (short)1 + tm_CED_9F7C.length
+                );
 
         short pos = 0;
         short lengthArraySize = TLV.makeLength(responseLength, lengthArray);
@@ -579,43 +604,61 @@ public class EMVCard extends Applet implements Application {
     }
 
     public void generateCryptogram17(byte[] iccACMasterKey, byte[] d){
-        Key key = KeyBuilder.buildKey(
-                KeyBuilder.TYPE_DES,
-                //JCSystem.MEMORY_TYPE_PERSISTENT,
-                KeyBuilder.LENGTH_DES3_2KEY,
-                false);
-        ((DESKey)key).setKey(iccACMasterKey,(short)0);
-        iso9797Alg3(key,d);
-
+        iso9797Alg3NoMethod2Pad(iccACMasterKey,d);
     }
 
-    public void iso9797Alg3(Key desKey, byte[] data){
-        Signature engine = Signature.getInstance(Signature.ALG_DES_MAC8_ISO9797_1_M2_ALG3, false);
-        signData(engine, desKey, null, data);
-    }
+    public void iso9797Alg3NoMethod2Pad(byte[] iccACMasterKey, byte[] d){
+        //already padded with 00 during buffer allocation
+        Cipher engine = Cipher.getInstance(Cipher.ALG_DES_ECB_NOPAD, false);
+        Key left = KeyBuilder.buildKey(KeyBuilder.TYPE_DES,KeyBuilder.LENGTH_DES,false);
+        Key right = KeyBuilder.buildKey(KeyBuilder.TYPE_DES,KeyBuilder.LENGTH_DES,false);
 
-    private void signData(Signature engine, Key key, byte[] iv, byte[] msg) {
-        if (iv == null) {
-            engine.init(key, Signature.MODE_SIGN);
-        } else {
-            engine.init(key, Signature.MODE_SIGN, iv, (short) 0, (short) iv.length);
+        byte[] leftBytes = JCSystem.makeTransientByteArray((short)8, JCSystem.CLEAR_ON_DESELECT);
+        byte[] rightBytes = JCSystem.makeTransientByteArray((short)8, JCSystem.CLEAR_ON_DESELECT);
+
+        Util.arrayCopy(iccACMasterKey,(short)0,leftBytes,(short)0,(short)8);
+        Util.arrayCopy(iccACMasterKey,(short)8,rightBytes,(short)0,(short)8);
+
+        ((DESKey)left).setKey(leftBytes,(short)0);
+        ((DESKey)right).setKey(rightBytes,(short)0);
+
+        byte[] yi = JCSystem.makeTransientByteArray((short)8, JCSystem.CLEAR_ON_DESELECT);
+        byte[] y_i = JCSystem.makeTransientByteArray((short)8, JCSystem.CLEAR_ON_DESELECT);
+        engine.init(left,Cipher.MODE_ENCRYPT);
+        for (short i = 0; i < d.length; i += 8)
+        {
+            Util.arrayCopy(d, i, yi, (short)0, (short)yi.length);
+            engine.doFinal(Utils.Xor(yi, y_i),(short)0,(short)8,y_i,(short)0);
         }
-        engine.sign(msg, (short) 0, (short) msg.length, tm_AC_9F26, (short) 0);
+        engine.init(right,Cipher.MODE_DECRYPT);
+        engine.doFinal(y_i, (short)0,(short)8,y_i,(short)0);
+        engine.init(left,Cipher.MODE_ENCRYPT);
+        engine.doFinal(y_i, (short)0,(short)8,y_i, (short)0);
+        Util.arrayCopy(y_i,(short)0,tm_AC_9F26,(short)0,(short)8);
     }
+
+//    public void iso9797Alg3(byte[] iccACMasterKey, byte[] data){
+//        Key key = KeyBuilder.buildKey(
+//                KeyBuilder.TYPE_DES,
+//                //JCSystem.MEMORY_TYPE_PERSISTENT,
+//                KeyBuilder.LENGTH_DES3_2KEY,
+//                false);
+//        ((DESKey)key).setKey(iccACMasterKey,(short)0);
+//        Signature engine = Signature.getInstance(Signature.ALG_DES_MAC8_ISO9797_1_M2_ALG3, false);
+//        signData(engine, key, null, data);
+//    }
+//    private void signData(Signature engine, Key key, byte[] iv, byte[] msg) {
+//        if (iv == null) {
+//            engine.init(key, Signature.MODE_SIGN);
+//        } else {
+//            engine.init(key, Signature.MODE_SIGN, iv, (short) 0, (short) iv.length);
+//        }
+//        engine.getPaddingAlgorithm();
+//        engine.sign(msg, (short) 0, (short) msg.length, tm_AC_9F26, (short) 0);
+//    }
 
     public void processData(byte[] baBuffer, short sOffset, short sLength) {
         doStoreData(baBuffer, sOffset, sLength);
     }
-
-
-//    private void appendIDDTo_9F10() {
-//        byte[] prefix = new byte[2];
-//        prefix[0] = (byte)tm_IDD.length;
-//        prefix[1] = 0x00;
-//
-//        byte[] val = concatArrays(prefix,tm_IDD);
-//        val = concatArrays(tm_IAD_9F10,val);
-//        Util.arrayCopy(val,(short)0,tm_IAD_9F10,(short)0,(short)val.length);
-//    }
 
 }

@@ -11,8 +11,8 @@
     <AssemblyName>DCEMV_DemoEMVApp.UWP</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
-    <TargetPlatformVersion>10.0.15063.0</TargetPlatformVersion>
-    <TargetPlatformMinVersion>10.0.10586.0</TargetPlatformMinVersion>
+    <TargetPlatformVersion>10.0.17134.0</TargetPlatformVersion>
+    <TargetPlatformMinVersion>10.0.16299.0</TargetPlatformMinVersion>
     <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
     <EnableDotNetNativeCompatibleProfile>true</EnableDotNetNativeCompatibleProfile>
     <FileAlignment>512</FileAlignment>
@@ -168,8 +168,8 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Xamarin.Forms" Version="2.5.0.121934" />
-    <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform" Version="6.0.5" />
+    <PackageReference Include="Xamarin.Forms" Version="3.1.0.697729" />
+    <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform" Version="6.1.7" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\DCEMV_ConfigurationManager\DCEMV_ConfigurationManager.csproj">
@@ -215,6 +215,10 @@
     <ProjectReference Include="..\..\DCEMV_TLVProtocol\DCEMV_TLVProtocol.csproj">
       <Project>{DDDBFC8D-A231-4185-A8C2-7460156C67C3}</Project>
       <Name>DCEMV_TLVProtocol</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\DCEMV_WindowsCardEmulatorProxyDriver\DCEMV_WindowsCardEmulatorProxyDriver.csproj">
+      <Project>{41CE5693-53AE-45E3-86DB-DBA73E28F5B1}</Project>
+      <Name>DCEMV_WindowsCardEmulatorProxyDriver</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\DCEMV_WindowsDevicesSmartCardsDriver\DCEMV_WindowsDevicesSmartCardsDriver.csproj">
       <Project>{BA7748E1-3970-4889-B859-07C710F9351D}</Project>

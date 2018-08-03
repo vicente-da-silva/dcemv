@@ -22,7 +22,7 @@ namespace DCEMV.EMVProtocol
 {
     public enum EMVInstructionEnum : byte
     {
-        SelectPPSE = 0xA4,
+        Select = 0xA4,
         GetProcessingOptions = 0xA8,
         ReadRecord = 0xB2,
         ExchangeRelayResistanceData = 0xEA,

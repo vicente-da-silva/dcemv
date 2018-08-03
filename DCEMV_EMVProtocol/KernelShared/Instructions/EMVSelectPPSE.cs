@@ -41,7 +41,7 @@ namespace DCEMV.EMVProtocol
     public class EMVSelectPPSERequest : EMVCommand
     {
         string fileName;
-        public EMVSelectPPSERequest(string fileName) : base(EMVInstructionEnum.SelectPPSE, null, 
+        public EMVSelectPPSERequest(string fileName) : base(EMVInstructionEnum.Select, null, 
             (byte)SelectPPSERequest_P1.SelectByName,
             (byte)SelectPPSERequest_P2.FirstOrOnlyOccurrence)
         {

@@ -20,6 +20,7 @@ along with this program.  If not, see http://www.gnu.org/licenses/
 */
 using DCEMV.CardReaders.I2CRPi3NXPOM5577Driver;
 using DCEMV.CardReaders.NCIDriver;
+using DCEMV.CardReaders.WindowsCardEmulatorProxyDriver;
 using DCEMV.CardReaders.WindowsDevicesSmartCardsDriver;
 using DCEMV.ConfigurationManager;
 using DCEMV.SimulatedPaymentProvider;
@@ -38,6 +39,8 @@ namespace DCEMV.DemoEMVApp.UWP
                 null,
                 new NCICardReader(new I2CRPi3NXPOM5577HAL()),
 #else
+                //null,
+                //new Win10CardProxy("127.0.0.1",50000),
                 new Win10CardReader(), //set to null to disable interface
                 new Win10CardReader(), //set to null to disable interface
 #endif

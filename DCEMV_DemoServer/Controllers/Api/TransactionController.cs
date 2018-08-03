@@ -31,6 +31,7 @@ using DCEMV.Shared;
 using Newtonsoft.Json;
 using DCEMV.EMVProtocol.Kernels;
 using DCEMV.SimulatedPaymentProvider;
+using DCEMV.EMVSecurity;
 
 namespace DCEMV.DemoServer.Controllers.Api
 {
@@ -45,6 +46,9 @@ namespace DCEMV.DemoServer.Controllers.Api
         private const string authIp = "192.168.0.100";
         private const int authPort = 6010;
 
+        private static byte[] arcApproved = FormattingUtils.Formatting.HexStringToByteArray("3030"); //approved code
+        private static byte[] arcDeclined = FormattingUtils.Formatting.HexStringToByteArray("3035"); //declined code
+
         public TransactionController(
             ITransactionsRepository transactionRepository,
             IAccountsRepository accountsRepository)
@@ -54,6 +58,26 @@ namespace DCEMV.DemoServer.Controllers.Api
 
         }
 
+        public static byte[] VerifyCardSignature(TLV tlv)
+        {
+            CryptoMetaData cryptoMetaData = EMVDESSecurity.BuildCryptoMeta(tlv);
+
+            //fire up HSM
+            if (jcesecmod == null)
+                jcesecmod = new EMVDESSecurity(lmkFilePath);
+
+            TLV _8A;
+            bool isApproved = true;
+            if (isApproved)
+                _8A = TLV.Create(EMVTagsEnum.AUTHORISATION_RESPONSE_CODE_8A_KRN.Tag, arcApproved);
+            else
+                _8A = TLV.Create(EMVTagsEnum.AUTHORISATION_RESPONSE_CODE_8A_KRN.Tag, arcDeclined);
+
+            byte[] arpc = jcesecmod.VerifyCryptogramGenARPC(tlv, cryptoMetaData, _8A.Value, mkACEncrypted, mkACEncryptedCV);
+
+            return arpc;
+        }
+
         //[NoCache]
         [HttpPost]
         [Route("transaction/transfer")]
@@ -61,11 +85,14 @@ namespace DCEMV.DemoServer.Controllers.Api
         {
             TransferTransaction tx = TransferTransaction.FromJsonString(json);
 
-            if (!VerifyCryptogram17(tx.CardFromEMVData))
-                throw new ValidationException("Invalid Cryptogram");
-
             if (tx.Amount == 0)
                 throw new ValidationException("Invalid Amount");
+
+            TLV tlv = TLVasJSON.FromJSON(tx.CardFromEMVData);
+
+            byte[] arpc = VerifyCardSignature(tlv);
+            if (arpc == null)
+                throw new ValidationException("ARQC failure");
 
             //TODO: only accept transactions from DC EMV cards, not EMV cards
 

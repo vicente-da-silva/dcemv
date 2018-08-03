@@ -256,7 +256,7 @@ namespace DCEMV.DemoServer.Controllers.Api
             if (transaction.Amount != emvAmount)
                 throw new ValidationException("Invalid Amount: Card does not match Cryptogram");
 
-            if (!VerifyCryptogram17(transaction.CardFromEMVData))
+            if (TransactionController.VerifyCardSignature(tlv) == null)
                 throw new ValidationException("Invalid Cryptogram");
 
             transaction.TransactionType = TransactionType.SendMoneyFromCardToApp;

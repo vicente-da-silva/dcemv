@@ -28,6 +28,8 @@ namespace DCEMV.EMVProtocol.Kernels
 {
     public enum AIDEnum
     {
+        A000000050010101,           //DC EMV
+
         A0000000046000,             //Cirrus
 
         A0000000031010,             //Visa International VISA Debit/Credit (Classic)

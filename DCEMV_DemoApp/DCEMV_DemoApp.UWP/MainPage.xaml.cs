@@ -43,7 +43,8 @@ namespace DCEMV.DemoApp.UWP
 #if Pi
                    new NCICardReader(new I2CRPi3NXPOM5577HAL()),
 #else
-                   new Win10CardProxy("localhost", 50000),
+                   //new Win10CardProxy("localhost", 50000),
+                   new Win10CardReader(),
 #endif
                    //new SPDHApprover("192.168.1.107", 6010), 
                    //new DCEMVServerOnlineApprover(),

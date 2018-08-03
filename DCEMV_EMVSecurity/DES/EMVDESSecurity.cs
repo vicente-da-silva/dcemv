@@ -40,9 +40,9 @@ namespace DCEMV.EMVSecurity
     {
         public SKDMethod SKDMethod { get; set; }
         public CrptoVersionEnum CryptoVersion { get; set; }
-        public SecretKeySpec IMKACUnEncrypted { get; set; }
-        public SecretKeySpec IMKMACUnEncrypted { get; set; }
-        public SecretKeySpec IMKDEAUnEncrypted { get; set; }
+        public IKey IMKACUnEncrypted { get; set; }
+        public IKey IMKMACUnEncrypted { get; set; }
+        public IKey IMKDEAUnEncrypted { get; set; }
         public byte KDI { get; set; }
         public byte[] CVR { get; set; }
         public byte[] Cryptogram { get; set; }
@@ -55,6 +55,15 @@ namespace DCEMV.EMVSecurity
     }
     public class EMVDESSecurity //: EMVDESSecurityBase
     {
+        //standard unencrypted test keys
+        private const string vsdcACKey = "2315208C9110AD402315208C9110AD40";
+        private const string vsdcMACKey = "2315208C9110AD402315208C9110AD40";
+        private const string vsdcDEAKey = "2315208C9110AD402315208C9110AD40";
+
+        private const string mchipACKey = "9E15204313F7318ACB79B90BD986AD29";
+        private const string mchipMACKey = "4664942FE615FB02E5D57F292AA2B3B6";
+        private const string mchipDEAKey = "CE293B8CC12A977379EF256D76109492";
+
         private static byte[] fPaddingBlock = Formatting.HexStringToByteArray("FFFFFFFFFFFFFFFF");
         private static byte[] zeroBlock = Formatting.HexStringToByteArray("0000000000000000");
 
@@ -432,6 +441,40 @@ namespace DCEMV.EMVSecurity
             return secureDESKey;
         }
 
+        public byte[] VerifyCryptogramGenARPC(TLV emvData, CryptoMetaData cryptoMetaData, byte[] arc, 
+            string mkACEncrypted, string mkACEncryptedCV)
+        {
+            if (!String.IsNullOrEmpty(mkACEncrypted) && !String.IsNullOrEmpty(mkACEncryptedCV))
+            {
+                SecureDESKey imkacAC = new SecureDESKey(SMAdapter.LENGTH_DES3_2KEY, SMAdapter.TYPE_MK_AC + ":1U", mkACEncrypted, mkACEncryptedCV);
+                //TODO: clone this metatdata
+                cryptoMetaData.IMKACUnEncrypted = DecryptFromLMK(imkacAC);
+
+                byte[] arpc;
+                switch (cryptoMetaData.CryptoVersion)
+                {
+                    case CrptoVersionEnum._10:
+                        arpc = VerifyCryptogram10ARQCGenerateARPCImpl(emvData, cryptoMetaData, arc);
+                        break;
+
+                    case CrptoVersionEnum._17:
+                        arpc = VerifyCryptogram17ARQCGenerateARPCImpl(emvData, cryptoMetaData, arc);
+                        break;
+
+                    case CrptoVersionEnum._18:
+                        arpc = VerifyCryptogram18ARQCGenerateARPCImpl(emvData, cryptoMetaData, arc);
+                        break;
+
+                    default:
+                        throw new Exception("CryptoVersion not supported:" + cryptoMetaData.CryptoVersion);
+                }
+                return arpc;
+            }
+            else
+            {
+                return null;
+            }
+        }
 
         #region Static Methods
 
@@ -906,7 +949,7 @@ namespace DCEMV.EMVSecurity
                             default:
                                 throw new Exception("DetermineCryptoType: cryptoVersionNumber not supported:" + _9F10.Value[2]);
                         }
-                        //byte 4 to 7 = cvr
+                        //byte 4 to 7 = cvr -> 4 bytes
                         cvr = Formatting.copyOfRange(_9F10.Value, 3, 7);
 
                     }
@@ -933,7 +976,7 @@ namespace DCEMV.EMVSecurity
                             default:
                                 throw new Exception("DetermineCryptoType: cryptoVersionNumber not supported:" + _9F10.Value[2]);
                         }
-                        //byte 4 to 8 = cvr
+                        //byte 4 to 8 = cvr -> 5 bytes
                         cvr = Formatting.copyOfRange(_9F10.Value, 3, 8);
                     }
                     else
@@ -994,6 +1037,10 @@ namespace DCEMV.EMVSecurity
 
         private static SKDMethod DetermineCryptoMethod(String aid)
         {
+            if (aid.StartsWith(AIDEnum.A000000050010101.ToString()))
+            {
+                return SKDMethod.VSDC;
+            }
             if (aid.StartsWith(AIDEnum.A0000000031010.ToString()))
             {
                 return SKDMethod.VSDC;
@@ -1227,6 +1274,41 @@ namespace DCEMV.EMVSecurity
                 propAuthData);
 
             return arpc;
+        }
+
+        public static CryptoMetaData BuildCryptoMeta(TLV emvData)
+        {
+            CryptoMetaData cryptoMetaData = DetermineCryptoMeta(emvData);
+
+            switch (cryptoMetaData.SKDMethod)
+            {
+                case SKDMethod.VSDC:
+                    cryptoMetaData.IMKACUnEncrypted = JCEHandler.FormDESKey(SMAdapter.LENGTH_DES3_2KEY, Formatting.HexStringToByteArray(vsdcACKey));
+                    cryptoMetaData.IMKDEAUnEncrypted = JCEHandler.FormDESKey(SMAdapter.LENGTH_DES3_2KEY, Formatting.HexStringToByteArray(vsdcDEAKey));
+                    cryptoMetaData.IMKMACUnEncrypted = JCEHandler.FormDESKey(SMAdapter.LENGTH_DES3_2KEY, Formatting.HexStringToByteArray(vsdcMACKey));
+                    break;
+
+                case SKDMethod.MCHIP:
+                    cryptoMetaData.IMKACUnEncrypted = JCEHandler.FormDESKey(SMAdapter.LENGTH_DES3_2KEY, Formatting.HexStringToByteArray(mchipACKey));
+                    cryptoMetaData.IMKDEAUnEncrypted = JCEHandler.FormDESKey(SMAdapter.LENGTH_DES3_2KEY, Formatting.HexStringToByteArray(mchipDEAKey));
+                    cryptoMetaData.IMKMACUnEncrypted = JCEHandler.FormDESKey(SMAdapter.LENGTH_DES3_2KEY, Formatting.HexStringToByteArray(mchipMACKey));
+                    break;
+
+                case SKDMethod.EMV_CSKD:
+                    if (cryptoMetaData.CryptoVersion == CrptoVersionEnum._18)
+                    {
+                        cryptoMetaData.IMKACUnEncrypted = JCEHandler.FormDESKey(SMAdapter.LENGTH_DES3_2KEY, Formatting.HexStringToByteArray(vsdcACKey));
+                        cryptoMetaData.IMKDEAUnEncrypted = JCEHandler.FormDESKey(SMAdapter.LENGTH_DES3_2KEY, Formatting.HexStringToByteArray(vsdcDEAKey));
+                        cryptoMetaData.IMKMACUnEncrypted = JCEHandler.FormDESKey(SMAdapter.LENGTH_DES3_2KEY, Formatting.HexStringToByteArray(vsdcMACKey));
+                    }
+                    else
+                        throw new Exception("DoAuth: SKDMethod not supported:" + cryptoMetaData.SKDMethod + " for CVN:" + cryptoMetaData.CryptoVersion);
+                    break;
+
+                default:
+                    throw new Exception("DoAuth: SKDMethod not supported:" + cryptoMetaData.SKDMethod);
+            }
+            return cryptoMetaData;
         }
 
         public static byte[] VerifyCryptogramGenARPC(TLV emvData, CryptoMetaData cryptoMetaData, byte[] arc)

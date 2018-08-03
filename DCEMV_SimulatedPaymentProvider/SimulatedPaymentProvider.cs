@@ -34,47 +34,10 @@ namespace DCEMV.SimulatedPaymentProvider
 
         private byte[] arcApproved = Formatting.HexStringToByteArray("3030"); //approved code
         private byte[] arcDeclined = Formatting.HexStringToByteArray("3035"); //declined code
-        
-        private const string vsdcACKey = "2315208C9110AD402315208C9110AD40";
-        private const string vsdcMACKey = "2315208C9110AD402315208C9110AD40";
-        private const string vsdcDEAKey = "2315208C9110AD402315208C9110AD40";
-
-        private const string mchipACKey = "9E15204313F7318ACB79B90BD986AD29";
-        private const string mchipMACKey = "4664942FE615FB02E5D57F292AA2B3B6";
-        private const string mchipDEAKey = "CE293B8CC12A977379EF256D76109492";
 
         public ApproverResponse DoAuth(ApproverRequest request)
         {
-            CryptoMetaData cryptoMetaData = EMVDESSecurity.DetermineCryptoMeta(request.EMV_Data);
-
-            switch (cryptoMetaData.SKDMethod)
-            {
-                case SKDMethod.VSDC:
-                    cryptoMetaData.IMKACUnEncrypted = (SecretKeySpec)JCEHandler.FormDESKey(SMAdapter.LENGTH_DES3_2KEY, Formatting.HexStringToByteArray(vsdcACKey));
-                    cryptoMetaData.IMKDEAUnEncrypted = (SecretKeySpec)JCEHandler.FormDESKey(SMAdapter.LENGTH_DES3_2KEY, Formatting.HexStringToByteArray(vsdcDEAKey));
-                    cryptoMetaData.IMKMACUnEncrypted = (SecretKeySpec)JCEHandler.FormDESKey(SMAdapter.LENGTH_DES3_2KEY, Formatting.HexStringToByteArray(vsdcMACKey));
-                    break;
-
-                case SKDMethod.MCHIP:
-                    cryptoMetaData.IMKACUnEncrypted = (SecretKeySpec)JCEHandler.FormDESKey(SMAdapter.LENGTH_DES3_2KEY, Formatting.HexStringToByteArray(mchipACKey));
-                    cryptoMetaData.IMKDEAUnEncrypted = (SecretKeySpec)JCEHandler.FormDESKey(SMAdapter.LENGTH_DES3_2KEY, Formatting.HexStringToByteArray(mchipDEAKey));
-                    cryptoMetaData.IMKMACUnEncrypted = (SecretKeySpec)JCEHandler.FormDESKey(SMAdapter.LENGTH_DES3_2KEY, Formatting.HexStringToByteArray(mchipMACKey));
-                    break;
-
-                case SKDMethod.EMV_CSKD:
-                    if (cryptoMetaData.CryptoVersion == CrptoVersionEnum._18)
-                    {
-                        cryptoMetaData.IMKACUnEncrypted = (SecretKeySpec)JCEHandler.FormDESKey(SMAdapter.LENGTH_DES3_2KEY, Formatting.HexStringToByteArray(vsdcACKey));
-                        cryptoMetaData.IMKDEAUnEncrypted = (SecretKeySpec)JCEHandler.FormDESKey(SMAdapter.LENGTH_DES3_2KEY, Formatting.HexStringToByteArray(vsdcDEAKey));
-                        cryptoMetaData.IMKMACUnEncrypted = (SecretKeySpec)JCEHandler.FormDESKey(SMAdapter.LENGTH_DES3_2KEY, Formatting.HexStringToByteArray(vsdcMACKey));
-                    }
-                    else
-                        throw new SimulatedPaymentProviderException("DoAuth: SKDMethod not supported:" + cryptoMetaData.SKDMethod + " for CVN:" + cryptoMetaData.CryptoVersion);
-                    break;
-
-                default:
-                    throw new SimulatedPaymentProviderException("DoAuth: SKDMethod not supported:" + cryptoMetaData.SKDMethod);
-            }
+            CryptoMetaData cryptoMetaData = EMVDESSecurity.BuildCryptoMeta(request.EMV_Data);
 
             //Do additional checking here, e.g. customer balances etc
             //if decline set isApproved to false

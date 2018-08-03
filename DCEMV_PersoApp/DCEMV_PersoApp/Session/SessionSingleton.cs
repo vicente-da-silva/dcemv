@@ -48,6 +48,7 @@ namespace DCEMV.PersoApp
         private SessionSingleton()
         {
             SecurityDomainAID = "A000000018434D00";
+            //replace with master key for your card
             SecurityDomainMasterKey = "12345678901234567890123456789012";
         }
 

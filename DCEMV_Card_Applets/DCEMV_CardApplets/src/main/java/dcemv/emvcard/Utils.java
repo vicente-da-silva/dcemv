@@ -20,6 +20,7 @@ along with this program.  If not, see http://www.gnu.org/licenses/
 */
 package dcemv.emvcard;
 
+import javacard.framework.JCSystem;
 import javacard.framework.Util;
 
 public class Utils {
@@ -36,9 +37,26 @@ public class Utils {
     public static byte ClearBit(byte val, short bit){
         return (byte)(val & ~(1 << bit));
     }
+    public static byte[] Xor(byte[] op1, byte[] op2){
+        byte[] result;
+        // Use the smallest array
+        if (op2.length > op1.length)
+        {
+            result = JCSystem.makeTransientByteArray((short)op1.length, JCSystem.CLEAR_ON_DESELECT);
+        }
+        else
+        {
+            result = JCSystem.makeTransientByteArray((short)op2.length, JCSystem.CLEAR_ON_DESELECT);
+        }
+        for (short i = 0; i < result.length; i++)
+        {
+            result[i] = (byte)(op1[i] ^ op2[i]);
+        }
+        return result;
+    }
 
-    //code for testing only, do not use in non test perso code
-    //uncomment this code for running the applet in the emulator
+//    code for testing only, do not use in non test perso code
+//    uncomment this code for running the applet in the emulator
     public static byte[] hexStringToByteArray(String s) {
         int len = s.length();
         byte[] data = new byte[len / 2];
