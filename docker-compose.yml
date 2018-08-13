@@ -27,10 +27,10 @@ services:
     # directs, via nginx.conf to the identity server on its port (44359).
     # It must also match the value specified on the client side, so token authentication will
     # work
-      - ID_SERVER_URL=https://192.168.0.100
-      - DB_SERVER_NAME=192.168.0.100 
-      #- ID_SERVER_URL=https://www.payloola.com
-      #- DB_SERVER_NAME=paylooladbserver.database.windows.net 
+      ID_SERVER_URL: https://192.168.0.100
+      DB_SERVER_NAME: 192.168.0.100 
+      #ID_SERVER_URL: https://www.payloola.com
+      #DB_SERVER_NAME: paylooladbserver.database.windows.net 
     build:
       context: .
       dockerfile: DCEMV_DemoServer/Dockerfile
