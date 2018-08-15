@@ -30,9 +30,65 @@ using IdentityServer4.EntityFramework.Mappers;
 using DCEMV.DemoServer.Persistence.Credentials;
 using DCEMV.DemoServer.Persistence.Api;
 using System.Threading;
+using Microsoft.AspNetCore;
+using Microsoft.Extensions.Configuration;
 
 namespace DCEMV.DemoServer
 {
+    public static class Ext
+    {
+        public static IWebHost Migrate(this IWebHost webhost)
+        {
+            using (var scope = webhost.Services.GetService<IServiceScopeFactory>().CreateScope())
+            {
+                using (var db1 = scope.ServiceProvider.GetRequiredService<IdentityUserDbContext>())
+                {
+                    db1.Database.Migrate();
+                }
+                using (var db2 = scope.ServiceProvider.GetRequiredService<PersistedGrantDbContext>())
+                {
+                    db2.Database.Migrate();
+                }
+                using (var context = scope.ServiceProvider.GetRequiredService<ConfigurationDbContext>())
+                {
+                    context.Database.Migrate();
+
+                    if (!context.Clients.Any())
+                    {
+                        foreach (IdentityServer4.Models.Client client in Config.GetClients())
+                        {
+                            context.Clients.Add(client.ToEntity());
+                        }
+                        context.SaveChanges();
+                    }
+
+                    if (!context.IdentityResources.Any())
+                    {
+                        foreach (IdentityServer4.Models.IdentityResource resource in Config.GetIdentityResources())
+                        {
+                            context.IdentityResources.Add(resource.ToEntity());
+                        }
+                        context.SaveChanges();
+                    }
+
+                    if (!context.ApiResources.Any())
+                    {
+                        foreach (IdentityServer4.Models.ApiResource resource in Config.GetApiResources())
+                        {
+                            context.ApiResources.Add(resource.ToEntity());
+                        }
+                        context.SaveChanges();
+                    }
+                }
+                using (var db4 = scope.ServiceProvider.GetRequiredService<ApiDbContext>())
+                {
+                    db4.Database.Migrate();
+                }
+            }
+            return webhost;
+        }
+    }
+
     public class Program
     {
         public static void Main(string[] args)
@@ -40,17 +96,7 @@ namespace DCEMV.DemoServer
             try
             {
                 //Console.Title = "DCEMV Demo Server";
-
-                IWebHost host = new WebHostBuilder()
-                    .UseUrls(ConfigSingleton.ThisServerUrl)
-                    .UseKestrel()
-                    .UseContentRoot(Directory.GetCurrentDirectory())
-                    //.UseIISIntegration()
-                    .UseStartup<Startup>()
-                    .Build();
-
-                SanityCheckDatabase(host);
-                host.Run();
+                BuildWebHost(args).Migrate().Run();
             }
             catch (Exception ex)
             {
@@ -60,54 +106,19 @@ namespace DCEMV.DemoServer
                 System.Diagnostics.Debug.WriteLine("ID:" + Environment.GetEnvironmentVariable("ID_SERVER_URL"));
             }
         }
-        
-        private static void SanityCheckDatabase(IWebHost host)
-        {
-            IdentityUserDbContext db1 = (IdentityUserDbContext)host.Services.GetService(typeof(IdentityUserDbContext));
-            PersistedGrantDbContext db2 = (PersistedGrantDbContext)host.Services.GetService(typeof(PersistedGrantDbContext));
-            ConfigurationDbContext db3 = (ConfigurationDbContext)host.Services.GetService(typeof(ConfigurationDbContext));
-            ApiDbContext db4 = (ApiDbContext)host.Services.GetService(typeof(ApiDbContext));
-            
-            db1.Database.Migrate();
-            db2.Database.Migrate();
-            db3.Database.Migrate();
-            db4.Database.Migrate();
 
-            InitializeIdentityDatabase(host);
-        }
-
-        private static void InitializeIdentityDatabase(IWebHost host)
-        {
-            using (var serviceScope = host.Services.GetService<IServiceScopeFactory>().CreateScope())
-            {
-                var context = serviceScope.ServiceProvider.GetRequiredService<ConfigurationDbContext>();
-                if (!context.Clients.Any())
+        public static IWebHost BuildWebHost(string[] args) =>
+            WebHost.CreateDefaultBuilder(args)
+                .UseUrls(ConfigSingleton.ThisServerUrl)
+                .UseKestrel()
+                .UseContentRoot(Directory.GetCurrentDirectory())
+                .UseStartup<Startup>()
+                .ConfigureAppConfiguration((hostContext, config) =>
                 {
-                    foreach (IdentityServer4.Models.Client client in Config.GetClients())
-                    {
-                        context.Clients.Add(client.ToEntity());
-                    }
-                    context.SaveChanges();
-                }
-
-                if (!context.IdentityResources.Any())
-                {
-                    foreach (IdentityServer4.Models.IdentityResource resource in Config.GetIdentityResources())
-                    {
-                        context.IdentityResources.Add(resource.ToEntity());
-                    }
-                    context.SaveChanges();
-                }
-
-                if (!context.ApiResources.Any())
-                {
-                    foreach (IdentityServer4.Models.ApiResource resource in Config.GetApiResources())
-                    {
-                        context.ApiResources.Add(resource.ToEntity());
-                    }
-                    context.SaveChanges();
-                }
-            }
-        }
+                    // delete all default configuration providers
+                    config.Sources.Clear();
+                    config.AddJsonFile("appsettings.json", optional: true);
+                })
+                .Build();
     }
 }

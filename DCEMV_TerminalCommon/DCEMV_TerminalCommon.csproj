@@ -1,18 +1,20 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netstandard1.4</TargetFramework>
     <RootNamespace>DCEMV.TerminalCommon</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Xamarin.Forms" Version="3.1.0.697729" />
+    <PackageReference Include="ZXing.Net.Mobile.Forms" Version="2.4.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\DCEMV_EMVProtocol\DCEMV_EMVProtocol.csproj" />
     <ProjectReference Include="..\DCEMV_FormattingUtils\DCEMV_FormattingUtils.csproj" />
     <ProjectReference Include="..\DCEMV_ISO7816Protocol\DCEMV_ISO7816Protocol.csproj" />
+    <ProjectReference Include="..\DCEMV_QRDEProtocol\DCEMV_QRDEProtocol.csproj" />
     <ProjectReference Include="..\DCEMV_ServerShared\DCEMV_ServerShared.csproj" />
   </ItemGroup>
 

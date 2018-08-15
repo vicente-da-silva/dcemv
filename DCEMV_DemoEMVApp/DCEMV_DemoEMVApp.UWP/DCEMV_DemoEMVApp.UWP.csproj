@@ -170,6 +170,9 @@
   <ItemGroup>
     <PackageReference Include="Xamarin.Forms" Version="3.1.0.697729" />
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform" Version="6.1.7" />
+    <PackageReference Include="ZXing.Net.Mobile.Forms">
+      <Version>2.4.1</Version>
+    </PackageReference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\DCEMV_ConfigurationManager\DCEMV_ConfigurationManager.csproj">
@@ -195,6 +198,10 @@
     <ProjectReference Include="..\..\DCEMV_NCIDriver\DCEMV_NCIDriver.csproj">
       <Project>{0BE72C29-F644-4BE0-B9A4-9B9BB3A456E7}</Project>
       <Name>DCEMV_NCIDriver</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\DCEMV_QRDEProtocol\DCEMV_QRDEProtocol.csproj">
+      <Project>{14da4789-1758-441e-a1f2-eb1ac53ec1f9}</Project>
+      <Name>DCEMV_QRDEProtocol</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\DCEMV_Shared\DCEMV_Shared.csproj">
       <Project>{611383DA-D8C9-4939-938F-C1055B0040FD}</Project>

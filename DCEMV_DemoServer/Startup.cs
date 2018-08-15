@@ -41,6 +41,9 @@ using DCEMV.DemoServer.Persistence.Api;
 
 using DCEMV.DemoServer.Persistence.Api.Repository;
 using DCEMV.DemoServer.Components;
+using Microsoft.AspNetCore.Identity;
+using IdentityServer4.AccessTokenValidation;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace DCEMV.DemoServer
 {
@@ -106,15 +109,20 @@ namespace DCEMV.DemoServer
         public void Apply(Swashbuckle.AspNetCore.Swagger.Operation operation, OperationFilterContext context)
         {
             // Policy names map to scopes
-            var controllerScopes = context.ApiDescription.ControllerAttributes()
-                .OfType<AuthorizeAttribute>()
+            MethodInfo methodInfo;
+            context.ApiDescription.TryGetMethodInfo(out methodInfo);
+            IEnumerable<string> requiredScopes = methodInfo.CustomAttributes.OfType<AuthorizeAttribute>()
                 .Select(attr => attr.Policy);
 
-            var actionScopes = context.ApiDescription.ActionAttributes()
-                .OfType<AuthorizeAttribute>()
-                .Select(attr => attr.Policy);
+            //var controllerScopes = context.ApiDescription.ControllerAttributes()
+            //    .OfType<AuthorizeAttribute>()
+            //    .Select(attr => attr.Policy);
 
-            var requiredScopes = controllerScopes.Union(actionScopes).Distinct();
+            //var actionScopes = context.ApiDescription.ActionAttributes()
+            //    .OfType<AuthorizeAttribute>()
+            //    .Select(attr => attr.Policy);
+
+            //var requiredScopes = controllerScopes.Union(actionScopes).Distinct();
 
             if (requiredScopes.Any())
             {
@@ -131,49 +139,34 @@ namespace DCEMV.DemoServer
         }
     }
 
-    /*
-     * ASP.NET Core dependency injection provides application services during an application's startup. You can request these services by including the 
-     * appropriate interface as a parameter on your Startup class's constructor or one of its Configure or ConfigureServices methods. 
-     * 
-     * Looking at each method in the Startup class in the order in which they are called, the following services may be requested as parameters:
-     * In the constructor: IHostingEnvironment, ILoggerFactory
-     * In the ConfigureServices method: IServiceCollection
-     * In the Configure method: IApplicationBuilder, IHostingEnvironment, ILoggerFactory, IApplicationLifetime
-     */
     public class Startup
     {
-        public Startup(IHostingEnvironment env)
+        public Startup(IConfiguration configuration)
         {
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(env.ContentRootPath)
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
-                .AddEnvironmentVariables();
-            Configuration = builder.Build();
+            Configuration = configuration;
         }
-
-        public IConfigurationRoot Configuration { get; }
+        public IConfiguration Configuration { get; }
 
         //The ConfigureServices method is optional; but if used, it's called before the Configure method by the runtime 
         //(some features are added before they're wired up to the request pipeline). Configuration options are set in this method.
         public void ConfigureServices(IServiceCollection services)
         {
-            //string tokenConnectionString = Configuration["ConnectionStrings:TokenServerConnection"];
-            string userConnectionString = Configuration["ConnectionStrings:UserServerConnection"];
-            //string apiConnectionString = Configuration["ConnectionStrings:ApiServerConnection"];
+            string userConnectionString = Configuration.GetConnectionString("UserServerConnection");
 
             string env = Environment.GetEnvironmentVariable("DB_SERVER_NAME");
             if (String.IsNullOrEmpty(env))
                 throw new Exception("DB_SERVER_NAME env variable not found");
 
-            //apiConnectionString = apiConnectionString.Replace("{DB_SERVER_NAME}", env);
             userConnectionString = userConnectionString.Replace("{DB_SERVER_NAME}", env);
-            //tokenConnectionString = tokenConnectionString.Replace("{DB_SERVER_NAME}", env);
 
             string migrationAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
 
-            services.AddDbContext<IdentityUserDbContext>(builder => builder.UseSqlServer(userConnectionString, options => options.MigrationsAssembly(migrationAssembly)));
-            services.AddDbContext<ApiDbContext>(builder => builder.UseSqlServer(userConnectionString, options => options.MigrationsAssembly(migrationAssembly)));
+            services.AddDbContext<IdentityUserDbContext>(
+                builder => builder.UseSqlServer(userConnectionString,
+                    options => options.MigrationsAssembly(migrationAssembly)));
+            services.AddDbContext<ApiDbContext>(
+                builder => builder.UseSqlServer(userConnectionString,
+                    options => options.MigrationsAssembly(migrationAssembly)));
 
             services.AddIdentity<ApplicationUser, IdentityRole>(config =>
             {
@@ -186,10 +179,21 @@ namespace DCEMV.DemoServer
             .AddEntityFrameworkStores<IdentityUserDbContext>()
             .AddDefaultTokenProviders();
 
+            services.AddAuthentication(options=> 
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddIdentityServerAuthentication(options =>
+            {
+                options.Authority = ConfigSingleton.IdentityServerUrl;
+                options.RequireHttpsMetadata = false;
+            });
+
             services.AddMvc(options =>
             {
-            //    options.SslPort = 44359;
-            //    options.Filters.Add(new RequireHttpsAttribute());
+                //    options.SslPort = 44359;
+                //    options.Filters.Add(new RequireHttpsAttribute());
             })
             .AddJsonOptions(x => x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);//ignore circular references in entities
 
@@ -203,15 +207,26 @@ namespace DCEMV.DemoServer
 
 
             services.AddIdentityServer(/*x => { x.IssuerUri = ConfigSingleton.IdentityServerUrl;}*/)
-                .AddTemporarySigningCredential()
+                .AddDeveloperSigningCredential()
                //.AddInMemoryIdentityResources(Config.GetIdentityResources())
                //.AddInMemoryApiResources(Config.GetApiResources())
                //.AddInMemoryClients(Config.GetClients())
                //.AddTestUsers(Config.GetUsers())
-               .AddConfigurationStore(builder => builder.UseSqlServer(userConnectionString, options => options.MigrationsAssembly(migrationAssembly)))
-               .AddOperationalStore(builder => builder.UseSqlServer(userConnectionString, options => options.MigrationsAssembly(migrationAssembly)))
+               .AddConfigurationStore(options =>
+               {
+                   // options.DefaultSchema = "token";
+                   options.ConfigureDbContext = builder =>
+                        builder.UseSqlServer(userConnectionString,
+                            sql => sql.MigrationsAssembly(migrationAssembly));
+               })
+               .AddOperationalStore(options =>
+               {
+                   //options.DefaultSchema = "token";
+                   options.ConfigureDbContext = builder =>
+                        builder.UseSqlServer(userConnectionString,
+                            sql => sql.MigrationsAssembly(migrationAssembly));
+               })
                .AddAspNetIdentity<ApplicationUser>();
-               //.AddResourceOwnerValidator<ResourceOwnerPasswordValidator<ApplicationUser>>();
 
             services.AddSwaggerGen(c =>
             {
@@ -228,7 +243,7 @@ namespace DCEMV.DemoServer
                 {
                     Type = "oauth2",
                     Flow = "implicit",
-                    AuthorizationUrl = ConfigSingleton.IdentityServerUrl +  "/connect/authorize",
+                    AuthorizationUrl = ConfigSingleton.IdentityServerUrl + "/connect/authorize",
                     Scopes = new Dictionary<string, string>
                     {
                         { "readAccess", "readAccess" },
@@ -247,35 +262,33 @@ namespace DCEMV.DemoServer
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
-            //app.UseDeveloperExceptionPage();
-            app.UseExceptionHandler(options =>
-            {
-                options.Run(async context =>
-                {
-                    context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                    context.Response.ContentType = "text/html";
-                    IExceptionHandlerFeature ex = context.Features.Get<IExceptionHandlerFeature>();
-                    string err;
-                    if (ex != null)
-                    {
-                        if(ex.Error is TechnicalException)
-                        {
-                            err = $"Technical Error: {ex.Error.Message}";
-                        }
-                        else if(ex.Error is ValidationException)
-                        {
-                            err = $"Validation Error: {ex.Error.Message}";
-                        }
-                        else
-                        {
-                            err = $"Exception: {ex.Error.Message}";
-                        }
-                        await context.Response.WriteAsync(err).ConfigureAwait(false);
-                    }
-                });
-            });
-
-            app.UseIdentity();
+            app.UseDeveloperExceptionPage();
+            //app.UseExceptionHandler(options =>
+            //{
+            //    options.Run(async context =>
+            //    {
+            //        context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+            //        context.Response.ContentType = "text/html";
+            //        IExceptionHandlerFeature ex = context.Features.Get<IExceptionHandlerFeature>();
+            //        string err;
+            //        if (ex != null)
+            //        {
+            //            if (ex.Error is TechnicalException)
+            //            {
+            //                err = $"Technical Error: {ex.Error.Message}";
+            //            }
+            //            else if (ex.Error is ValidationException)
+            //            {
+            //                err = $"Validation Error: {ex.Error.Message}";
+            //            }
+            //            else
+            //            {
+            //                err = $"Exception: {ex.Error.Message}";
+            //            }
+            //            await context.Response.WriteAsync(err).ConfigureAwait(false);
+            //        }
+            //    });
+            //});
 
             ForwardedHeadersOptions fordwardedHeaderOptions = new ForwardedHeadersOptions
             {
@@ -287,14 +300,8 @@ namespace DCEMV.DemoServer
 
             app.UseStaticFiles();
 
-            app.UseIdentityServerAuthentication(new IdentityServerAuthenticationOptions
-            {
-                Authority = ConfigSingleton.IdentityServerUrl,
-                RequireHttpsMetadata = false,
-            });
+            app.UseAuthentication();
 
-            //app.Map("/id", api =>
-            //{
             app.UseIdentityServer();
 
             app.UseMvcWithDefaultRoute();
@@ -306,7 +313,6 @@ namespace DCEMV.DemoServer
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "DC EMV Demo Server API V1");
                 //c.ConfigureOAuth2("swagger-ui", "swagger-ui", null, "Swagger UI");
             });
-            //});
         }
     }
 }

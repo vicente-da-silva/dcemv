@@ -1,27 +1,6 @@
-﻿/*
-*************************************************************************
-DC EMV
-Open Source EMV
-Copyright (C) 2018  Vicente Da Silva
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License as published
-by the Free Software Foundation, either version 3 of the License, or
-any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Affero General Public License for more details.
-
-You should have received a copy of the GNU Affero General Public License
-along with this program.  If not, see http://www.gnu.org/licenses/
-*************************************************************************
-*/
-using System;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DCEMV.DemoServer.Migrations.IdentityServer.ConfigurationDb
 {
@@ -35,10 +14,10 @@ namespace DCEMV.DemoServer.Migrations.IdentityServer.ConfigurationDb
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Description = table.Column<string>(maxLength: 1000, nullable: true),
-                    DisplayName = table.Column<string>(maxLength: 200, nullable: true),
                     Enabled = table.Column<bool>(nullable: false),
-                    Name = table.Column<string>(maxLength: 200, nullable: false)
+                    Name = table.Column<string>(maxLength: 200, nullable: false),
+                    DisplayName = table.Column<string>(maxLength: 200, nullable: true),
+                    Description = table.Column<string>(maxLength: 1000, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -51,35 +30,40 @@ namespace DCEMV.DemoServer.Migrations.IdentityServer.ConfigurationDb
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    AbsoluteRefreshTokenLifetime = table.Column<int>(nullable: false),
-                    AccessTokenLifetime = table.Column<int>(nullable: false),
-                    AccessTokenType = table.Column<int>(nullable: false),
-                    AllowAccessTokensViaBrowser = table.Column<bool>(nullable: false),
-                    AllowOfflineAccess = table.Column<bool>(nullable: false),
-                    AllowPlainTextPkce = table.Column<bool>(nullable: false),
+                    Enabled = table.Column<bool>(nullable: false),
+                    ClientId = table.Column<string>(maxLength: 200, nullable: false),
+                    ProtocolType = table.Column<string>(maxLength: 200, nullable: false),
+                    RequireClientSecret = table.Column<bool>(nullable: false),
+                    ClientName = table.Column<string>(maxLength: 200, nullable: true),
+                    Description = table.Column<string>(maxLength: 1000, nullable: true),
+                    ClientUri = table.Column<string>(maxLength: 2000, nullable: true),
+                    LogoUri = table.Column<string>(maxLength: 2000, nullable: true),
+                    RequireConsent = table.Column<bool>(nullable: false),
                     AllowRememberConsent = table.Column<bool>(nullable: false),
                     AlwaysIncludeUserClaimsInIdToken = table.Column<bool>(nullable: false),
-                    AlwaysSendClientClaims = table.Column<bool>(nullable: false),
-                    AuthorizationCodeLifetime = table.Column<int>(nullable: false),
-                    ClientId = table.Column<string>(maxLength: 200, nullable: false),
-                    ClientName = table.Column<string>(maxLength: 200, nullable: true),
-                    ClientUri = table.Column<string>(maxLength: 2000, nullable: true),
-                    EnableLocalLogin = table.Column<bool>(nullable: false),
-                    Enabled = table.Column<bool>(nullable: false),
-                    IdentityTokenLifetime = table.Column<int>(nullable: false),
-                    IncludeJwtId = table.Column<bool>(nullable: false),
-                    LogoUri = table.Column<string>(nullable: true),
-                    LogoutSessionRequired = table.Column<bool>(nullable: false),
-                    LogoutUri = table.Column<string>(nullable: true),
-                    PrefixClientClaims = table.Column<bool>(nullable: false),
-                    ProtocolType = table.Column<string>(maxLength: 200, nullable: false),
-                    RefreshTokenExpiration = table.Column<int>(nullable: false),
-                    RefreshTokenUsage = table.Column<int>(nullable: false),
-                    RequireClientSecret = table.Column<bool>(nullable: false),
-                    RequireConsent = table.Column<bool>(nullable: false),
                     RequirePkce = table.Column<bool>(nullable: false),
+                    AllowPlainTextPkce = table.Column<bool>(nullable: false),
+                    AllowAccessTokensViaBrowser = table.Column<bool>(nullable: false),
+                    FrontChannelLogoutUri = table.Column<string>(maxLength: 2000, nullable: true),
+                    FrontChannelLogoutSessionRequired = table.Column<bool>(nullable: false),
+                    BackChannelLogoutUri = table.Column<string>(maxLength: 2000, nullable: true),
+                    BackChannelLogoutSessionRequired = table.Column<bool>(nullable: false),
+                    AllowOfflineAccess = table.Column<bool>(nullable: false),
+                    IdentityTokenLifetime = table.Column<int>(nullable: false),
+                    AccessTokenLifetime = table.Column<int>(nullable: false),
+                    AuthorizationCodeLifetime = table.Column<int>(nullable: false),
+                    ConsentLifetime = table.Column<int>(nullable: true),
+                    AbsoluteRefreshTokenLifetime = table.Column<int>(nullable: false),
                     SlidingRefreshTokenLifetime = table.Column<int>(nullable: false),
-                    UpdateAccessTokenClaimsOnRefresh = table.Column<bool>(nullable: false)
+                    RefreshTokenUsage = table.Column<int>(nullable: false),
+                    UpdateAccessTokenClaimsOnRefresh = table.Column<bool>(nullable: false),
+                    RefreshTokenExpiration = table.Column<int>(nullable: false),
+                    AccessTokenType = table.Column<int>(nullable: false),
+                    EnableLocalLogin = table.Column<bool>(nullable: false),
+                    IncludeJwtId = table.Column<bool>(nullable: false),
+                    AlwaysSendClientClaims = table.Column<bool>(nullable: false),
+                    ClientClaimsPrefix = table.Column<string>(maxLength: 200, nullable: true),
+                    PairWiseSubjectSalt = table.Column<string>(maxLength: 200, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -92,12 +76,12 @@ namespace DCEMV.DemoServer.Migrations.IdentityServer.ConfigurationDb
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Description = table.Column<string>(maxLength: 1000, nullable: true),
-                    DisplayName = table.Column<string>(maxLength: 200, nullable: true),
-                    Emphasize = table.Column<bool>(nullable: false),
                     Enabled = table.Column<bool>(nullable: false),
                     Name = table.Column<string>(maxLength: 200, nullable: false),
+                    DisplayName = table.Column<string>(maxLength: 200, nullable: true),
+                    Description = table.Column<string>(maxLength: 1000, nullable: true),
                     Required = table.Column<bool>(nullable: false),
+                    Emphasize = table.Column<bool>(nullable: false),
                     ShowInDiscoveryDocument = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
@@ -111,8 +95,8 @@ namespace DCEMV.DemoServer.Migrations.IdentityServer.ConfigurationDb
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    ApiResourceId = table.Column<int>(nullable: false),
-                    Type = table.Column<string>(maxLength: 200, nullable: false)
+                    Type = table.Column<string>(maxLength: 200, nullable: false),
+                    ApiResourceId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -131,13 +115,13 @@ namespace DCEMV.DemoServer.Migrations.IdentityServer.ConfigurationDb
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    ApiResourceId = table.Column<int>(nullable: false),
-                    Description = table.Column<string>(maxLength: 1000, nullable: true),
-                    DisplayName = table.Column<string>(maxLength: 200, nullable: true),
-                    Emphasize = table.Column<bool>(nullable: false),
                     Name = table.Column<string>(maxLength: 200, nullable: false),
+                    DisplayName = table.Column<string>(maxLength: 200, nullable: true),
+                    Description = table.Column<string>(maxLength: 1000, nullable: true),
                     Required = table.Column<bool>(nullable: false),
-                    ShowInDiscoveryDocument = table.Column<bool>(nullable: false)
+                    Emphasize = table.Column<bool>(nullable: false),
+                    ShowInDiscoveryDocument = table.Column<bool>(nullable: false),
+                    ApiResourceId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -154,13 +138,13 @@ namespace DCEMV.DemoServer.Migrations.IdentityServer.ConfigurationDb
                 name: "ApiSecrets",
                 columns: table => new
                 {
+                    Expiration = table.Column<DateTime>(nullable: true),
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    ApiResourceId = table.Column<int>(nullable: false),
                     Description = table.Column<string>(maxLength: 1000, nullable: true),
-                    Expiration = table.Column<DateTime>(nullable: true),
+                    Value = table.Column<string>(maxLength: 2000, nullable: true),
                     Type = table.Column<string>(maxLength: 250, nullable: true),
-                    Value = table.Column<string>(maxLength: 2000, nullable: true)
+                    ApiResourceId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -179,9 +163,9 @@ namespace DCEMV.DemoServer.Migrations.IdentityServer.ConfigurationDb
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    ClientId = table.Column<int>(nullable: false),
                     Type = table.Column<string>(maxLength: 250, nullable: false),
-                    Value = table.Column<string>(maxLength: 250, nullable: false)
+                    Value = table.Column<string>(maxLength: 250, nullable: false),
+                    ClientId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -200,8 +184,8 @@ namespace DCEMV.DemoServer.Migrations.IdentityServer.ConfigurationDb
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    ClientId = table.Column<int>(nullable: false),
-                    Origin = table.Column<string>(maxLength: 150, nullable: false)
+                    Origin = table.Column<string>(maxLength: 150, nullable: false),
+                    ClientId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -220,8 +204,8 @@ namespace DCEMV.DemoServer.Migrations.IdentityServer.ConfigurationDb
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    ClientId = table.Column<int>(nullable: false),
-                    GrantType = table.Column<string>(maxLength: 250, nullable: false)
+                    GrantType = table.Column<string>(maxLength: 250, nullable: false),
+                    ClientId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -240,8 +224,8 @@ namespace DCEMV.DemoServer.Migrations.IdentityServer.ConfigurationDb
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    ClientId = table.Column<int>(nullable: false),
-                    Provider = table.Column<string>(maxLength: 200, nullable: false)
+                    Provider = table.Column<string>(maxLength: 200, nullable: false),
+                    ClientId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -260,8 +244,8 @@ namespace DCEMV.DemoServer.Migrations.IdentityServer.ConfigurationDb
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    ClientId = table.Column<int>(nullable: false),
-                    PostLogoutRedirectUri = table.Column<string>(maxLength: 2000, nullable: false)
+                    PostLogoutRedirectUri = table.Column<string>(maxLength: 2000, nullable: false),
+                    ClientId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -275,13 +259,34 @@ namespace DCEMV.DemoServer.Migrations.IdentityServer.ConfigurationDb
                 });
 
             migrationBuilder.CreateTable(
+                name: "ClientProperties",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Key = table.Column<string>(maxLength: 250, nullable: false),
+                    Value = table.Column<string>(maxLength: 2000, nullable: false),
+                    ClientId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ClientProperties", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ClientProperties_Clients_ClientId",
+                        column: x => x.ClientId,
+                        principalTable: "Clients",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ClientRedirectUris",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    ClientId = table.Column<int>(nullable: false),
-                    RedirectUri = table.Column<string>(maxLength: 2000, nullable: false)
+                    RedirectUri = table.Column<string>(maxLength: 2000, nullable: false),
+                    ClientId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -300,8 +305,8 @@ namespace DCEMV.DemoServer.Migrations.IdentityServer.ConfigurationDb
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    ClientId = table.Column<int>(nullable: false),
-                    Scope = table.Column<string>(maxLength: 200, nullable: false)
+                    Scope = table.Column<string>(maxLength: 200, nullable: false),
+                    ClientId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -318,13 +323,13 @@ namespace DCEMV.DemoServer.Migrations.IdentityServer.ConfigurationDb
                 name: "ClientSecrets",
                 columns: table => new
                 {
+                    Expiration = table.Column<DateTime>(nullable: true),
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    ClientId = table.Column<int>(nullable: false),
                     Description = table.Column<string>(maxLength: 2000, nullable: true),
-                    Expiration = table.Column<DateTime>(nullable: true),
+                    Value = table.Column<string>(maxLength: 2000, nullable: false),
                     Type = table.Column<string>(maxLength: 250, nullable: true),
-                    Value = table.Column<string>(maxLength: 2000, nullable: false)
+                    ClientId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -343,8 +348,8 @@ namespace DCEMV.DemoServer.Migrations.IdentityServer.ConfigurationDb
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    IdentityResourceId = table.Column<int>(nullable: false),
-                    Type = table.Column<string>(maxLength: 200, nullable: false)
+                    Type = table.Column<string>(maxLength: 200, nullable: false),
+                    IdentityResourceId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -363,8 +368,8 @@ namespace DCEMV.DemoServer.Migrations.IdentityServer.ConfigurationDb
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    ApiScopeId = table.Column<int>(nullable: false),
-                    Type = table.Column<string>(maxLength: 200, nullable: false)
+                    Type = table.Column<string>(maxLength: 200, nullable: false),
+                    ApiScopeId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -378,15 +383,20 @@ namespace DCEMV.DemoServer.Migrations.IdentityServer.ConfigurationDb
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_ApiClaims_ApiResourceId",
+                table: "ApiClaims",
+                column: "ApiResourceId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ApiResources_Name",
                 table: "ApiResources",
                 column: "Name",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_ApiClaims_ApiResourceId",
-                table: "ApiClaims",
-                column: "ApiResourceId");
+                name: "IX_ApiScopeClaims_ApiScopeId",
+                table: "ApiScopeClaims",
+                column: "ApiScopeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ApiScopes_ApiResourceId",
@@ -400,20 +410,9 @@ namespace DCEMV.DemoServer.Migrations.IdentityServer.ConfigurationDb
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_ApiScopeClaims_ApiScopeId",
-                table: "ApiScopeClaims",
-                column: "ApiScopeId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_ApiSecrets_ApiResourceId",
                 table: "ApiSecrets",
                 column: "ApiResourceId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Clients_ClientId",
-                table: "Clients",
-                column: "ClientId",
-                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_ClientClaims_ClientId",
@@ -441,9 +440,20 @@ namespace DCEMV.DemoServer.Migrations.IdentityServer.ConfigurationDb
                 column: "ClientId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ClientProperties_ClientId",
+                table: "ClientProperties",
+                column: "ClientId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ClientRedirectUris_ClientId",
                 table: "ClientRedirectUris",
                 column: "ClientId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Clients_ClientId",
+                table: "Clients",
+                column: "ClientId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_ClientScopes_ClientId",
@@ -492,6 +502,9 @@ namespace DCEMV.DemoServer.Migrations.IdentityServer.ConfigurationDb
 
             migrationBuilder.DropTable(
                 name: "ClientPostLogoutRedirectUris");
+
+            migrationBuilder.DropTable(
+                name: "ClientProperties");
 
             migrationBuilder.DropTable(
                 name: "ClientRedirectUris");

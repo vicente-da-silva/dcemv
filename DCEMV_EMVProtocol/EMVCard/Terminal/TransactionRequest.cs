@@ -39,8 +39,8 @@ namespace DCEMV.EMVProtocol
 
         public bool IsSingleUnitOfCurrency { get; }
 
-        private long amount;
-        private long amountOther;
+        private readonly long amount;
+        private readonly long amountOther;
         private TransactionTypeEnum transactionTypeEnum;
         private DateTime transactionDate;
 

@@ -20,13 +20,14 @@
       "launchBrowser": true,
       "launchUrl": "swagger",
       "environmentVariables": {
-        //"ID_SERVER_URL": "http://localhost:44359",
+        "ID_SERVER_URL": "http://localhost:44359",
         //"DB_SERVER_NAME": "paylooladbserver.database.windows.net",
-        "ID_SERVER_URL": "http://192.168.0.100:44359",
+        //"ID_SERVER_URL": "http://192.168.0.100:44359",
         "DB_SERVER_NAME": "localhost",
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "applicationUrl": "http://0.0.0.0:44359"
+      "applicationUrl": "http://localhost:44359"
+      //"applicationUrl": "http://192.168.0.100:44359"
     }
   }
 }

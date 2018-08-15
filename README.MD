@@ -1,16 +1,17 @@
 # DC EMV Open Source EMV Implementation
-## V1.1
+## V1.2
 
 >DC EMV Decoded Book available in DCEMV_Documentation folder This will help you to quickly get up and running with the various applications and understand the various capabilities of the system.
 
 Features:
 * Contactless EMV Kernel 1,2,3 (EMV 2.6)
 * Contact EMV Kernel (EMV 4.3)
+* EMV QR Code Implmentation (EMV 1.1)
 * EMV Contact and EMV Contactless Terminal Payment Application
 * EMV Payment Application UI Controls
 * DC EMV JavaCard Applet (compatible with kernel 3)
-* DC EMV Android Host Card Emulation Applet (compatible with kernel 3)
-* GlobalPlatform Personalization application
+* DC EMV HCE (Host Card Emulation) Applet on Android (compatible with kernel 3)
+* GlobalPlatform Personalization application 
 * Card Reader Drivers 
   * Android Builtin and ACS1255
   * Windows PC/SC
@@ -48,4 +49,3 @@ Features:
 7.	Improve testability to the point where a full regression test can be done in completely automated way, using simulated cards and the switch mentioned above. This automated testing would be able to check card logs, terminal logs and switch logs and report on discrepancies across the entire transaction flow for all test cases in a matter of minutes.
 8.	Certify physical cards for use with the applets. Any card manufacturers interested in having their cards certified for use with the DC EMV payment applets should contact me. I would like to be able to provide users of the DC EMV framework a list of cards certified to work with the applets. This will negate them having to find compatible cards themselves and will shorten their development cycle.
 9.	Enhance the HSM module to do tokenization of cards. This simply requires adding an API, datastore and using the existing HSM crypto functions.
-10.	Allow payments in the DC EMV Demo App using QR codes, this will negate the need for NFC hardware but then implies that both devices involved in the transaction must be capable of scanning/presenting a QR code.

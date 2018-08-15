@@ -91,6 +91,10 @@
       <Project>{6db88042-9a1f-45e7-8a02-5b7d9fd3f900}</Project>
       <Name>DCEMV_AndroidHCEDriver</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\DCEMV_QRDEProtocol\DCEMV_QRDEProtocol.csproj">
+      <Project>{14da4789-1758-441e-a1f2-eb1ac53ec1f9}</Project>
+      <Name>DCEMV_QRDEProtocol</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\DCEMV_ServerShared\DCEMV_ServerShared.csproj">
       <Project>{9b565d57-e501-4c71-a3d8-681d1a40ffa2}</Project>
       <Name>DCEMV_ServerShared</Name>
@@ -139,13 +143,13 @@
       <Project>{39b80fb0-8427-4f63-9617-f39d83e48e43}</Project>
       <Name>DCEMV_TCPIPDriver</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\DCEMV_TLVProtocol\DCEMV_TLVProtocol.csproj">
-      <Project>{dddbfc8d-a231-4185-a8c2-7460156c67c3}</Project>
-      <Name>DCEMV_TLVProtocol</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\DCEMV_TerminalCommon\DCEMV_TerminalCommon.csproj">
       <Project>{e9da6055-deec-4167-9a15-6002de715828}</Project>
       <Name>DCEMV_TerminalCommon</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\DCEMV_TLVProtocol\DCEMV_TLVProtocol.csproj">
+      <Project>{dddbfc8d-a231-4185-a8c2-7460156c67c3}</Project>
+      <Name>DCEMV_TLVProtocol</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -154,6 +158,12 @@
     </PackageReference>
     <PackageReference Include="Xamarin.Forms">
       <Version>3.1.0.697729</Version>
+    </PackageReference>
+    <PackageReference Include="ZXing.Net.Mobile">
+      <Version>2.4.1</Version>
+    </PackageReference>
+    <PackageReference Include="ZXing.Net.Mobile.Forms">
+      <Version>2.4.1</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>

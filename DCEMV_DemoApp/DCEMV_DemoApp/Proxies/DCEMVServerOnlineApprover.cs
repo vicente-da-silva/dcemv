@@ -32,20 +32,38 @@ namespace DCEMV.DemoApp.Proxies
     {
         public static Logger Logger = new Logger(typeof(DCEMVServerOnlineApprover));
 
-        public ApproverResponse DoReversal(ApproverRequest request, bool isOnline)
+        public ApproverResponseBase DoReversal(ApproverRequestBase request, bool isOnline)
         {
             throw new NotImplementedException();
         }
 
-        public ApproverResponse DoAdvice(ApproverRequest request, bool isOnline)
+        public ApproverResponseBase DoAdvice(ApproverRequestBase request, bool isOnline)
         {
             throw new NotImplementedException();
         }
 
-        public ApproverResponse DoAuth(ApproverRequest request)
+        public ApproverResponseBase DoCheckAuthStatus(ApproverRequestBase request)
+        {
+            throw new NotImplementedException();
+        }
+        public ApproverResponseBase DoAuth(ApproverRequestBase request)
+        {
+
+            if (request is EMVApproverRequest)
+                return DoEMVAuth(request);
+            if (request is QRCodeApproverRequest)
+                return DoQRAuth(request);
+            else
+                throw new NotImplementedException();
+
+        }
+
+        private ApproverResponseBase DoEMVAuth(ApproverRequestBase requestIn)
         {
             try
             {
+                EMVApproverRequest request = ((EMVApproverRequest)requestIn);
+
                 DCEMVDemoServerClient client = SessionSingleton.GenDCEMVServerApiClient();
                 using (SessionSingleton.HttpClient)
                 {
@@ -53,18 +71,18 @@ namespace DCEMV.DemoApp.Proxies
                     {
                         EMV_Data = TLVasJSON.Convert(request.EMV_Data),
                     };
-                    string responseJson ="";
+                    string responseJson = "";
                     Task.Run(async () => {
                         responseJson = await client.TransactionAuthtransactiontoissuerPostAsync(tx.ToJsonString());
                     }).Wait();
                     ContactCardOnlineAuthResponse response = ContactCardOnlineAuthResponse.FromJsonString(responseJson);
 
-                    ApproverResponse approverResponse = null;
+                    EMVApproverResponse approverResponse = null;
                     switch (response.Response)
                     {
                         case ContactCardOnlineAuthResponseEnum.Approved:
                         case ContactCardOnlineAuthResponseEnum.Declined:
-                            approverResponse = new ApproverResponse();
+                            approverResponse = new EMVApproverResponse();
                             approverResponse.AuthCode_8A = TLVasJSON.Convert(response.AuthCode_8A);
                             approverResponse.IssuerAuthData_91 = TLVasJSON.Convert(response.IssuerAuthData_91);
                             approverResponse.IsApproved = response.Response == ContactCardOnlineAuthResponseEnum.Approved ? true : false;
@@ -83,6 +101,10 @@ namespace DCEMV.DemoApp.Proxies
             {
                 return null;
             }
+        }
+        private ApproverResponseBase DoQRAuth(ApproverRequestBase requestIn)
+        {
+            throw new NotImplementedException();
         }
     }
 }

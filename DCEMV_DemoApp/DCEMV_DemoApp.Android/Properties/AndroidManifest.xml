@@ -26,5 +26,6 @@ along with this program.  If not, see http://www.gnu.org/licenses/
 	<uses-permission android:name="android.permission.BLUETOOTH" />
 	<uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
 	<uses-permission android:name="android.permission.BLUETOOTH_PRIVILEGED" />
+	<uses-permission android:name="android.permission.CAMERA" />
 	<application android:label="DC EMV Demo App" android:icon="@drawable/icon"></application>
 </manifest>

@@ -19,28 +19,53 @@ along with this program.  If not, see http://www.gnu.org/licenses/
 *************************************************************************
 */
 using DCEMV.Shared;
+using DCEMV_QRDEProtocol;
 
 namespace DCEMV.TLVProtocol
 {
     public interface IOnlineApprover
     {
-        ApproverResponse DoAuth(ApproverRequest request);
-        ApproverResponse DoAdvice(ApproverRequest request, bool isOnline);
-        ApproverResponse DoReversal(ApproverRequest request, bool isOnline);
+        ApproverResponseBase DoAuth(ApproverRequestBase request);
+        ApproverResponseBase DoCheckAuthStatus(ApproverRequestBase request);
+        ApproverResponseBase DoAdvice(ApproverRequestBase request, bool isOnline);
+        ApproverResponseBase DoReversal(ApproverRequestBase request, bool isOnline);
     }
 
-    public class ApproverResponse
+    public enum QRCodeRequestType
+    {
+        Poll,
+        Process,
+    }
+    public abstract class ApproverResponseBase
     {
         public bool IsApproved { get; set; }
         public string ResponseMessage { get; set; }
+    }
+    public abstract class ApproverRequestBase
+    {
+        public TCPClientStream TCPClientStream { get; set; }
+    }
+
+    
+    public class QRCodeApproverResponse : ApproverResponseBase
+    {
+
+    }
+    public class QRCodeApproverRequest : ApproverRequestBase
+    {
+        public QRCodeRequestType QRCodeRequestType { get; set; }
+        public QRDEList QRData { get; set; }
+    }
+
+    public class EMVApproverResponse : ApproverResponseBase
+    {
         public TLV AuthCode_8A { get; set; }
         public TLV IssuerAuthData_91 { get; set; }
         public TLV IssuerScriptTemplate_72 { get; set; }
         public TLV IssuerScriptTemplate_71 { get; set; }
     }
-    public class ApproverRequest
+    public class EMVApproverRequest : ApproverRequestBase
     {
         public TLV EMV_Data { get; set; }
-        public TCPClientStream TCPClientStream { get; set; }
     }
 }

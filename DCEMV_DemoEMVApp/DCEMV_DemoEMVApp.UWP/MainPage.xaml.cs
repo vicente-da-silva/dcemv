@@ -39,10 +39,11 @@ namespace DCEMV.DemoEMVApp.UWP
                 null,
                 new NCICardReader(new I2CRPi3NXPOM5577HAL()),
 #else
-                //null,
                 //new Win10CardProxy("127.0.0.1",50000),
-                new Win10CardReader(), //set to null to disable interface
-                new Win10CardReader(), //set to null to disable interface
+                //new Win10CardReader(), //set to null to disable interface
+                //new Win10CardReader(), //set to null to disable interface
+                null,
+                null,
 #endif
                 //new SPDHApprover("192.168.0.100", 6010),
                 new SimulatedApprover(),

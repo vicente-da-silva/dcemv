@@ -42,6 +42,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)Converters\CurrencyConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Converters\CurrencyConverterNoDiv.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Converters\DateTimeConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Views\EMVQRCodeView.xaml.cs">
+      <DependentUpon>EMVQRCodeView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Views\EMVTx.xaml.cs">
       <SubType>Code</SubType>
       <DependentUpon>EMVTx.xaml</DependentUpon>
@@ -69,5 +72,11 @@
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Session\" />
     <Folder Include="$(MSBuildThisFileDirectory)Views\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\EMVQRCodeView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
   </ItemGroup>
 </Project>

@@ -200,7 +200,7 @@ namespace DCEMV.DemoServer.Persistence.Api.Repository
                         CardFromEMVData = tx.CardFromEMVData,
 
                     };
-                    int id = _transactionRepository.AddTransaction(tpm, credentialsId, false);
+                    int id = _transactionRepository.AddCardBasedTransaction(tpm, credentialsId, false);
                     txPos.TransactionIdRef = id;
                     _context.POSTransactions.Add(txPos);
                     _context.SaveChanges();

@@ -286,7 +286,9 @@ namespace DCEMV.DemoApp
             tr = new TransactionRequest(amount + amountOther, amountOther, TransactionTypeEnum.PurchaseGoodsAndServices);
 
             //cannot use contact interface with DC EMV Cards
-            emvTxCtl.Start(tr, null, "", contactlessCardInterfaceManger, SessionSingleton.ContactlessDeviceId, configProvider, onlineApprover, tcpClientStream);
+            emvTxCtl.Init(null, "", contactlessCardInterfaceManger, SessionSingleton.ContactlessDeviceId, 
+                QRCodeMode.PresentAndPoll , SessionSingleton.Account.AccountNumberId ,configProvider, 
+                onlineApprover, tcpClientStream, tr);
         }
 
         private async void EmvTxCtl_TxCompleted(object sender, EventArgs e)
@@ -421,7 +423,7 @@ namespace DCEMV.DemoApp
                     POSTransaction posTx = new POSTransaction();
                     posTx.InvItems = ConvertLineItems(basketItems.ToList());
 
-                    TransferTransaction tx = new TransferTransaction()
+                    CardTransferTransaction tx = new CardTransferTransaction()
                     {
                         Amount = amount.Value,
                         AccountFrom = fromAccountNumber,
@@ -430,7 +432,7 @@ namespace DCEMV.DemoApp
                         CardSerialTo = cardSerialNumberTo,
                         CardFromEMVData = TLVasJSON.ToJSON(emvData),
                     };
-                    await client.StoreSalePostAsync(tx.ToJsonString(), posTx.ToJsonString());
+                    await client.StoreSalebycardPostAsync(tx.ToJsonString(), posTx.ToJsonString());
                 }
             }
             catch (Exception ex)

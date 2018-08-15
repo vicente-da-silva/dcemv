@@ -22,14 +22,17 @@ using System;
 using Microsoft.EntityFrameworkCore.Storage;
 using DCEMV.DemoServer.Persistence.Api.Entities;
 using DCEMV.ServerShared;
+using System.Linq;
 
 namespace DCEMV.DemoServer.Persistence.Api.Repository
 {
     public interface ITransactionsRepository
     {
         //Transaction GetTransaction(string transactionId);
-        int AddTransaction(TransactionPM tx, string credentialsId,bool useTransaction = true);
+        int AddCardBasedTransaction(TransactionPM tx, string credentialsId,bool useTransaction = true);
+        int AddQRCodeBasedTransaction(TransactionPM t, string credentialsId, bool useTransaction = true);
         int AddTopUpTransaction(CCTopUpTransactionPM tx, string credentialsId);
+        int GetTransactionState(string trackingId);
     }
 
     public class TransactionsRepository : ITransactionsRepository
@@ -51,6 +54,9 @@ namespace DCEMV.DemoServer.Persistence.Api.Repository
 
             if (t.Amount > ConfigSingleton.MaxTopUpTransactionAmount)
                 throw new ValidationException("Invalid transaction, greater than max top up amount allowed");
+
+            if (String.IsNullOrEmpty(t.EMV_Data))
+                throw new ValidationException("Card EMV data not supplied");
 
             AccountPM accountLoggedIn = _accountsRepository.GetAccountForUser(credentialsId);
 
@@ -74,14 +80,85 @@ namespace DCEMV.DemoServer.Persistence.Api.Repository
                 }
             }
         }
-
-        public int AddTransaction(TransactionPM t, string credentialsId, bool useTransaction)
+        private void ValidateCommonTxDetail(TransactionPM t)
         {
             //TODO: Validate cardholder either by card crytogram of cardholder pin
-            if(t.Amount > ConfigSingleton.MaxTransactionAmount)
+            if (t.Amount > ConfigSingleton.MaxTransactionAmount)
                 throw new ValidationException("Invalid transaction, amount greater than max transaction amount allowed");
 
             t.TransactionDateTime = DateTime.Now;
+        }
+        private int StoreTx(TransactionPM t, AccountPM accountFrom, AccountPM accountTo, CardPM cardFrom, bool useTransaction)
+        {
+            Action action = () =>
+            {
+                _context.Transactions.Add(t);
+                UpdateAccountBalance(accountFrom.AccountNumberId, accountFrom.Balance = accountFrom.Balance - t.Amount);
+                UpdateAccountBalance(accountTo.AccountNumberId, accountTo.Balance = accountTo.Balance + t.Amount);
+                if (cardFrom != null)
+                {
+                    cardFrom.AvailablegDailySpendLimit = cardFrom.AvailablegDailySpendLimit - t.Amount;
+                    cardFrom.AvailableMonthlySpendLimit = cardFrom.AvailableMonthlySpendLimit - t.Amount;
+                }
+            };
+
+            if (!useTransaction)
+            {
+                try
+                {
+                    action.Invoke();
+                    _context.SaveChanges();
+                    return t.TransactionId;
+                }
+                catch
+                {
+                    throw new TechnicalException("Error Occured during transaction db operation. Transaction Rolled Back");
+                }
+            }
+            else
+            {
+                using (IDbContextTransaction dbTransaction = _context.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        action.Invoke();
+                        _context.SaveChanges();
+                        dbTransaction.Commit();
+                        return t.TransactionId;
+                    }
+                    catch (Exception ex)
+                    {
+                        dbTransaction.Rollback();
+                        throw new TechnicalException("Error Occured during transaction db operation. Transaction Rolled Back:" + ex.Message);
+                    }
+                }
+            }
+        }
+        public int AddQRCodeBasedTransaction(TransactionPM t, string credentialsId, bool useTransaction)
+        {
+            ValidateCommonTxDetail(t);
+
+            AccountPM accountLoggedIn = _accountsRepository.GetAccountForUser(credentialsId);
+            AccountPM accountFrom = null;
+            AccountPM accountTo = null;
+
+            if (accountLoggedIn.AccountNumberId != t.AccountNumberIdFromRef)
+                throw new ValidationException("Invalid AccountNumberId");
+
+            accountTo = GetAccount(t.AccountNumberIdToRef);
+            accountFrom = accountLoggedIn; //_accountsRepository.GetAccount(transaction.AccountNumberIdFrom);
+            if (accountFrom.Balance < t.Amount)
+                throw new ValidationException("Insufficient funds");
+
+            return StoreTx(t, accountFrom, accountTo, null, useTransaction);
+        }
+        public int GetTransactionState(string trackingId)
+        {
+            return _context.Transactions.Where(x => x.TrackingId == trackingId).Count();
+        }
+        public int AddCardBasedTransaction(TransactionPM t, string credentialsId, bool useTransaction)
+        {
+            ValidateCommonTxDetail(t);
 
             AccountPM accountLoggedIn = _accountsRepository.GetAccountForUser(credentialsId);
             AccountPM accountFrom = null;
@@ -119,6 +196,9 @@ namespace DCEMV.DemoServer.Persistence.Api.Repository
                     if (cardFrom.MonthlySpendLimit < t.Amount)
                         throw new ValidationException("Monthly Spend Limit Exceeded");
 
+                    if(String.IsNullOrEmpty(t.CardFromEMVData))
+                        throw new ValidationException("Card EMV data not supplied");
+
                     t.AccountNumberIdFromRef = cardFrom.AccountNumberIdRef;
                     accountFrom = GetAccount(t.AccountNumberIdFromRef);
                     accountTo = accountLoggedIn; //_accountsRepository.GetAccount(transaction.AccountNumberIdTo);
@@ -130,51 +210,8 @@ namespace DCEMV.DemoServer.Persistence.Api.Repository
                     throw new ValidationException("Invalid transaction type: " + t.TransactionType);
             }
 
-            Action action = ()=> 
-            {
-                _context.Transactions.Add(t);
-                UpdateAccountBalance(accountFrom.AccountNumberId, accountFrom.Balance = accountFrom.Balance - t.Amount);
-                UpdateAccountBalance(accountTo.AccountNumberId, accountTo.Balance = accountTo.Balance + t.Amount);
-                if (cardFrom != null)
-                {
-                    cardFrom.AvailablegDailySpendLimit = cardFrom.AvailablegDailySpendLimit - t.Amount;
-                    cardFrom.AvailableMonthlySpendLimit = cardFrom.AvailableMonthlySpendLimit - t.Amount;
-                }
-            };
-
-            if (!useTransaction)
-            {
-                try
-                {
-                    action.Invoke();
-                    _context.SaveChanges();
-                    return t.TransactionId;
-                }
-                catch
-                {
-                    throw new TechnicalException("Error Occured during transaction db operation. Transaction Rolled Back");
-                }
-            }
-            else
-            {
-                using (IDbContextTransaction dbTransaction = _context.Database.BeginTransaction()) 
-                {
-                    try
-                    {
-                        action.Invoke();
-                        _context.SaveChanges();
-                        dbTransaction.Commit();
-                        return t.TransactionId;
-                    }
-                    catch(Exception ex)
-                    {
-                        dbTransaction.Rollback();
-                        throw new TechnicalException("Error Occured during transaction db operation. Transaction Rolled Back:" + ex.Message);
-                    }
-                }
-            }
+            return StoreTx(t, accountFrom, accountTo, cardFrom, useTransaction);
         }
-
 
         private AccountPM GetAccount(string accountNumberId)
         {

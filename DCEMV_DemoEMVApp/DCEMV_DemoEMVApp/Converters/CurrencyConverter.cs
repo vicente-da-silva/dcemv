@@ -30,8 +30,9 @@ namespace DCEMV.DemoEMVApp
         {
             if (value == null)
                 return null;
-            //if ((string)value == "")
-            //    return null;
+            if (value is string)
+                if (String.IsNullOrEmpty((string)value))
+                    return null;
             decimal d = System.Convert.ToDecimal(value) / 100;
             return d.ToString("C");
         }

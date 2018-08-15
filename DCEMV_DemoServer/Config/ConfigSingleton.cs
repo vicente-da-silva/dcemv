@@ -24,33 +24,11 @@ namespace DCEMV.DemoServer
 {
     public class ConfigSingleton
     {
-        private static readonly ConfigSingleton instance = new ConfigSingleton();
+        public static long MaxTransactionAmount { get { return 20000; } }
+        public static long MaxTopUpTransactionAmount { get { return 20000; } }
+        public static string ThisServerUrl { get { return "http://0.0.0.0:44359"; }  }
+        public static string IdentityServerUrl { get { return Environment.GetEnvironmentVariable("ID_SERVER_URL"); } }
 
-        //private static string ID_SERVER_URL_ENV_VAR = "ID_SERVER_URL";
-        public static long MaxTransactionAmount { get; set; }
-        public static long MaxTopUpTransactionAmount { get; set; }
-
-        public static string ThisServerUrl { get; set; }
-        public static string IdentityServerUrl { get; set; }
-
-        private ConfigSingleton()
-        {
-            MaxTransactionAmount = 20000;
-            MaxTopUpTransactionAmount = 20000;
-            string env = Environment.GetEnvironmentVariable("ID_SERVER_URL");
-            if (String.IsNullOrEmpty(env))
-                throw new TechnicalException("ID_SERVER_URL env variable not found");
-            else
-                IdentityServerUrl = env;
-            ThisServerUrl = "http://0.0.0.0:44359";
-        }
-
-        public static ConfigSingleton Instance
-        {
-            get
-            {
-                return instance;
-            }
-        }
+        public static ConfigSingleton Instance { get; } = new ConfigSingleton();
     }
 }

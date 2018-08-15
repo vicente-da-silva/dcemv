@@ -116,7 +116,7 @@ namespace DCEMV.FormattingUtils
         }
         public static bool NumberValidation(string number)
         {
-            if (number == null)
+            if (String.IsNullOrEmpty(number))
                 return false;
 
             const string regex = @"^[0-9]{1,30}$";
@@ -124,7 +124,7 @@ namespace DCEMV.FormattingUtils
         }
         public static bool NameValidation(string amount)
         {
-            if (amount == null)
+            if (String.IsNullOrEmpty(amount))
                 return false;
 
             const string regex = @"^[a-zA-Z'.\s]{1,20}$";
@@ -132,7 +132,7 @@ namespace DCEMV.FormattingUtils
         }
         public static bool EmailValidation(string email)
         {
-            if (email == null)
+            if (String.IsNullOrEmpty(email))
                 return false;
 
             const string regex = @"^(?("")("".+?(?<!\\)""@)|(([0-9a-z]((\.(?!\.))|[-!#\$%&'\*\+/=\?\^`\{\}\|~\w])*)(?<=[0-9a-z])@))" +
@@ -142,10 +142,11 @@ namespace DCEMV.FormattingUtils
         }
         public static bool GuidValidation(string guid)
         {
-            if (guid == null)
+            if (String.IsNullOrEmpty(guid))
                 return false;
 
-            const string regex = @"^[{(]?[0-9A-F]{8}[-]?([0-9A-F]{4}[-]?){3}[0-9A-F]{12}[)}]?$";
+            //const string regex = @"^[{(]?[0-9A-F]{8}[-]?([0-9A-F]{4}[-]?){3}[0-9A-F]{12}[)}]?$";
+            const string regex = @"^[{(]?[0-9A-F]{32}[)}]?$";
 
             return (Regex.IsMatch(guid, regex, RegexOptions.IgnoreCase, TimeSpan.FromMilliseconds(250)));
         }

@@ -117,24 +117,6 @@ namespace DCEMV.DemoApp.Proxies
                             }
                         }
                         else
-                        if (status_ == "401")
-                        {
-                            var responseData_ = await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new SwaggerException("Unauthorized", (int)response_.StatusCode, responseData_, headers_, null);
-                        }
-                        else
-                        if (status_ == "403")
-                        {
-                            var responseData_ = await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new SwaggerException("Forbidden", (int)response_.StatusCode, responseData_, headers_, null);
-                        }
-                        else
-                        if (status_ == "500")
-                        {
-                            var responseData_ = await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new SwaggerException("Server Error", (int)response_.StatusCode, responseData_, headers_, null);
-                        }
-                        else
                         if (status_ != "200" && status_ != "204")
                         {
                             var responseData_ = await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
@@ -211,24 +193,6 @@ namespace DCEMV.DemoApp.Proxies
                             }
                         }
                         else
-                        if (status_ == "401")
-                        {
-                            var responseData_ = await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new SwaggerException("Unauthorized", (int)response_.StatusCode, responseData_, headers_, null);
-                        }
-                        else
-                        if (status_ == "403")
-                        {
-                            var responseData_ = await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new SwaggerException("Forbidden", (int)response_.StatusCode, responseData_, headers_, null);
-                        }
-                        else
-                        if (status_ == "500")
-                        {
-                            var responseData_ = await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new SwaggerException("Server Error", (int)response_.StatusCode, responseData_, headers_, null);
-                        }
-                        else
                         if (status_ != "200" && status_ != "204")
                         {
                             var responseData_ = await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
@@ -297,24 +261,6 @@ namespace DCEMV.DemoApp.Proxies
                             return;
                         }
                         else
-                        if (status_ == "401")
-                        {
-                            var responseData_ = await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new SwaggerException("Unauthorized", (int)response_.StatusCode, responseData_, headers_, null);
-                        }
-                        else
-                        if (status_ == "403")
-                        {
-                            var responseData_ = await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new SwaggerException("Forbidden", (int)response_.StatusCode, responseData_, headers_, null);
-                        }
-                        else
-                        if (status_ == "500")
-                        {
-                            var responseData_ = await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new SwaggerException("Server Error", (int)response_.StatusCode, responseData_, headers_, null);
-                        }
-                        else
                         if (status_ != "200" && status_ != "204")
                         {
                             var responseData_ = await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
@@ -379,24 +325,6 @@ namespace DCEMV.DemoApp.Proxies
                         if (status_ == "200")
                         {
                             return;
-                        }
-                        else
-                        if (status_ == "401")
-                        {
-                            var responseData_ = await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new SwaggerException("Unauthorized", (int)response_.StatusCode, responseData_, headers_, null);
-                        }
-                        else
-                        if (status_ == "403")
-                        {
-                            var responseData_ = await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new SwaggerException("Forbidden", (int)response_.StatusCode, responseData_, headers_, null);
-                        }
-                        else
-                        if (status_ == "500")
-                        {
-                            var responseData_ = await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new SwaggerException("Server Error", (int)response_.StatusCode, responseData_, headers_, null);
                         }
                         else
                         if (status_ != "200" && status_ != "204")
@@ -465,24 +393,6 @@ namespace DCEMV.DemoApp.Proxies
                             return;
                         }
                         else
-                        if (status_ == "401")
-                        {
-                            var responseData_ = await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new SwaggerException("Unauthorized", (int)response_.StatusCode, responseData_, headers_, null);
-                        }
-                        else
-                        if (status_ == "403")
-                        {
-                            var responseData_ = await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new SwaggerException("Forbidden", (int)response_.StatusCode, responseData_, headers_, null);
-                        }
-                        else
-                        if (status_ == "500")
-                        {
-                            var responseData_ = await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new SwaggerException("Server Error", (int)response_.StatusCode, responseData_, headers_, null);
-                        }
-                        else
                         if (status_ != "200" && status_ != "204")
                         {
                             var responseData_ = await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
@@ -547,24 +457,6 @@ namespace DCEMV.DemoApp.Proxies
                         if (status_ == "200")
                         {
                             return;
-                        }
-                        else
-                        if (status_ == "401")
-                        {
-                            var responseData_ = await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new SwaggerException("Unauthorized", (int)response_.StatusCode, responseData_, headers_, null);
-                        }
-                        else
-                        if (status_ == "403")
-                        {
-                            var responseData_ = await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new SwaggerException("Forbidden", (int)response_.StatusCode, responseData_, headers_, null);
-                        }
-                        else
-                        if (status_ == "500")
-                        {
-                            var responseData_ = await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new SwaggerException("Server Error", (int)response_.StatusCode, responseData_, headers_, null);
                         }
                         else
                         if (status_ != "200" && status_ != "204")
@@ -633,24 +525,6 @@ namespace DCEMV.DemoApp.Proxies
                             return;
                         }
                         else
-                        if (status_ == "401")
-                        {
-                            var responseData_ = await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new SwaggerException("Unauthorized", (int)response_.StatusCode, responseData_, headers_, null);
-                        }
-                        else
-                        if (status_ == "403")
-                        {
-                            var responseData_ = await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new SwaggerException("Forbidden", (int)response_.StatusCode, responseData_, headers_, null);
-                        }
-                        else
-                        if (status_ == "500")
-                        {
-                            var responseData_ = await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new SwaggerException("Server Error", (int)response_.StatusCode, responseData_, headers_, null);
-                        }
-                        else
                         if (status_ != "200" && status_ != "204")
                         {
                             var responseData_ = await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
@@ -715,24 +589,6 @@ namespace DCEMV.DemoApp.Proxies
                         if (status_ == "200")
                         {
                             return;
-                        }
-                        else
-                        if (status_ == "401")
-                        {
-                            var responseData_ = await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new SwaggerException("Unauthorized", (int)response_.StatusCode, responseData_, headers_, null);
-                        }
-                        else
-                        if (status_ == "403")
-                        {
-                            var responseData_ = await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new SwaggerException("Forbidden", (int)response_.StatusCode, responseData_, headers_, null);
-                        }
-                        else
-                        if (status_ == "500")
-                        {
-                            var responseData_ = await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new SwaggerException("Server Error", (int)response_.StatusCode, responseData_, headers_, null);
                         }
                         else
                         if (status_ != "200" && status_ != "204")
@@ -802,24 +658,6 @@ namespace DCEMV.DemoApp.Proxies
                             return;
                         }
                         else
-                        if (status_ == "401")
-                        {
-                            var responseData_ = await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new SwaggerException("Unauthorized", (int)response_.StatusCode, responseData_, headers_, null);
-                        }
-                        else
-                        if (status_ == "403")
-                        {
-                            var responseData_ = await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new SwaggerException("Forbidden", (int)response_.StatusCode, responseData_, headers_, null);
-                        }
-                        else
-                        if (status_ == "500")
-                        {
-                            var responseData_ = await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new SwaggerException("Server Error", (int)response_.StatusCode, responseData_, headers_, null);
-                        }
-                        else
                         if (status_ != "200" && status_ != "204")
                         {
                             var responseData_ = await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
@@ -883,24 +721,6 @@ namespace DCEMV.DemoApp.Proxies
                         if (status_ == "200")
                         {
                             return;
-                        }
-                        else
-                        if (status_ == "401")
-                        {
-                            var responseData_ = await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new SwaggerException("Unauthorized", (int)response_.StatusCode, responseData_, headers_, null);
-                        }
-                        else
-                        if (status_ == "403")
-                        {
-                            var responseData_ = await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new SwaggerException("Forbidden", (int)response_.StatusCode, responseData_, headers_, null);
-                        }
-                        else
-                        if (status_ == "500")
-                        {
-                            var responseData_ = await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new SwaggerException("Server Error", (int)response_.StatusCode, responseData_, headers_, null);
                         }
                         else
                         if (status_ != "200" && status_ != "204")
@@ -978,24 +798,6 @@ namespace DCEMV.DemoApp.Proxies
                             return;
                         }
                         else
-                        if (status_ == "401")
-                        {
-                            var responseData_ = await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new SwaggerException("Unauthorized", (int)response_.StatusCode, responseData_, headers_, null);
-                        }
-                        else
-                        if (status_ == "403")
-                        {
-                            var responseData_ = await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new SwaggerException("Forbidden", (int)response_.StatusCode, responseData_, headers_, null);
-                        }
-                        else
-                        if (status_ == "500")
-                        {
-                            var responseData_ = await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new SwaggerException("Server Error", (int)response_.StatusCode, responseData_, headers_, null);
-                        }
-                        else
                         if (status_ != "200" && status_ != "204")
                         {
                             var responseData_ = await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
@@ -1057,24 +859,6 @@ namespace DCEMV.DemoApp.Proxies
                         if (status_ == "200")
                         {
                             return;
-                        }
-                        else
-                        if (status_ == "401")
-                        {
-                            var responseData_ = await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new SwaggerException("Unauthorized", (int)response_.StatusCode, responseData_, headers_, null);
-                        }
-                        else
-                        if (status_ == "403")
-                        {
-                            var responseData_ = await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new SwaggerException("Forbidden", (int)response_.StatusCode, responseData_, headers_, null);
-                        }
-                        else
-                        if (status_ == "500")
-                        {
-                            var responseData_ = await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new SwaggerException("Server Error", (int)response_.StatusCode, responseData_, headers_, null);
                         }
                         else
                         if (status_ != "200" && status_ != "204")
@@ -1149,24 +933,6 @@ namespace DCEMV.DemoApp.Proxies
                             {
                                 throw new SwaggerException("Could not deserialize the response body.", (int)response_.StatusCode, responseData_, headers_, exception_);
                             }
-                        }
-                        else
-                        if (status_ == "401")
-                        {
-                            var responseData_ = await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new SwaggerException("Unauthorized", (int)response_.StatusCode, responseData_, headers_, null);
-                        }
-                        else
-                        if (status_ == "403")
-                        {
-                            var responseData_ = await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new SwaggerException("Forbidden", (int)response_.StatusCode, responseData_, headers_, null);
-                        }
-                        else
-                        if (status_ == "500")
-                        {
-                            var responseData_ = await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new SwaggerException("Server Error", (int)response_.StatusCode, responseData_, headers_, null);
                         }
                         else
                         if (status_ != "200" && status_ != "204")
@@ -1249,24 +1015,6 @@ namespace DCEMV.DemoApp.Proxies
                             }
                         }
                         else
-                        if (status_ == "401")
-                        {
-                            var responseData_ = await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new SwaggerException("Unauthorized", (int)response_.StatusCode, responseData_, headers_, null);
-                        }
-                        else
-                        if (status_ == "403")
-                        {
-                            var responseData_ = await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new SwaggerException("Forbidden", (int)response_.StatusCode, responseData_, headers_, null);
-                        }
-                        else
-                        if (status_ == "500")
-                        {
-                            var responseData_ = await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new SwaggerException("Server Error", (int)response_.StatusCode, responseData_, headers_, null);
-                        }
-                        else
                         if (status_ != "200" && status_ != "204")
                         {
                             var responseData_ = await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
@@ -1333,24 +1081,6 @@ namespace DCEMV.DemoApp.Proxies
                         if (status_ == "200")
                         {
                             return;
-                        }
-                        else
-                        if (status_ == "401")
-                        {
-                            var responseData_ = await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new SwaggerException("Unauthorized", (int)response_.StatusCode, responseData_, headers_, null);
-                        }
-                        else
-                        if (status_ == "403")
-                        {
-                            var responseData_ = await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new SwaggerException("Forbidden", (int)response_.StatusCode, responseData_, headers_, null);
-                        }
-                        else
-                        if (status_ == "500")
-                        {
-                            var responseData_ = await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new SwaggerException("Server Error", (int)response_.StatusCode, responseData_, headers_, null);
                         }
                         else
                         if (status_ != "200" && status_ != "204")
@@ -1420,24 +1150,6 @@ namespace DCEMV.DemoApp.Proxies
                             return;
                         }
                         else
-                        if (status_ == "401")
-                        {
-                            var responseData_ = await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new SwaggerException("Unauthorized", (int)response_.StatusCode, responseData_, headers_, null);
-                        }
-                        else
-                        if (status_ == "403")
-                        {
-                            var responseData_ = await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new SwaggerException("Forbidden", (int)response_.StatusCode, responseData_, headers_, null);
-                        }
-                        else
-                        if (status_ == "500")
-                        {
-                            var responseData_ = await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new SwaggerException("Server Error", (int)response_.StatusCode, responseData_, headers_, null);
-                        }
-                        else
                         if (status_ != "200" && status_ != "204")
                         {
                             var responseData_ = await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
@@ -1500,24 +1212,6 @@ namespace DCEMV.DemoApp.Proxies
                         if (status_ == "200")
                         {
                             return;
-                        }
-                        else
-                        if (status_ == "401")
-                        {
-                            var responseData_ = await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new SwaggerException("Unauthorized", (int)response_.StatusCode, responseData_, headers_, null);
-                        }
-                        else
-                        if (status_ == "403")
-                        {
-                            var responseData_ = await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new SwaggerException("Forbidden", (int)response_.StatusCode, responseData_, headers_, null);
-                        }
-                        else
-                        if (status_ == "500")
-                        {
-                            var responseData_ = await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new SwaggerException("Server Error", (int)response_.StatusCode, responseData_, headers_, null);
                         }
                         else
                         if (status_ != "200" && status_ != "204")
@@ -1587,24 +1281,6 @@ namespace DCEMV.DemoApp.Proxies
                             return;
                         }
                         else
-                        if (status_ == "401")
-                        {
-                            var responseData_ = await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new SwaggerException("Unauthorized", (int)response_.StatusCode, responseData_, headers_, null);
-                        }
-                        else
-                        if (status_ == "403")
-                        {
-                            var responseData_ = await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new SwaggerException("Forbidden", (int)response_.StatusCode, responseData_, headers_, null);
-                        }
-                        else
-                        if (status_ == "500")
-                        {
-                            var responseData_ = await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new SwaggerException("Server Error", (int)response_.StatusCode, responseData_, headers_, null);
-                        }
-                        else
                         if (status_ != "200" && status_ != "204")
                         {
                             var responseData_ = await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
@@ -1669,24 +1345,6 @@ namespace DCEMV.DemoApp.Proxies
                         if (status_ == "200")
                         {
                             return;
-                        }
-                        else
-                        if (status_ == "401")
-                        {
-                            var responseData_ = await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new SwaggerException("Unauthorized", (int)response_.StatusCode, responseData_, headers_, null);
-                        }
-                        else
-                        if (status_ == "403")
-                        {
-                            var responseData_ = await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new SwaggerException("Forbidden", (int)response_.StatusCode, responseData_, headers_, null);
-                        }
-                        else
-                        if (status_ == "500")
-                        {
-                            var responseData_ = await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new SwaggerException("Server Error", (int)response_.StatusCode, responseData_, headers_, null);
                         }
                         else
                         if (status_ != "200" && status_ != "204")
@@ -1757,24 +1415,6 @@ namespace DCEMV.DemoApp.Proxies
                             return;
                         }
                         else
-                        if (status_ == "401")
-                        {
-                            var responseData_ = await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new SwaggerException("Unauthorized", (int)response_.StatusCode, responseData_, headers_, null);
-                        }
-                        else
-                        if (status_ == "403")
-                        {
-                            var responseData_ = await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new SwaggerException("Forbidden", (int)response_.StatusCode, responseData_, headers_, null);
-                        }
-                        else
-                        if (status_ == "500")
-                        {
-                            var responseData_ = await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new SwaggerException("Server Error", (int)response_.StatusCode, responseData_, headers_, null);
-                        }
-                        else
                         if (status_ != "200" && status_ != "204")
                         {
                             var responseData_ = await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
@@ -1838,24 +1478,6 @@ namespace DCEMV.DemoApp.Proxies
                         if (status_ == "200")
                         {
                             return;
-                        }
-                        else
-                        if (status_ == "401")
-                        {
-                            var responseData_ = await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new SwaggerException("Unauthorized", (int)response_.StatusCode, responseData_, headers_, null);
-                        }
-                        else
-                        if (status_ == "403")
-                        {
-                            var responseData_ = await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new SwaggerException("Forbidden", (int)response_.StatusCode, responseData_, headers_, null);
-                        }
-                        else
-                        if (status_ == "500")
-                        {
-                            var responseData_ = await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new SwaggerException("Server Error", (int)response_.StatusCode, responseData_, headers_, null);
                         }
                         else
                         if (status_ != "200" && status_ != "204")
@@ -2606,18 +2228,18 @@ namespace DCEMV.DemoApp.Proxies
 
         /// <returns>Success</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
-        public System.Threading.Tasks.Task StoreSalePostAsync(string jsonTx, string jsonPosTx)
+        public System.Threading.Tasks.Task StoreSalebyqrcodePostAsync(string jsonTx, string jsonPosTx)
         {
-            return StoreSalePostAsync(jsonTx, jsonPosTx, System.Threading.CancellationToken.None);
+            return StoreSalebyqrcodePostAsync(jsonTx, jsonPosTx, System.Threading.CancellationToken.None);
         }
 
         /// <returns>Success</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        public async System.Threading.Tasks.Task StoreSalePostAsync(string jsonTx, string jsonPosTx, System.Threading.CancellationToken cancellationToken)
+        public async System.Threading.Tasks.Task StoreSalebyqrcodePostAsync(string jsonTx, string jsonPosTx, System.Threading.CancellationToken cancellationToken)
         {
             var urlBuilder_ = new System.Text.StringBuilder();
-            urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/store/sale?");
+            urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/store/salebyqrcode?");
             if (jsonTx != null) urlBuilder_.Append("jsonTx=").Append(System.Uri.EscapeDataString(ConvertToString(jsonTx, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
             if (jsonPosTx != null) urlBuilder_.Append("jsonPosTx=").Append(System.Uri.EscapeDataString(ConvertToString(jsonPosTx, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
             urlBuilder_.Length--;
@@ -2673,18 +2295,163 @@ namespace DCEMV.DemoApp.Proxies
 
         /// <returns>Success</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
-        public System.Threading.Tasks.Task TransactionTransferPostAsync(string json)
+        public System.Threading.Tasks.Task StoreSalebycardPostAsync(string jsonTx, string jsonPosTx)
         {
-            return TransactionTransferPostAsync(json, System.Threading.CancellationToken.None);
+            return StoreSalebycardPostAsync(jsonTx, jsonPosTx, System.Threading.CancellationToken.None);
         }
 
         /// <returns>Success</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        public async System.Threading.Tasks.Task TransactionTransferPostAsync(string json, System.Threading.CancellationToken cancellationToken)
+        public async System.Threading.Tasks.Task StoreSalebycardPostAsync(string jsonTx, string jsonPosTx, System.Threading.CancellationToken cancellationToken)
         {
             var urlBuilder_ = new System.Text.StringBuilder();
-            urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/transaction/transfer?");
+            urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/store/salebycard?");
+            if (jsonTx != null) urlBuilder_.Append("jsonTx=").Append(System.Uri.EscapeDataString(ConvertToString(jsonTx, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+            if (jsonPosTx != null) urlBuilder_.Append("jsonPosTx=").Append(System.Uri.EscapeDataString(ConvertToString(jsonPosTx, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+            urlBuilder_.Length--;
+
+            var client_ = _httpClient;
+            try
+            {
+                using (var request_ = new System.Net.Http.HttpRequestMessage())
+                {
+                    request_.Content = new System.Net.Http.StringContent(string.Empty, System.Text.Encoding.UTF8, "application/json");
+                    request_.Method = new System.Net.Http.HttpMethod("POST");
+
+                    PrepareRequest(client_, request_, urlBuilder_);
+                    var url_ = urlBuilder_.ToString();
+                    request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
+                    PrepareRequest(client_, request_, url_);
+
+                    var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
+                    try
+                    {
+                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        if (response_.Content != null && response_.Content.Headers != null)
+                        {
+                            foreach (var item_ in response_.Content.Headers)
+                                headers_[item_.Key] = item_.Value;
+                        }
+
+                        ProcessResponse(client_, response_);
+
+                        var status_ = ((int)response_.StatusCode).ToString();
+                        if (status_ == "200")
+                        {
+                            return;
+                        }
+                        else
+                        if (status_ != "200" && status_ != "204")
+                        {
+                            var responseData_ = await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
+                            throw new SwaggerException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + ").", (int)response_.StatusCode, responseData_, headers_, null);
+                        }
+                    }
+                    finally
+                    {
+                        if (response_ != null)
+                            response_.Dispose();
+                    }
+                }
+            }
+            finally
+            {
+            }
+        }
+
+        /// <returns>Success</returns>
+        /// <exception cref="SwaggerException">A server side error occurred.</exception>
+        public System.Threading.Tasks.Task<bool> TransactionGettransactionstateGetAsync(string trackingId)
+        {
+            return TransactionGettransactionstateGetAsync(trackingId, System.Threading.CancellationToken.None);
+        }
+
+        /// <returns>Success</returns>
+        /// <exception cref="SwaggerException">A server side error occurred.</exception>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        public async System.Threading.Tasks.Task<bool> TransactionGettransactionstateGetAsync(string trackingId, System.Threading.CancellationToken cancellationToken)
+        {
+            var urlBuilder_ = new System.Text.StringBuilder();
+            urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/transaction/gettransactionstate?");
+            if (trackingId != null) urlBuilder_.Append("trackingId=").Append(System.Uri.EscapeDataString(ConvertToString(trackingId, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+            urlBuilder_.Length--;
+
+            var client_ = _httpClient;
+            try
+            {
+                using (var request_ = new System.Net.Http.HttpRequestMessage())
+                {
+                    request_.Method = new System.Net.Http.HttpMethod("GET");
+                    request_.Headers.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+
+                    PrepareRequest(client_, request_, urlBuilder_);
+                    var url_ = urlBuilder_.ToString();
+                    request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
+                    PrepareRequest(client_, request_, url_);
+
+                    var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
+                    try
+                    {
+                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        if (response_.Content != null && response_.Content.Headers != null)
+                        {
+                            foreach (var item_ in response_.Content.Headers)
+                                headers_[item_.Key] = item_.Value;
+                        }
+
+                        ProcessResponse(client_, response_);
+
+                        var status_ = ((int)response_.StatusCode).ToString();
+                        if (status_ == "200")
+                        {
+                            var responseData_ = await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
+                            var result_ = default(bool);
+                            try
+                            {
+                                result_ = Newtonsoft.Json.JsonConvert.DeserializeObject<bool>(responseData_, _settings.Value);
+                                return result_;
+                            }
+                            catch (System.Exception exception_)
+                            {
+                                throw new SwaggerException("Could not deserialize the response body.", (int)response_.StatusCode, responseData_, headers_, exception_);
+                            }
+                        }
+                        else
+                        if (status_ != "200" && status_ != "204")
+                        {
+                            var responseData_ = await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
+                            throw new SwaggerException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + ").", (int)response_.StatusCode, responseData_, headers_, null);
+                        }
+
+                        return default(bool);
+                    }
+                    finally
+                    {
+                        if (response_ != null)
+                            response_.Dispose();
+                    }
+                }
+            }
+            finally
+            {
+            }
+        }
+
+        /// <returns>Success</returns>
+        /// <exception cref="SwaggerException">A server side error occurred.</exception>
+        public System.Threading.Tasks.Task TransactionQrcodetransferPostAsync(string json)
+        {
+            return TransactionQrcodetransferPostAsync(json, System.Threading.CancellationToken.None);
+        }
+
+        /// <returns>Success</returns>
+        /// <exception cref="SwaggerException">A server side error occurred.</exception>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        public async System.Threading.Tasks.Task TransactionQrcodetransferPostAsync(string json, System.Threading.CancellationToken cancellationToken)
+        {
+            var urlBuilder_ = new System.Text.StringBuilder();
+            urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/transaction/qrcodetransfer?");
             if (json != null) urlBuilder_.Append("json=").Append(System.Uri.EscapeDataString(ConvertToString(json, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
             urlBuilder_.Length--;
 
@@ -2719,22 +2486,70 @@ namespace DCEMV.DemoApp.Proxies
                             return;
                         }
                         else
-                        if (status_ == "401")
+                        if (status_ != "200" && status_ != "204")
                         {
                             var responseData_ = await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new SwaggerException("Unauthorized", (int)response_.StatusCode, responseData_, headers_, null);
+                            throw new SwaggerException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + ").", (int)response_.StatusCode, responseData_, headers_, null);
                         }
-                        else
-                        if (status_ == "403")
+                    }
+                    finally
+                    {
+                        if (response_ != null)
+                            response_.Dispose();
+                    }
+                }
+            }
+            finally
+            {
+            }
+        }
+
+        /// <returns>Success</returns>
+        /// <exception cref="SwaggerException">A server side error occurred.</exception>
+        public System.Threading.Tasks.Task TransactionCardtransferPostAsync(string json)
+        {
+            return TransactionCardtransferPostAsync(json, System.Threading.CancellationToken.None);
+        }
+
+        /// <returns>Success</returns>
+        /// <exception cref="SwaggerException">A server side error occurred.</exception>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        public async System.Threading.Tasks.Task TransactionCardtransferPostAsync(string json, System.Threading.CancellationToken cancellationToken)
+        {
+            var urlBuilder_ = new System.Text.StringBuilder();
+            urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/transaction/cardtransfer?");
+            if (json != null) urlBuilder_.Append("json=").Append(System.Uri.EscapeDataString(ConvertToString(json, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+            urlBuilder_.Length--;
+
+            var client_ = _httpClient;
+            try
+            {
+                using (var request_ = new System.Net.Http.HttpRequestMessage())
+                {
+                    request_.Content = new System.Net.Http.StringContent(string.Empty, System.Text.Encoding.UTF8, "application/json");
+                    request_.Method = new System.Net.Http.HttpMethod("POST");
+
+                    PrepareRequest(client_, request_, urlBuilder_);
+                    var url_ = urlBuilder_.ToString();
+                    request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
+                    PrepareRequest(client_, request_, url_);
+
+                    var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
+                    try
+                    {
+                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        if (response_.Content != null && response_.Content.Headers != null)
                         {
-                            var responseData_ = await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new SwaggerException("Forbidden", (int)response_.StatusCode, responseData_, headers_, null);
+                            foreach (var item_ in response_.Content.Headers)
+                                headers_[item_.Key] = item_.Value;
                         }
-                        else
-                        if (status_ == "500")
+
+                        ProcessResponse(client_, response_);
+
+                        var status_ = ((int)response_.StatusCode).ToString();
+                        if (status_ == "200")
                         {
-                            var responseData_ = await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new SwaggerException("Server Error", (int)response_.StatusCode, responseData_, headers_, null);
+                            return;
                         }
                         else
                         if (status_ != "200" && status_ != "204")
@@ -2801,24 +2616,6 @@ namespace DCEMV.DemoApp.Proxies
                         if (status_ == "200")
                         {
                             return;
-                        }
-                        else
-                        if (status_ == "401")
-                        {
-                            var responseData_ = await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new SwaggerException("Unauthorized", (int)response_.StatusCode, responseData_, headers_, null);
-                        }
-                        else
-                        if (status_ == "403")
-                        {
-                            var responseData_ = await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new SwaggerException("Forbidden", (int)response_.StatusCode, responseData_, headers_, null);
-                        }
-                        else
-                        if (status_ == "500")
-                        {
-                            var responseData_ = await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new SwaggerException("Server Error", (int)response_.StatusCode, responseData_, headers_, null);
                         }
                         else
                         if (status_ != "200" && status_ != "204")
@@ -2896,24 +2693,6 @@ namespace DCEMV.DemoApp.Proxies
                             {
                                 throw new SwaggerException("Could not deserialize the response body.", (int)response_.StatusCode, responseData_, headers_, exception_);
                             }
-                        }
-                        else
-                        if (status_ == "401")
-                        {
-                            var responseData_ = await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new SwaggerException("Unauthorized", (int)response_.StatusCode, responseData_, headers_, null);
-                        }
-                        else
-                        if (status_ == "403")
-                        {
-                            var responseData_ = await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new SwaggerException("Forbidden", (int)response_.StatusCode, responseData_, headers_, null);
-                        }
-                        else
-                        if (status_ == "500")
-                        {
-                            var responseData_ = await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new SwaggerException("Server Error", (int)response_.StatusCode, responseData_, headers_, null);
                         }
                         else
                         if (status_ != "200" && status_ != "204")
@@ -3005,10 +2784,10 @@ namespace DCEMV.DemoApp.Proxies
         public System.Collections.ObjectModel.ObservableCollection<Card> Cards { get; set; }
 
         [Newtonsoft.Json.JsonProperty("transferFromTransactions", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.ObjectModel.ObservableCollection<TransferTransaction> TransferFromTransactions { get; set; }
+        public System.Collections.ObjectModel.ObservableCollection<CardTransferTransaction> TransferFromTransactions { get; set; }
 
         [Newtonsoft.Json.JsonProperty("transferToTransactions", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.ObjectModel.ObservableCollection<TransferTransaction> TransferToTransactions { get; set; }
+        public System.Collections.ObjectModel.ObservableCollection<CardTransferTransaction> TransferToTransactions { get; set; }
 
         [Newtonsoft.Json.JsonProperty("topUpTransactions", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.Collections.ObjectModel.ObservableCollection<CCTopUpTransaction> TopUpTransactions { get; set; }
@@ -3059,7 +2838,7 @@ namespace DCEMV.DemoApp.Proxies
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "9.10.42.0 (Newtonsoft.Json v9.0.0.0)")]
-    public partial class TransferTransaction
+    public partial class CardTransferTransaction
     {
         [Newtonsoft.Json.JsonProperty("amount", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public long? Amount { get; set; }
@@ -3086,16 +2865,16 @@ namespace DCEMV.DemoApp.Proxies
         public int? TransactionId { get; set; }
 
         [Newtonsoft.Json.JsonProperty("transactionType", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public TransferTransactionTransactionType? TransactionType { get; set; }
+        public CardTransferTransactionTransactionType? TransactionType { get; set; }
 
         public string ToJson()
         {
             return Newtonsoft.Json.JsonConvert.SerializeObject(this);
         }
 
-        public static TransferTransaction FromJson(string data)
+        public static CardTransferTransaction FromJson(string data)
         {
-            return Newtonsoft.Json.JsonConvert.DeserializeObject<TransferTransaction>(data);
+            return Newtonsoft.Json.JsonConvert.DeserializeObject<CardTransferTransaction>(data);
         }
 
     }
@@ -3268,7 +3047,7 @@ namespace DCEMV.DemoApp.Proxies
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "9.10.42.0 (Newtonsoft.Json v9.0.0.0)")]
-    public enum TransferTransactionTransactionType
+    public enum CardTransferTransactionTransactionType
     {
         _0 = 0,
 

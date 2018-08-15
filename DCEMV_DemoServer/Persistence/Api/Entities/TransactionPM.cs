@@ -42,9 +42,9 @@ namespace DCEMV.DemoServer.Persistence.Api.Entities
         public DateTime TransactionDateTime { get; set; }
         [Required]
         public TransactionType TransactionType { get; set; }
-        [Required]
-        [FromForm]
+
         public string CardFromEMVData { get; set; }
+        public string TrackingId { get; set; }
 
         /***************************/
         //Foreign Keys

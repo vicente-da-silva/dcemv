@@ -591,7 +591,7 @@ namespace DCEMV.DemoServer.Controllers.Credentials
             {
                 try
                 {
-                    _accountsRepository.AddAccount(Guid.NewGuid().ToString(), user.Id);
+                    _accountsRepository.AddAccount(GuidBuilder.Create().ToString(), user.Id);
                     // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=532713
                     // Send an email with this link
                     string code = await _userManager.GenerateEmailConfirmationTokenAsync(user);

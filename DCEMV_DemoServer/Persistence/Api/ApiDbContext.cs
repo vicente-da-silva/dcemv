@@ -133,6 +133,10 @@ namespace DCEMV.DemoServer.Persistence.Api
                 .HasIndex(p => p.CardSerialNumberId)
                 .IsUnique(true);
 
+            modelBuilder.Entity<TransactionPM>()
+                .HasIndex(p => p.TrackingId)
+                .IsUnique(true);
+
         }
     }
 }

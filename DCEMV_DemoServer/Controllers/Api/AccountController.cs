@@ -59,7 +59,7 @@ namespace DCEMV.DemoServer.Controllers.Api
 
             account.TransactionsFrom.ForEach(x =>
             {
-                TransferTransaction tx = new TransferTransaction()
+                CardTransferTransaction tx = new CardTransferTransaction()
                 {
                     AccountFrom = x.AccountNumberIdFromRef,
                     //AccountTo = x.AccountNumberIdToRef,
@@ -73,7 +73,7 @@ namespace DCEMV.DemoServer.Controllers.Api
 
             account.TransactionsTo.ForEach(x =>
             {
-                TransferTransaction tx = new TransferTransaction()
+                CardTransferTransaction tx = new CardTransferTransaction()
                 {
                     //AccountFrom = x.AccountNumberIdFromRef,
                     AccountTo = x.AccountNumberIdToRef,

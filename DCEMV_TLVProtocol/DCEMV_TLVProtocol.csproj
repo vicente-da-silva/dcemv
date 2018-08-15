@@ -23,6 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\DCEMV_QRDEProtocol\DCEMV_QRDEProtocol.csproj" />
     <ProjectReference Include="..\DCEMV_Shared\DCEMV_Shared.csproj" />
     <ProjectReference Include="..\DCEMV_FormattingUtils\DCEMV_FormattingUtils.csproj" />
   </ItemGroup>

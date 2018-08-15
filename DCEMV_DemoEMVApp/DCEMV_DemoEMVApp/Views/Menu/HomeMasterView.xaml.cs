@@ -26,6 +26,7 @@ namespace DCEMV.DemoEMVApp
     public enum ViewTypes
     {
         Transact,
+        QRCode,
         Settings
     }
     public class MasterPageItem
@@ -55,6 +56,12 @@ namespace DCEMV.DemoEMVApp
                 Title = "Transact",
                 IconSource = ImageResourceExtension.ProvideImageSource("hamburger.png"),
                 View = ViewTypes.Transact,
+            });
+            transactPageItems.Add(new MasterPageItem
+            {
+                Title = "Present QR Code",
+                IconSource = ImageResourceExtension.ProvideImageSource("hamburger.png"),
+                View = ViewTypes.QRCode,
             });
             listViewTransact.ItemsSource = transactPageItems;
             /*****************************************/

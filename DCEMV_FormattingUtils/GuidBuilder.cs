@@ -1,4 +1,4 @@
-/*
+﻿/*
 *************************************************************************
 DC EMV
 Open Source EMV
@@ -18,16 +18,15 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see http://www.gnu.org/licenses/
 *************************************************************************
 */
-using DCEMV.Shared;
-using DCEMV.EMVProtocol.Kernels;
-using DCEMV.TLVProtocol;
+using System;
 
-namespace DCEMV.EMVProtocol
+namespace DCEMV.FormattingUtils
 {
-    public class EMVTerminalProcessingOutcome : TerminalProcessingOutcome
+    public class GuidBuilder
     {
-        public TLV DataRecord { get; set; }
-        public TLV DiscretionaryData { get; set; }
-        public KernelCVMEnum CVM { get; set; }
+        public static string Create()
+        {
+            return Guid.NewGuid().ToString("N"); //no hyphen
+        }
     }
 }

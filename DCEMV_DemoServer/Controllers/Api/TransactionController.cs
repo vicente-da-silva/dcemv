@@ -58,32 +58,57 @@ namespace DCEMV.DemoServer.Controllers.Api
 
         }
 
-        public static byte[] VerifyCardSignature(TLV tlv)
+        [HttpGet]
+        [Route("transaction/gettransactionstate")]
+        public bool GetTransactionState(string trackingId)
         {
-            CryptoMetaData cryptoMetaData = EMVDESSecurity.BuildCryptoMeta(tlv);
-
-            //fire up HSM
-            if (jcesecmod == null)
-                jcesecmod = new EMVDESSecurity(lmkFilePath);
-
-            TLV _8A;
-            bool isApproved = true;
-            if (isApproved)
-                _8A = TLV.Create(EMVTagsEnum.AUTHORISATION_RESPONSE_CODE_8A_KRN.Tag, arcApproved);
-            else
-                _8A = TLV.Create(EMVTagsEnum.AUTHORISATION_RESPONSE_CODE_8A_KRN.Tag, arcDeclined);
-
-            byte[] arpc = jcesecmod.VerifyCryptogramGenARPC(tlv, cryptoMetaData, _8A.Value, mkACEncrypted, mkACEncryptedCV);
-
-            return arpc;
+            try
+            {
+                if(_transactionRepository.GetTransactionState(trackingId) == 0)
+                    return false;
+                else
+                    return true;
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
         }
 
         //[NoCache]
         [HttpPost]
-        [Route("transaction/transfer")]
-        public void Transfer(string json)
+        [Route("transaction/qrcodetransfer")]
+        public void QRCodeTransfer(string json)
         {
-            TransferTransaction tx = TransferTransaction.FromJsonString(json);
+            QRCodeTransferTransaction tx = QRCodeTransferTransaction.FromJsonString(json);
+
+            if (tx.Amount == 0)
+                throw new ValidationException("Invalid Amount");
+
+            if (!Validate.GuidValidation(tx.AccountFrom))
+                throw new ValidationException("Invalid AccountNumberFrom");
+            if (!Validate.GuidValidation(tx.AccountTo))
+                throw new ValidationException("Invalid AccountNumberTo");
+            if (!Validate.GuidValidation(tx.TrackingId))
+                throw new ValidationException("Invalid TrackingId");
+
+            TransactionPM tpm = new TransactionPM()
+            {
+                Amount = tx.Amount,
+                TransactionType = TransactionType.SendMoneyFromAppToCard,
+                AccountNumberIdFromRef = tx.AccountFrom,
+                AccountNumberIdToRef = tx.AccountTo,
+                TrackingId = tx.TrackingId,
+            };
+            _transactionRepository.AddQRCodeBasedTransaction(tpm, GetCurrentUserId());
+        }
+
+        //[NoCache]
+        [HttpPost]
+        [Route("transaction/cardtransfer")]
+        public void CardTransfer(string json)
+        {
+            CardTransferTransaction tx = CardTransferTransaction.FromJsonString(json);
 
             if (tx.Amount == 0)
                 throw new ValidationException("Invalid Amount");
@@ -138,7 +163,7 @@ namespace DCEMV.DemoServer.Controllers.Api
                 CardFromEMVData = tx.CardFromEMVData
             };
 
-            _transactionRepository.AddTransaction(tpm, GetCurrentUserId());
+            _transactionRepository.AddCardBasedTransaction(tpm, GetCurrentUserId());
         }
 
         //[NoCache]
@@ -206,8 +231,8 @@ namespace DCEMV.DemoServer.Controllers.Api
             ContactCardOnlineAuthResponse response = new ContactCardOnlineAuthResponse();
             try
             {
-                ApproverResponse onlineResponse = GoOnline(
-                                        new ApproverRequest()
+                EMVApproverResponse onlineResponse = GoOnline(
+                                        new EMVApproverRequest()
                                         {
                                             EMV_Data = TLVasJSON.Convert(request.EMV_Data),
                                         });
@@ -230,16 +255,36 @@ namespace DCEMV.DemoServer.Controllers.Api
             }
         }
 
-        private ApproverResponse GoOnline(ApproverRequest request)
+        public static byte[] VerifyCardSignature(TLV tlv)
+        {
+            CryptoMetaData cryptoMetaData = EMVDESSecurity.BuildCryptoMeta(tlv);
+
+            //fire up HSM
+            if (jcesecmod == null)
+                jcesecmod = new EMVDESSecurity(lmkFilePath);
+
+            TLV _8A;
+            bool isApproved = true;
+            if (isApproved)
+                _8A = TLV.Create(EMVTagsEnum.AUTHORISATION_RESPONSE_CODE_8A_KRN.Tag, arcApproved);
+            else
+                _8A = TLV.Create(EMVTagsEnum.AUTHORISATION_RESPONSE_CODE_8A_KRN.Tag, arcDeclined);
+
+            byte[] arpc = jcesecmod.VerifyCryptogramGenARPC(tlv, cryptoMetaData, _8A.Value, mkACEncrypted, mkACEncryptedCV);
+
+            return arpc;
+        }
+
+        private EMVApproverResponse GoOnline(EMVApproverRequest request)
         {
             IOnlineApprover onlineApprover = new SPDHApprover(authIp, authPort);
             //IOnlineApprover onlineApprover = new ContactlessDummyOnlineApprover(authIp, authPort);
             //IOnlineApprover onlineApprover = new SimulatedApprover();
-            ApproverResponse onlineResponse;
+            EMVApproverResponse onlineResponse;
             using (TCPClientStream tcpClientStream = new TCPClientStreamNetCore())
             {
                 request.TCPClientStream = tcpClientStream;
-                onlineResponse = onlineApprover.DoAuth(request);
+                onlineResponse = (EMVApproverResponse)onlineApprover.DoAuth(request);
             }
             return onlineResponse;
         }

@@ -24,8 +24,8 @@ rem     </DotNetCliToolReference>
 rem </ItemGroup>
 
 rem create api identity tables migration scripts
-rem set DB_SERVER_NAME=localhost
-set DB_SERVER_NAME=paylooladbserver.database.windows.net
+set DB_SERVER_NAME=localhost
+rem set DB_SERVER_NAME=paylooladbserver.database.windows.net
 echo %DB_SERVER_NAME%
 
 rem update the database

@@ -191,8 +191,8 @@ namespace DCEMV.DemoApp
 
         private SessionSingleton()
         {
-            ApiServerURL = "http://192.168.0.100:44359"; 
-            //ApiServerURL = "http://localhost:44359";
+            //ApiServerURL = "http://192.168.0.100:44359"; 
+            ApiServerURL = "http://localhost:44359";
             UserName = "testuser@domain.com";
             Password = "Password1!";
 

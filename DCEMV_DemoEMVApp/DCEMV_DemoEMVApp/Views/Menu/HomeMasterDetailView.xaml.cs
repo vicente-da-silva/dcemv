@@ -79,6 +79,10 @@ namespace DCEMV.DemoEMVApp
                             selected = new EMVTx(contactCardInterfaceManger, contactlessCardInterfaceManger, configProvider, onlineApprover, tcpClientStream);
                             break;
 
+                        case ViewTypes.QRCode:
+                            selected = new EMVQRCodeView(contactCardInterfaceManger, contactlessCardInterfaceManger, configProvider, onlineApprover, tcpClientStream);
+                            break;
+
                         case ViewTypes.Settings:
                             selected = new SettingsView(contactCardInterfaceManger, contactlessCardInterfaceManger);
                             break;

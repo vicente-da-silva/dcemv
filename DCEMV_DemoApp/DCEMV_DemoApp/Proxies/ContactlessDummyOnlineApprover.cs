@@ -27,27 +27,36 @@ namespace DCEMV.DemoApp.Proxies
 {
     public class ContactlessDummyOnlineApprover : IOnlineApprover
     {
-        public ApproverResponse DoAdvice(ApproverRequest request, bool isOnline)
+        public ApproverResponseBase DoAdvice(ApproverRequestBase request, bool isOnline)
         {
-            return new ApproverResponse()
+            return new EMVApproverResponse()
             {
                 IsApproved = true,
                 ResponseMessage = "Approved Advice By ContactlessDummyOnlineApprover"
             };
         }
 
-        public ApproverResponse DoAuth(ApproverRequest request)
+        public ApproverResponseBase DoAuth(ApproverRequestBase request)
         {
-            return new ApproverResponse()
+            return new EMVApproverResponse()
             {
                 IsApproved = true,
                 ResponseMessage = "Approved Auth By ContactlessDummyOnlineApprover"
             };
         }
 
-        public ApproverResponse DoReversal(ApproverRequest request, bool isOnline)
+        public ApproverResponseBase DoReversal(ApproverRequestBase request, bool isOnline)
         {
-            return new ApproverResponse()
+            return new EMVApproverResponse()
+            {
+                IsApproved = true,
+                ResponseMessage = "Approved Reversal By ContactlessDummyOnlineApprover"
+            };
+        }
+
+        public ApproverResponseBase DoCheckAuthStatus(ApproverRequestBase request)
+        {
+            return new EMVApproverResponse()
             {
                 IsApproved = true,
                 ResponseMessage = "Approved Reversal By ContactlessDummyOnlineApprover"

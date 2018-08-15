@@ -35,8 +35,59 @@ namespace DCEMV.SimulatedPaymentProvider
         private byte[] arcApproved = Formatting.HexStringToByteArray("3030"); //approved code
         private byte[] arcDeclined = Formatting.HexStringToByteArray("3035"); //declined code
 
-        public ApproverResponse DoAuth(ApproverRequest request)
+        public ApproverResponseBase DoAuth(ApproverRequestBase request)
         {
+            if (request is EMVApproverRequest)
+                return DoEMVAuth(request);
+            if (request is QRCodeApproverRequest)
+                return DoQRAuth(request);
+            else
+                throw new NotImplementedException();
+        }
+
+        public ApproverResponseBase DoReversal(ApproverRequestBase request, bool isOnline)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ApproverResponseBase DoAdvice(ApproverRequestBase request, bool isOnline)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ApproverResponseBase DoCheckAuthStatus(ApproverRequestBase request)
+        {
+            if (request is EMVApproverRequest)
+                throw new NotImplementedException();
+            if (request is QRCodeApproverRequest)
+                return DoQRCheckAuthStatus(request);
+            else
+                throw new NotImplementedException();
+           
+        }
+
+        private ApproverResponseBase DoQRCheckAuthStatus(ApproverRequestBase request)
+        {
+            return new QRCodeApproverResponse()
+            {
+                IsApproved = true,
+                ResponseMessage = "Approved",
+            };
+        }
+
+        private ApproverResponseBase DoQRAuth(ApproverRequestBase requestIn)
+        {
+            return new QRCodeApproverResponse()
+            {
+                IsApproved = true,
+                ResponseMessage = "Approved",
+            };
+        }
+
+        private ApproverResponseBase DoEMVAuth(ApproverRequestBase requestIn)
+        {
+            EMVApproverRequest request = ((EMVApproverRequest)requestIn);
+
             CryptoMetaData cryptoMetaData = EMVDESSecurity.BuildCryptoMeta(request.EMV_Data);
 
             //Do additional checking here, e.g. customer balances etc
@@ -119,7 +170,7 @@ namespace DCEMV.SimulatedPaymentProvider
                 _71TLV.Deserialize(Formatting.ConcatArrays(new byte[] { 0x71, 0x00 }, new byte[0]), 0);
             }
 
-            return new ApproverResponse()
+            return new EMVApproverResponse()
             {
                 IsApproved = isApproved,
                 ResponseMessage = responseMessage,
@@ -199,14 +250,6 @@ namespace DCEMV.SimulatedPaymentProvider
             return new byte[] { byte1, byte2, byte3, byte4 };
         }
 
-        public ApproverResponse DoReversal(ApproverRequest request, bool isOnline)
-        {
-            throw new NotImplementedException();
-        }
-
-        public ApproverResponse DoAdvice(ApproverRequest request, bool isOnline)
-        {
-            throw new NotImplementedException();
-        }
+        
     }
 }

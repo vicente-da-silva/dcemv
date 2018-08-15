@@ -23,7 +23,25 @@ using System;
 
 namespace DCEMV.ServerShared
 {
-    public class TransferTransaction
+    public class QRCodeTransferTransaction
+    {
+        public long Amount { get; set; }
+        public string AccountFrom { get; set; }
+        public string AccountTo { get; set; }
+        public DateTime DateTime { get; set; }
+        public string TrackingId { get; set; }
+        public int TransactionId { get; set; }
+
+        public string ToJsonString()
+        {
+            return JsonConvert.SerializeObject(this);
+        }
+        public static QRCodeTransferTransaction FromJsonString(string json)
+        {
+            return JsonConvert.DeserializeObject<QRCodeTransferTransaction>(json);
+        }
+    }
+    public class CardTransferTransaction
     {
         public long Amount { get; set; }
         public string AccountFrom { get; set; }
@@ -33,16 +51,15 @@ namespace DCEMV.ServerShared
         public string CardFromEMVData { get; set; }
         public DateTime DateTime { get; set; }
         public int TransactionId { get; set; }
-
         public TransactionType TransactionType { get; set; }
 
         public string ToJsonString()
         {
             return JsonConvert.SerializeObject(this);
         }
-        public static TransferTransaction FromJsonString(string json)
+        public static CardTransferTransaction FromJsonString(string json)
         {
-            return JsonConvert.DeserializeObject<TransferTransaction>(json);
+            return JsonConvert.DeserializeObject<CardTransferTransaction>(json);
         }
     }
 }

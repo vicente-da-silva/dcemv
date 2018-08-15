@@ -22,7 +22,75 @@ along with this program.  If not, see http://www.gnu.org/licenses/
 <Grid xmlns="http://xamarin.com/schemas/2014/forms"
       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
       xmlns:common="clr-namespace:DCEMV.TerminalCommon;assembly=DCEMV_TerminalCommon"
+      xmlns:zxing="clr-namespace:ZXing.Net.Mobile.Forms;assembly=ZXing.Net.Mobile.Forms"
       x:Class="DCEMV.TerminalCommon.EMVTxCtl">
+
+    <Grid  x:Name="gridTransactDetails"  HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition />
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200"></ColumnDefinition>
+            <ColumnDefinition Width="Auto"></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+
+        <Label Grid.Row="0" x:Name="lblStatusAskAmount"  Grid.ColumnSpan="3"/>
+
+        <Entry Grid.Row="1" Placeholder="Amount" Keyboard="Numeric" Text="{Binding Total, Mode=TwoWay}" x:Name="txtAmount">
+            <Entry.Behaviors>
+                <common:AmountValidatorBehavior x:Name="amountValidator"/>
+            </Entry.Behaviors>
+        </Entry>
+        <Image Grid.Row="1" Grid.Column="1" Style="{Binding Source={x:Reference amountValidator}, Path=IsValid, Converter={StaticResource boolToStyleImage}}">
+            <Image.Triggers>
+                <MultiTrigger TargetType="Image">
+                    <MultiTrigger.Conditions>
+                        <BindingCondition Binding="{Binding Source={x:Reference txtAmount}, Path=Text }" Value="" />
+                    </MultiTrigger.Conditions>
+                    <MultiTrigger.Setters>
+                        <Setter Property="IsVisible" Value="False" />
+                    </MultiTrigger.Setters>
+                </MultiTrigger>
+            </Image.Triggers>
+        </Image>
+        <Label Grid.Row="1" Grid.Column="2" Style="{Binding Source={x:Reference amountValidator}, Path=IsValid, Converter={StaticResource boolToStyleAmount}}">
+            <Label.Triggers>
+                <MultiTrigger TargetType="Label">
+                    <MultiTrigger.Conditions>
+                        <BindingCondition Binding="{Binding Source={x:Reference txtAmount}, Path=Text }" Value="" />
+                    </MultiTrigger.Conditions>
+                    <MultiTrigger.Setters>
+                        <Setter Property="IsVisible" Value="False" />
+                    </MultiTrigger.Setters>
+                </MultiTrigger>
+            </Label.Triggers>
+        </Label>
+
+        <Grid Grid.Row="3" Grid.ColumnSpan="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Button IsEnabled="False" x:Name="cmdNextToPaymentApp" Style="{StaticResource styleButton}" Clicked="CmdNextToPaymentApp_Clicked" Text="Next">
+                <Button.Triggers>
+                    <MultiTrigger TargetType="Button">
+                        <MultiTrigger.Conditions>
+                            <BindingCondition Binding="{Binding Source={x:Reference amountValidator}, Path=IsValid }" Value="true" />
+                        </MultiTrigger.Conditions>
+                        <MultiTrigger.Setters>
+                            <Setter Property="IsEnabled" Value="True" />
+                        </MultiTrigger.Setters>
+                    </MultiTrigger>
+                </Button.Triggers>
+            </Button>
+            <Button x:Name="cmdScanQRCode" Grid.Column="1" Style="{StaticResource styleButton}" Clicked="cmdScanQRCode_Clicked"  Text="QR Code Scan" />
+        </Grid>
+    </Grid>
 
     <Grid x:Name="gridTapInsertCard" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
 
@@ -40,17 +108,27 @@ along with this program.  If not, see http://www.gnu.org/licenses/
             <ColumnDefinition Width="Auto"></ColumnDefinition>
             <ColumnDefinition></ColumnDefinition>
         </Grid.ColumnDefinitions>
-
-        <Label Grid.Row="0" x:Name="lblStatusTapPaymentCard" Grid.ColumnSpan="3"  />
-        <Label Grid.Row="1" x:Name="lblTotal" FontSize="Large"  Grid.ColumnSpan="3" Text="{Binding Total, Converter={StaticResource currencyConverter}}" />
+       
+        <Label Grid.Row="0" x:Name="lblTotal" FontSize="Large"  Grid.ColumnSpan="3" Text="{Binding Total, Converter={StaticResource currencyConverter}}" />
+        <!--the instructions-->
+        <Label Grid.Row="1" x:Name="lblStatusTapPaymentCard" Grid.ColumnSpan="3"  />
+        <!--the states in progress-->
         <Label Grid.Row="2" x:Name="lblStatusPaymentApp"  Grid.ColumnSpan="3" />
-        <Label Grid.Row="3" x:Name="lblStatusFinalResult" FontSize="Large" Grid.ColumnSpan="3"/>
+        <!--the final result-->
+        <Label Grid.Row="3" x:Name="lblStatusFinalResult" Grid.ColumnSpan="3"/>
+        <Grid  Grid.Row="4" Grid.ColumnSpan="3" x:Name="gridBarcode" >
+            <zxing:ZXingBarcodeImageView x:Name="zxingBIV" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" 
+                                         AutomationId="zXingBarcodeImageView" BarcodeFormat="QR_CODE" BarcodeValue="None"/>
+        </Grid>
 
-        <Grid Grid.Row="5" Grid.ColumnSpan="3">
+        <Grid  Grid.Row="5" Grid.ColumnSpan="3">
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <Button x:Name="cmdCancelTx" Style="{StaticResource styleButton}" Clicked="cmdCancelTx_Clicked"  Text="Cancel" />
+            <Button x:Name="cmdPollForQRCodeResult" Grid.Column="1" Style="{StaticResource styleButton}" Clicked="cmdPollForQRCodeResult_Clicked"  Text="QR Code Poll" />
         </Grid>
     </Grid>
 

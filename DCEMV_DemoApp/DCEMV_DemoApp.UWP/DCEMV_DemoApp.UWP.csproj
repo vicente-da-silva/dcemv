@@ -179,8 +179,15 @@
     </PackageReference>
     <PackageReference Include="Xamarin.Forms" Version="3.1.0.697729" />
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform" Version="6.1.7" />
+    <PackageReference Include="ZXing.Net.Mobile.Forms">
+      <Version>2.4.1</Version>
+    </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\DCEMV_QRDEProtocol\DCEMV_QRDEProtocol.csproj">
+      <Project>{14DA4789-1758-441E-A1F2-EB1AC53EC1F9}</Project>
+      <Name>DCEMV_QRDEProtocol</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\DCEMV_ServerShared\DCEMV_ServerShared.csproj">
       <Project>{9b565d57-e501-4c71-a3d8-681d1a40ffa2}</Project>
       <Name>DCEMV_ServerShared</Name>
@@ -229,6 +236,10 @@
       <Project>{39b80fb0-8427-4f63-9617-f39d83e48e43}</Project>
       <Name>DCEMV_TCPIPDriver</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\DCEMV_TerminalCommon\DCEMV_TerminalCommon.csproj">
+      <Project>{e9da6055-deec-4167-9a15-6002de715828}</Project>
+      <Name>DCEMV_TerminalCommon</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\DCEMV_TLVProtocol\DCEMV_TLVProtocol.csproj">
       <Project>{dddbfc8d-a231-4185-a8c2-7460156c67c3}</Project>
       <Name>DCEMV_TLVProtocol</Name>
@@ -240,10 +251,6 @@
     <ProjectReference Include="..\..\DCEMV_WindowsDevicesSmartCardsDriver\DCEMV_WindowsDevicesSmartCardsDriver.csproj">
       <Project>{ba7748e1-3970-4889-b859-07c710f9351d}</Project>
       <Name>DCEMV_WindowsDevicesSmartCardsDriver</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\DCEMV_TerminalCommon\DCEMV_TerminalCommon.csproj">
-      <Project>{e9da6055-deec-4167-9a15-6002de715828}</Project>
-      <Name>DCEMV_TerminalCommon</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="..\DCEMV_DemoApp\DCEMV_DemoApp.projitems" Label="Shared" />

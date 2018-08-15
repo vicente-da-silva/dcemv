@@ -29,15 +29,15 @@ using DCEMV.TLVProtocol;
 using Xamarin.Forms;
 using DCEMV.ServerShared;
 using DCEMV.TerminalCommon;
+using DCEMV_QRDEProtocol;
+using DCEMV.EMVProtocol.EMVQRCode;
 
 namespace DCEMV.DemoApp
 {
-    
     public enum ViewState
     {
-        Step1TransactDetails,
-        Step2TapCard,
-        Step3Summary
+        StepTxCtl,
+        StepSummary
     }
     public enum FlowType
     {
@@ -47,93 +47,65 @@ namespace DCEMV.DemoApp
 
     public partial class TransactView : ModalPage
     {
-        private TransactionRequest tr;
         private FlowType flowType;
-        private TotalAmountViewModel totalAmount;
-
-        //for EMVTxCtl
-        private IConfigurationProvider configProvider;
-        private ICardInterfaceManger contactCardInterfaceManger;
-        private ICardInterfaceManger contactlessCardInterfaceManger;
         private IOnlineApprover onlineApprover;
-        private TCPClientStream tcpClientStream;
-
+       
         public TransactView(FlowType flowType, ICardInterfaceManger contactCardInterfaceManger, ICardInterfaceManger contactlessCardInterfaceManger, IConfigurationProvider configProvider, IOnlineApprover onlineApprover, TCPClientStream tcpClientStream)
         {
             InitializeComponent();
 
-            this.contactCardInterfaceManger = contactCardInterfaceManger;
-            this.contactlessCardInterfaceManger = contactlessCardInterfaceManger;
-            this.configProvider = configProvider;
             this.onlineApprover = onlineApprover;
-            this.tcpClientStream = tcpClientStream;
             this.flowType = flowType;
 
-            emvTxCtl.TxCompleted += EmvTxCtl_TxCompleted;
-
-            totalAmount = new TotalAmountViewModel();
-            gridProgress.IsVisible = false;
-            txtAmount.BindingContext = totalAmount;
-
-            UpdateView(ViewState.Step1TransactDetails);
-        }
-
-        private void UpdateView(ViewState viewState)
-        {
+            QRCodeMode mode = QRCodeMode.None;
             switch (flowType)
             {
                 case FlowType.SendMoneyFromCardToApp:
-                    lblHeaderTransact.Text = "Send money from their card to your account";
+                    mode = QRCodeMode.PresentAndPoll;
+                    emvTxCtl.SetHeaderInstruction("Send money from their card to your account");
                     emvTxCtl.SetTxStartLabel("Send money from their card to your account");
                     this.Title = "Receive Money";
                     break;
                 case FlowType.SendMoneyFromAppToCard:
-                    lblHeaderTransact.Text = "Send money from your account to their card";
+                    mode = QRCodeMode.ScanAndProcess;
+                    emvTxCtl.SetHeaderInstruction("Send money from your account to their card");
                     emvTxCtl.SetTxStartLabel("Send money from your account to their card");
                     this.Title = "Send Money";
                     break;
             }
 
+            emvTxCtl.Init(contactCardInterfaceManger, SessionSingleton.ContactDeviceId,
+                contactlessCardInterfaceManger, SessionSingleton.ContactlessDeviceId,
+                mode, SessionSingleton.Account.AccountNumberId,
+                configProvider, onlineApprover, tcpClientStream);
+
+            emvTxCtl.TxCompleted += EmvTxCtl_TxCompleted;
+
+            gridProgress.IsVisible = false;
+
+            UpdateView(ViewState.StepTxCtl);
+        }
+
+        private void UpdateView(ViewState viewState)
+        {
             switch (viewState)
             {
-                case ViewState.Step1TransactDetails:
-                    gridTransactDetails.IsVisible = true;
-                    emvTxCtl.IsVisible = false;
-                    gridTransactSummary.IsVisible = false;
-                    break;
-
-                case ViewState.Step2TapCard:
-                    gridTransactDetails.IsVisible = false;
+                case ViewState.StepTxCtl:
                     emvTxCtl.IsVisible = true;
                     gridTransactSummary.IsVisible = false;
                     break;
 
-                case ViewState.Step3Summary:
-                    gridTransactDetails.IsVisible = false;
+                case ViewState.StepSummary:
                     emvTxCtl.IsVisible = false;
                     gridTransactSummary.IsVisible = true;
                     break;
             }
         }
         
-        private void cmdCompletedTransact_Clicked(object sender, EventArgs e)
-        {
-            UpdateView(ViewState.Step2TapCard);
-
-            long amount = Convert.ToInt64(totalAmount.Total);
-            long amountOther = 0;
-            tr = new TransactionRequest(amount + amountOther, amountOther, TransactionTypeEnum.PurchaseGoodsAndServices);
-
-            //cannot use contact interface with DC EMV Cards
-            emvTxCtl.Start(tr, null, "", contactlessCardInterfaceManger, SessionSingleton.ContactlessDeviceId ,configProvider, onlineApprover, tcpClientStream);
-        }
-
         private async void EmvTxCtl_TxCompleted(object sender, EventArgs e)
         {
             try
             {
-                long? amount = Convert.ToInt64(totalAmount.Total);
-
                 TransactionType transactionType;
                 string fromAccountNumber = "";
                 string cardSerialNumberFrom = "";
@@ -159,6 +131,12 @@ namespace DCEMV.DemoApp
                             panBCD = Formatting.StringToBcd(panString.Split('D')[0], false);
                         }
 
+                        TLV _9F02 = data.Children.Get(EMVTagsEnum.AMOUNT_AUTHORISED_NUMERIC_9F02_KRN.Tag);
+                        if (_9F02 == null)
+                            throw new Exception("No Amount found");
+
+                        long amount = Formatting.BcdToLong(_9F02.Value);
+
                         switch (flowType)
                         {
                             case FlowType.SendMoneyFromCardToApp:
@@ -178,11 +156,11 @@ namespace DCEMV.DemoApp
 
                         try
                         {
-                            await CallTransactWebService(fromAccountNumber, toAccountNumber, cardSerialNumberFrom, cardSerialNumberTo, amount, transactionType, data);
+                            await CallTransactByCardWebService(fromAccountNumber, toAccountNumber, cardSerialNumberFrom, cardSerialNumberTo, amount, transactionType, data);
                             Device.BeginInvokeOnMainThread(() =>
                             {
                                 lblTransactSummary.Text = "Transaction Completed Succesfully";
-                                UpdateView(ViewState.Step3Summary);
+                                UpdateView(ViewState.StepSummary);
                             });
                         }
                         catch
@@ -190,7 +168,7 @@ namespace DCEMV.DemoApp
                             Device.BeginInvokeOnMainThread(() =>
                             {
                                 lblTransactSummary.Text = "Declined, could not go online.";
-                                UpdateView(ViewState.Step3Summary);
+                                UpdateView(ViewState.StepSummary);
                             });
                         }
                     }
@@ -199,7 +177,101 @@ namespace DCEMV.DemoApp
                         Device.BeginInvokeOnMainThread(() =>
                         {
                             lblTransactSummary.Text = (e as TxCompletedEventArgs).TxResult.ToString();
-                            UpdateView(ViewState.Step3Summary);
+                            UpdateView(ViewState.StepSummary);
+                        });
+                    }
+                }
+                else if ((e as TxCompletedEventArgs).QR_Data.IsPresent())
+                {
+                    QRDEList data = (e as TxCompletedEventArgs).QR_Data.Get();
+                    QRDE _26 = data.Get(EMVQRTagsEnum.MERCHANT_ACCOUNT_INFORMATION_TEMPLATE_26.Tag);
+                    QRDE _54 = data.Get(EMVQRTagsEnum.TRANSACTION_AMOUNT_54.Tag);
+                    QRDE gui = _26.Children.Get(EMVQRTagsEnum.GLOBALLY_UNIQUE_IDENTIFIER_00.Tag);
+                    QRDE tracking = _26.Children.Get(TagId._05);
+
+                    long amount = Convert.ToInt64(_54.Value);
+
+                    if ((e as TxCompletedEventArgs).TxResult == TxResult.QRCodeScanned)
+                    {
+                    
+                        switch (flowType)
+                        {
+                            case FlowType.SendMoneyFromCardToApp:
+                                throw new Exception("Invalid flow type for Scanned QR code");
+                            case FlowType.SendMoneyFromAppToCard:
+                                fromAccountNumber = SessionSingleton.Account.AccountNumberId;
+                                toAccountNumber = gui.Value;
+                                transactionType = TransactionType.SendMoneyFromAppToCard;
+                                break;
+
+                            default:
+                                throw new Exception("Unknown flow type:" + flowType);
+                        }
+                        try
+                        {
+                            await CallTransactByQRCodeWebService(fromAccountNumber, toAccountNumber, amount, tracking.Value);
+                            Device.BeginInvokeOnMainThread(() =>
+                            {
+                                lblTransactSummary.Text = "Transaction Completed Succesfully";
+                                UpdateView(ViewState.StepSummary);
+                            });
+                        }
+                        catch (Exception ex)
+                        {
+                            Device.BeginInvokeOnMainThread(() =>
+                            {
+                                lblTransactSummary.Text = "Declined, could not go online.";
+                                UpdateView(ViewState.StepSummary);
+                            });
+                        }
+                    }
+                    else if ((e as TxCompletedEventArgs).TxResult == TxResult.QRCodeToPoll)
+                    {
+                        switch (flowType)
+                        {
+                            case FlowType.SendMoneyFromCardToApp:
+                                break;
+                            case FlowType.SendMoneyFromAppToCard:
+                                throw new Exception("Invalid flow type for QR code");
+
+                            default:
+                                throw new Exception("Unknown flow type:" + flowType);
+                        }
+
+                        try
+                        {
+                            bool success = await CallTransactGetStateWebService(tracking.Value);
+                            //bool success = await CallTransactGetStateWebService("929fa290b20647988f72f2ca762bc3e7");
+                            if (success)
+                            {
+                                Device.BeginInvokeOnMainThread(() =>
+                                {
+                                    lblTransactSummary.Text = "Transaction Approved";
+                                    UpdateView(ViewState.StepSummary);
+                                });
+                            }
+                            else
+                            {
+                                Device.BeginInvokeOnMainThread(() =>
+                                {
+                                    App.Current.MainPage.DisplayAlert("Info", "Transaction not found, try again if you believe the transaction was approved", "OK");
+                                });
+                            }
+                        }
+                        catch
+                        {
+                            Device.BeginInvokeOnMainThread(() =>
+                            {
+                                App.Current.MainPage.DisplayAlert("Info", "Unknown, there is no connectivity to the server, try again if you believe the tx was approved", "OK");
+                            });
+                        }
+                    }
+                    else
+                    {
+                        Device.BeginInvokeOnMainThread(() =>
+                        {
+                            lblTransactSummary.Text = (e as TxCompletedEventArgs).TxResult.ToString();
+                            UpdateView(ViewState.StepSummary);
                         });
                     }
                 }
@@ -208,7 +280,7 @@ namespace DCEMV.DemoApp
                     Device.BeginInvokeOnMainThread(() =>
                     {
                         lblTransactSummary.Text = "Declined";
-                        UpdateView(ViewState.Step3Summary);
+                        UpdateView(ViewState.StepSummary);
                     });
                 }
             }
@@ -217,12 +289,12 @@ namespace DCEMV.DemoApp
                 Device.BeginInvokeOnMainThread(() =>
                 {
                     lblTransactSummary.Text = ex.Message;
-                    UpdateView(ViewState.Step3Summary);
+                    UpdateView(ViewState.StepSummary);
                 });
             }
         }
 
-        private async Task CallTransactWebService(string fromAccountNumber, string toAccountNumber, string cardSerialNumberFrom, string cardSerialNumberTo, long? amount, TransactionType transactionType, TLV emvData)
+        private async Task CallTransactByCardWebService(string fromAccountNumber, string toAccountNumber, string cardSerialNumberFrom, string cardSerialNumberTo, long? amount, TransactionType transactionType, TLV emvData)
         {
             Device.BeginInvokeOnMainThread(() =>
             {
@@ -233,7 +305,7 @@ namespace DCEMV.DemoApp
                 Proxies.DCEMVDemoServerClient client = SessionSingleton.GenDCEMVServerApiClient();
                 using (SessionSingleton.HttpClient)
                 {
-                    TransferTransaction tx = new TransferTransaction()
+                    CardTransferTransaction tx = new CardTransferTransaction()
                     {
                         Amount = amount.Value,
                         TransactionType = transactionType,
@@ -243,7 +315,7 @@ namespace DCEMV.DemoApp
                         CardSerialTo = cardSerialNumberTo,
                         CardFromEMVData = TLVasJSON.ToJSON(emvData),
                 };
-                    await client.TransactionTransferPostAsync(tx.ToJsonString());
+                    await client.TransactionCardtransferPostAsync(tx.ToJsonString());
                 }
             }
             catch (Exception ex)
@@ -258,7 +330,66 @@ namespace DCEMV.DemoApp
                 });
             }
         }
-        
+        private async Task CallTransactByQRCodeWebService(string fromAccountNumber, string toAccountNumber, long? amount, string trackingId)
+        {
+            Device.BeginInvokeOnMainThread(() =>
+            {
+                gridProgress.IsVisible = true;
+            });
+            try
+            {
+                Proxies.DCEMVDemoServerClient client = SessionSingleton.GenDCEMVServerApiClient();
+                using (SessionSingleton.HttpClient)
+                {
+                    QRCodeTransferTransaction tx = new QRCodeTransferTransaction()
+                    {
+                        Amount = amount.Value,
+                        AccountFrom = fromAccountNumber,
+                        AccountTo = toAccountNumber,
+                        TrackingId = trackingId,
+                    };
+                    await client.TransactionQrcodetransferPostAsync(tx.ToJsonString());
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                Device.BeginInvokeOnMainThread(() =>
+                {
+                    gridProgress.IsVisible = false;
+                });
+            }
+        }
+        private async Task<bool> CallTransactGetStateWebService(string trackingId)
+        {
+            Device.BeginInvokeOnMainThread(() =>
+            {
+                gridProgress.IsVisible = true;
+            });
+            try
+            {
+                Proxies.DCEMVDemoServerClient client = SessionSingleton.GenDCEMVServerApiClient();
+                using (SessionSingleton.HttpClient)
+                {
+                    return await client.TransactionGettransactionstateGetAsync(trackingId);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                Device.BeginInvokeOnMainThread(() =>
+                {
+                    gridProgress.IsVisible = false;
+                });
+            }
+        }
+
         protected override void OnDisappearing()
         {
             emvTxCtl.Stop();

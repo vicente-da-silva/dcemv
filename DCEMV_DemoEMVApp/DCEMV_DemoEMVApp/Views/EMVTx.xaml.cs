@@ -50,54 +50,31 @@ namespace DCEMV.DemoEMVApp
     }
     public enum ViewState
     {
-        Step1TransactDetails,
-        Step2TapCard,
-        Step3Summary
+        StepTxCtl,
+        StepSummary
     }
     public partial class EMVTx : ModalPage
     {
         public static Logger Logger = new Logger(typeof(EMVTx));
 
-        private TransactionRequest tr;
-        private TotalAmountViewModel totalAmount;
-
-        //for EMVTxCtl
-        private IConfigurationProvider configProvider;
-        private ICardInterfaceManger contactCardInterfaceManger;
-        private ICardInterfaceManger contactlessCardInterfaceManger;
         private IOnlineApprover onlineApprover;
-        private TCPClientStream tcpClientStream;
 
         public EMVTx(ICardInterfaceManger contactCardInterfaceManger,
                      ICardInterfaceManger contactlessCardInterfaceManger,
                      IConfigurationProvider configProvider, IOnlineApprover onlineApprover, TCPClientStream tcpClientStream)
         {
             InitializeComponent();
-            
-            this.contactCardInterfaceManger = contactCardInterfaceManger;
-            this.contactlessCardInterfaceManger = contactlessCardInterfaceManger;
-            this.configProvider = configProvider;
-            this.onlineApprover = onlineApprover;
-            this.tcpClientStream = tcpClientStream;
-
             gridProgress.IsVisible = false;
-            totalAmount = new TotalAmountViewModel();
-            totalAmount.Total = "";
-            txtAmount.BindingContext = totalAmount;
+           
+            this.onlineApprover = onlineApprover;
+
+            emvTxCtl.Init(contactCardInterfaceManger, SessionSingleton.ContactDeviceId,
+                contactlessCardInterfaceManger, SessionSingleton.ContactlessDeviceId, 
+                QRCodeMode.ScanAndProcess, "", 
+                configProvider, onlineApprover, tcpClientStream);
 
             emvTxCtl.TxCompleted += EmvTxCtl_TxCompleted;
-
-            totalAmount.Total = "1000";
-            
-            //if(!String.IsNullOrEmpty(totalAmount.Total))
-            //{
-            //    CmdNextToPaymentApp_Clicked(null,null);
-            //}
-            //else
-            //{
-                lblStatusAskAmount.Text = "Enter the amount below";
-                UpdateView(ViewState.Step1TransactDetails);
-            //}
+            UpdateView(ViewState.StepTxCtl);
         }
         
         #region UI Code
@@ -105,20 +82,12 @@ namespace DCEMV.DemoEMVApp
         {
             switch (viewState)
             {
-                case ViewState.Step1TransactDetails:
-                    gridTransactDetails.IsVisible = true;
-                    emvTxCtl.IsVisible = false;
-                    gridTransactSummary.IsVisible = false;
-                    break;
-
-                case ViewState.Step2TapCard:
-                    gridTransactDetails.IsVisible = false;
+                case ViewState.StepTxCtl:
                     emvTxCtl.IsVisible = true;
                     gridTransactSummary.IsVisible = false;
                     break;
 
-                case ViewState.Step3Summary:
-                    gridTransactDetails.IsVisible = false;
+                case ViewState.StepSummary:
                     emvTxCtl.IsVisible = false;
                     gridTransactSummary.IsVisible = true;
                     break;
@@ -127,53 +96,54 @@ namespace DCEMV.DemoEMVApp
         #endregion
 
         #region App Start, Stop and Events
-        private void CmdNextToPaymentApp_Clicked(object sender, EventArgs e)
-        {
-            long amount;
-            if (!Int64.TryParse(totalAmount.Total, out amount))
-            {
-                lblStatusAskAmount.Text = "Enter the amount below without decimals";
-                return;
-            }
-
-            UpdateView(ViewState.Step2TapCard);
-            long amountOther = 0;
-            tr = new TransactionRequest(amount + amountOther, amountOther, TransactionTypeEnum.PurchaseGoodsAndServices);
-
-            emvTxCtl.Start(tr, contactCardInterfaceManger, SessionSingleton.ContactDeviceId, 
-                contactlessCardInterfaceManger, SessionSingleton.ContactlessDeviceId,
-                configProvider, onlineApprover, tcpClientStream);
-        }
         protected override void OnDisappearing()
         {
             emvTxCtl.Stop();//should already be stopped
 
-            UpdateView(ViewState.Step1TransactDetails);
+            UpdateView(ViewState.StepTxCtl);
             
             base.OnDisappearing();
         }
         private void EmvTxCtl_TxCompleted(object sender, EventArgs e)
         {
-            //(e as TxCompletedEventArgs).InterFaceType;
-            //(e as TxCompletedEventArgs).TxResult;
-
             if ((e as TxCompletedEventArgs).TxResult == TxResult.Cancelled)
-                UpdateView(ViewState.Step1TransactDetails);
+                UpdateView(ViewState.StepTxCtl);
 
-            if((e as TxCompletedEventArgs).EMV_Data.IsPresent())
+            if ((e as TxCompletedEventArgs).EMV_Data.IsPresent())
             {
                 //the contact app would have already gone online, and the TxResult would be approved or declined
+                //the reason going online for contactless is handled differently to going online for
+                //contact is that with contact we have to go online and then back to the card before we can
+                //process the transaction on the backend, for contacless we can choose to go online and process
+                //the transaction in one call
                 if ((e as TxCompletedEventArgs).TxResult == TxResult.ContactlessOnline)
                 {
-                    ApproverRequest auth = new ApproverRequest() { EMV_Data = (e as TxCompletedEventArgs).EMV_Data.Get() };
+                    EMVApproverRequest auth = new EMVApproverRequest() { EMV_Data = (e as TxCompletedEventArgs).EMV_Data.Get() };
                     try
                     {
-                        ApproverResponse response = onlineApprover.DoAuth(auth);
+                        EMVApproverResponse response = (EMVApproverResponse)onlineApprover.DoAuth(auth);
                         emvTxCtl.SetTxFinalResultLabel("CTLS Online:" + response.ResponseMessage);
                     }
                     catch (Exception ex)
                     {
                         emvTxCtl.SetTxFinalResultLabel("CTLS Online:" + ex.Message);
+                    }
+                }
+            }
+            if ((e as TxCompletedEventArgs).QR_Data.IsPresent())
+            {
+                if ((e as TxCompletedEventArgs).TxResult == TxResult.QRCodeScanned)
+                {
+                    //send qr code auth request
+                    QRCodeApproverRequest auth = new QRCodeApproverRequest() { QRData = (e as TxCompletedEventArgs).QR_Data.Get() };
+                    try
+                    {
+                        QRCodeApproverResponse response = (QRCodeApproverResponse)onlineApprover.DoAuth(auth);
+                        emvTxCtl.SetTxFinalResultLabel("QRCode Online:" + response.ResponseMessage);
+                    }
+                    catch (Exception ex)
+                    {
+                        emvTxCtl.SetTxFinalResultLabel("QRCode Online:" + ex.Message);
                     }
                 }
             }

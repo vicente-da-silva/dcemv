@@ -30,6 +30,10 @@ using DCEMV.TLVProtocol;
 using Xamarin.Forms;
 using DCEMV.FormattingUtils;
 using System.ComponentModel;
+using ZXing.Net.Mobile.Forms;
+using ZXing;
+using DCEMV.EMVProtocol.EMVQRCode;
+using DCEMV_QRDEProtocol;
 
 namespace DCEMV.TerminalCommon
 {
@@ -57,6 +61,8 @@ namespace DCEMV.TerminalCommon
     {
         Contact,
         Contactless,
+        QRCodeToPoll,
+        QRCodeScanned,
         Cancelled
     }
     public enum TxResult
@@ -67,18 +73,22 @@ namespace DCEMV.TerminalCommon
         Cancelled,
         ContactlessOnline,
         ContactlessMagOnline,
+        QRCodeToPoll,
+        QRCodeScanned,
     }
     public class TxCompletedEventArgs : EventArgs
     {
-        public TxCompletedEventArgs(TxResult txResult, InterFaceType interFaceType, Optional<TLV> emvData)
+        public TxCompletedEventArgs(TxResult txResult, InterFaceType interFaceType, Optional<TLV> emvData, Optional<QRDEList> qr_Data)
         {
             TxResult = txResult;
             InterFaceType = interFaceType;
             EMV_Data = emvData;
+            QR_Data = qr_Data;
         }
         public TxResult TxResult { get; private set; }
         public InterFaceType InterFaceType { get; private set; }
         public Optional<TLV> EMV_Data { get; private set; }
+        public Optional<QRDEList> QR_Data { get; private set; }
     }
     public class UICallbackProvider : IUICallbackProvider
     {
@@ -99,6 +109,19 @@ namespace DCEMV.TerminalCommon
         public string AppName { get; set; }
         public string AID { get; set; }
     }
+    public enum QRCodeMode
+    {
+        PresentAndPoll,
+        ScanAndProcess,
+        None
+    }
+    public enum ViewState
+    {
+        Step1TransactDetails,
+        Step2TapCard,
+        AppList,
+        Pin
+    }
 
     public partial class EMVTxCtl : Grid
     {
@@ -106,6 +129,14 @@ namespace DCEMV.TerminalCommon
 
         private EMVContactlessTerminalApplication contactlessCardApp;
         private EMVContactTerminalApplication contactCardApp;
+
+        private EMVTerminalQRCodePollApplication qrCodePollApp;
+        private EMVTerminalQRCodeScanApplication qrCodeScanApp;
+        private ZXingScannerPage barcodeScannerPage;
+        private string barcodeValue;
+        private QRCodeMode qrCodeMode;
+        private bool qrCodeScanned;
+
         private IUICallbackProvider uiProvider;
 
         private TaskCompletionSource<string> appSelectionTCS;
@@ -117,21 +148,161 @@ namespace DCEMV.TerminalCommon
         private IOnlineApprover onlineContactEMVApprover;
         private TCPClientStream tcpClientStream;
 
+        private string contactDeviceId;
+        private string contactlessDeviceId;
+        private string accountNumberInUse;
+
         private TotalAmountViewModel totalAmount;
         private Queue<UIMessageEventArgs> statusMessages = new Queue<UIMessageEventArgs>();
         private CancellationTokenSource cancellationTokenForStatusMessage;
 
+        private TransactionRequest tr;
         public event EventHandler TxCompleted;
-
         private TxResult txResult;
 
         public EMVTxCtl()
         {
             InitializeComponent();
+            QRMetaDataSourceSingleton.Instance.DataSource = new EMVQRMetaDataSource();
+            TLVMetaDataSourceSingleton.Instance.DataSource = new EMVTLVMetaDataSource();
+
+            uiProvider = new UICallbackProvider(ContactApp_DisplayAppsOnCard);
+
+            totalAmount = new TotalAmountViewModel();
+            totalAmount.Total = "";
+            txtAmount.BindingContext = totalAmount;
+            lblTotal.BindingContext = totalAmount;
+
+            totalAmount.Total = "1000";
+
+            //if(!String.IsNullOrEmpty(totalAmount.Total))
+            //{
+            //    CmdNextToPaymentApp_Clicked(null,null);
+            //}
+            //else
+            //{
+            lblStatusAskAmount.Text = "Enter the amount below";
+            //}
         }
 
+        #region QR Code Scan App
+        private void StartQRCodeScanPaymentApp(string barcode)
+        {
+            try
+            {
+                qrCodeScanApp = new EMVTerminalQRCodeScanApplication();
+                qrCodeScanApp.ExceptionOccured += QRCodeScanApp_ExceptionOccured;
+                qrCodeScanApp.ProcessCompleted += QRCodeScanApp_ProcessCompleted;
+                qrCodeScanApp.StartTransactionRequest(ref tr, barcode);
+                totalAmount.Total = Convert.ToString(tr.GetAmountAuthorized_9F02());
+                UpdateView(ViewState.Step2TapCard);
+            }
+            catch (Exception ex)
+            {
+                SetStatusLabel(MakeUIMessage(ex), InterFaceType.QRCodeScanned);
+            }
+        }
+        private void QRCodeScanApp_ExceptionOccured(object sender, EventArgs e)
+        {
+            try
+            {
+                SetStatusLabel(MakeUIMessage((e as ExceptionEventArgs).Exception), InterFaceType.QRCodeScanned);
+            }
+            catch
+            {
+                SetStatusLabel(new UIMessageEventArgs(MessageIdentifiersEnum.TryAgain, StatusEnum.EndProcessing), InterFaceType.QRCodeScanned);
+            }
+        }
+        private void QRCodeScanApp_ProcessCompleted(object sender, EventArgs e)
+        {
+            ProcessCompletion(e as TerminalProcessingOutcomeEventArgs, InterFaceType.QRCodeScanned);
+        }
+        #endregion
+
+        #region QR Code Poll App
+        private void StartQRCodePollPaymentApp()
+        {
+            try
+            {
+                qrCodePollApp = new EMVTerminalQRCodePollApplication();
+                qrCodePollApp.ExceptionOccured += QRCodePollApp_ExceptionOccured;
+                qrCodePollApp.ProcessCompleted += QRCodePollApp_ProcessCompleted;
+                qrCodePollApp.StartTransactionRequest(tr, barcodeValue);
+            }
+            catch (Exception ex)
+            {
+                SetStatusLabel(MakeUIMessage(ex), InterFaceType.QRCodeToPoll);
+            }
+        }
+        private void StopQRCodePollPaymentApp()
+        {
+            if (qrCodePollApp != null)
+                qrCodePollApp.StopTerminalApplication();
+        }
+        private void QRCodePollApp_ExceptionOccured(object sender, EventArgs e)
+        {
+            try
+            {
+                SetStatusLabel(MakeUIMessage((e as ExceptionEventArgs).Exception), InterFaceType.QRCodeToPoll);
+            }
+            catch
+            {
+                SetStatusLabel(new UIMessageEventArgs(MessageIdentifiersEnum.TryAgain, StatusEnum.EndProcessing), InterFaceType.QRCodeToPoll);
+            }
+        }
+        private void QRCodePollApp_ProcessCompleted(object sender, EventArgs e)
+        {
+            ProcessCompletion(e as TerminalProcessingOutcomeEventArgs, InterFaceType.QRCodeToPoll);
+        }
+        private string PresentBarcode(string accountToPresent)
+        {
+            if (tr != null)
+            {
+                barcodeValue = BuildQRCodeValue(tr.GetAmountAuthorized_9F02(), accountToPresent, GuidBuilder.Create());
+                if (!String.IsNullOrEmpty(barcodeValue))
+                {
+                    zxingBIV.BarcodeOptions.Hints.Clear();
+                    zxingBIV.BarcodeOptions.Hints.Add(EncodeHintType.CHARACTER_SET, "UTF-8");
+                    zxingBIV.BarcodeValue = barcodeValue;
+                    zxingBIV.BarcodeOptions.Width = 600;
+                    zxingBIV.BarcodeOptions.Height = 600;
+                }
+            }
+            return barcodeValue;
+        }
+        public static string BuildQRCodeValue(long amount, string accountToPresent,string trackingId)
+        {
+            try
+            {
+                QRDEList listIn = new QRDEList();
+
+                listIn.AddToList(QRDE.Create(EMVQRTagsEnum.PAYLOAD_FORMAT_INDICATOR_00, "01"));
+                listIn.AddToList(QRDE.Create(EMVQRTagsEnum.POINT_OF_INITIATION_METHOD_01, "12"));
+
+                QRDE _26 = QRDE.Create(EMVQRTagsEnum.MERCHANT_ACCOUNT_INFORMATION_TEMPLATE_26);
+                QRDE.Create(EMVQRTagsEnum.GLOBALLY_UNIQUE_IDENTIFIER_00, accountToPresent, _26);
+                EMVQRTagsEnum.CreateUnknown(TagId._05, trackingId, _26); //tracking id
+                listIn.AddToList(_26);
+
+                //listIn.AddToList(QRDE.Create(EMVQRTagsEnum.MERCHANT_CATEGORY_CODE_52, "4111"));
+                //listIn.AddToList(QRDE.Create(EMVQRTagsEnum.COUNTRY_CODE_58, "CN"));
+                listIn.AddToList(QRDE.Create(EMVQRTagsEnum.TRANSACTION_AMOUNT_54, Convert.ToString(amount)));
+                //listIn.AddToList(QRDE.Create(EMVQRTagsEnum.TRANSACTION_CURRENCY_53, "156"));
+
+                listIn.AddToList(QRDE.Create(EMVQRTagsEnum.CRC_63, "0000"));
+
+                return listIn.Serialize();
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex.Message);
+                return string.Empty;
+            }
+        }
+        #endregion
+
         #region Contactless App
-        private void StartContactlessPaymentApp(TransactionRequest tr, string deviceID)
+        private void StartContactlessPaymentApp(string deviceID)
         {
             try
             {
@@ -176,7 +347,7 @@ namespace DCEMV.TerminalCommon
         #endregion
 
         #region Contact App
-        private void StartContactPaymentApp(TransactionRequest tr, string deviceID)
+        private void StartContactPaymentApp(string deviceID)
         {
             try
             {
@@ -204,7 +375,7 @@ namespace DCEMV.TerminalCommon
         }
         private void ContactApp_OnlineRequest(object sender, EventArgs e)
         {
-            ApproverResponse onlineResponse = GoOnlineForContactEMV(InterFaceType.Contact, ((OnlineEventArgs)e).data, ((OnlineEventArgs)e).discretionaryData);
+            EMVApproverResponse onlineResponse = GoOnlineForContactEMV(InterFaceType.Contact, ((OnlineEventArgs)e).data, ((OnlineEventArgs)e).discretionaryData);
             if (onlineResponse == null)
             {
                 contactCardApp.DoOnlineReponse(KernelOnlineResponseType.UnableToGoOnline,
@@ -229,17 +400,13 @@ namespace DCEMV.TerminalCommon
         {
             Device.BeginInvokeOnMainThread(() =>
             {
-                gridAppList.IsVisible = false;
-                gridTapInsertCard.IsVisible = false;
-                gridPin.IsVisible = true;
+                UpdateView(ViewState.Pin);
             });
 
             pinEntryTCS = new TaskCompletionSource<string>();
             if (!pinEntryTCS.Task.Wait(60000))
             {
-                gridAppList.IsVisible = false;
-                gridTapInsertCard.IsVisible = true;
-                gridPin.IsVisible = false;
+                UpdateView(ViewState.Step2TapCard);
             }
         }
         private void ContactlessApp_PinRequest(TLVList data)
@@ -284,9 +451,8 @@ namespace DCEMV.TerminalCommon
         {
             Device.BeginInvokeOnMainThread(() =>
             {
-                gridAppList.IsVisible = true;
-                gridTapInsertCard.IsVisible = false;
-                gridPin.IsVisible = false;
+                UpdateView(ViewState.AppList);
+               
                 viewAppList.ItemsSource = null;
                 List<CardAppVM> listView = new List<CardAppVM>();
                 cardApps.ForEach(x =>
@@ -300,9 +466,7 @@ namespace DCEMV.TerminalCommon
             appSelectionTCS = new TaskCompletionSource<string>();
             if (!appSelectionTCS.Task.Wait(60000))
             {
-                gridAppList.IsVisible = false;
-                gridTapInsertCard.IsVisible = true;
-                gridPin.IsVisible = false;
+                UpdateView(ViewState.Step2TapCard);
             }
             return appSelectionTCS.Task.Result;
         }
@@ -314,9 +478,7 @@ namespace DCEMV.TerminalCommon
                 return;
             }
 
-            gridAppList.IsVisible = false;
-            gridTapInsertCard.IsVisible = true;
-            gridPin.IsVisible = false;
+            UpdateView(ViewState.Step2TapCard);
 
             string selectedApp = ((CardAppVM)viewAppList.SelectedItem).AID;
             appSelectionTCS.SetResult(selectedApp);
@@ -324,29 +486,25 @@ namespace DCEMV.TerminalCommon
         private void CmdCancel_ApppList_Clicked(object sender, EventArgs e)
         {
             string selectedApp = "";
-            gridAppList.IsVisible = false;
-            gridTapInsertCard.IsVisible = true;
-            gridPin.IsVisible = false;
+
+            UpdateView(ViewState.Step2TapCard);
+
             appSelectionTCS.SetResult(selectedApp);
         }
         private void CmdOk_Pin_Clicked(object sender, EventArgs e)
         {
-            gridAppList.IsVisible = false;
-            gridTapInsertCard.IsVisible = true;
-            gridPin.IsVisible = false;
+            UpdateView(ViewState.Step2TapCard);
             pinEntryTCS.SetResult(txtPin.Text);
         }
         private void CmdCancel_Pin_Clicked(object sender, EventArgs e)
         {
-            gridAppList.IsVisible = false;
-            gridTapInsertCard.IsVisible = true;
-            gridPin.IsVisible = false;
+            UpdateView(ViewState.Step2TapCard);
             pinEntryTCS.SetResult("");
         }
         #endregion
 
         #region Shared
-        private ApproverResponse GoOnlineForContactEMV(InterFaceType interfaceType, TLV data, TLV discretionary)
+        private EMVApproverResponse GoOnlineForContactEMV(InterFaceType interfaceType, TLV data, TLV discretionary)
         {
             try
             {
@@ -355,8 +513,8 @@ namespace DCEMV.TerminalCommon
                     data.Children.AddListToList(discretionary.Children);
                 #endregion
 
-                ApproverResponse onlineResponse = onlineContactEMVApprover.DoAuth(
-                                        new ApproverRequest()
+                EMVApproverResponse onlineResponse = (EMVApproverResponse)onlineContactEMVApprover.DoAuth(
+                                        new EMVApproverRequest()
                                         {
                                             EMV_Data = data,
                                             TCPClientStream = tcpClientStream
@@ -373,6 +531,8 @@ namespace DCEMV.TerminalCommon
         {
             TLV data = null;
             TLV discretionaryData = null;
+            QRDEList qrData = null;
+
             try
             {
                 long? amount = Convert.ToInt64(totalAmount.Total);
@@ -385,9 +545,11 @@ namespace DCEMV.TerminalCommon
                 {
                     data = ((EMVTerminalProcessingOutcome)tpo).DataRecord;
                     discretionaryData = ((EMVTerminalProcessingOutcome)tpo).DiscretionaryData;
+                    qrData = ((EMVTerminalProcessingOutcome)tpo).QRData;
 
                     if (data != null) //error
                     {
+
                         SetStatusLabel(new UIMessageEventArgs(MessageIdentifiersEnum.RemoveCard, StatusEnum.EndProcessing), interFaceType);
 
                         //may be a contactless magstripe transaction
@@ -403,7 +565,7 @@ namespace DCEMV.TerminalCommon
                                     throw new EMVProtocolException("Invalid state for contact, gen ac 2 returned arqc?");
 
                                 CARDHOLDER_VERIFICATION_METHOD_CVM_RESULTS_9F34_KRN cvmr = new CARDHOLDER_VERIFICATION_METHOD_CVM_RESULTS_9F34_KRN(data.Children.Get(EMVTagsEnum.CARDHOLDER_VERIFICATION_METHOD_CVM_RESULTS_9F34_KRN.Tag));
-                                if(cvmr.Value.GetCVMPerformed() == CVMCode.EncipheredPINVerifiedOnline)
+                                if (cvmr.Value.GetCVMPerformed() == CVMCode.EncipheredPINVerifiedOnline)
                                     ContactlessApp_PinRequest(data.Children);
 
                                 txResult = TxResult.ContactlessOnline;
@@ -416,6 +578,18 @@ namespace DCEMV.TerminalCommon
                             {
                                 txResult = TxResult.Declined;
                             }
+                        }
+
+                    }
+                    else if (qrData != null)
+                    {
+                        if (interFaceType == InterFaceType.QRCodeScanned)
+                        {
+                            txResult = TxResult.QRCodeScanned;
+                        }
+                        else if (interFaceType == InterFaceType.QRCodeToPoll)
+                        {
+                            txResult = TxResult.QRCodeToPoll;
                         }
                     }
                     else
@@ -442,19 +616,115 @@ namespace DCEMV.TerminalCommon
             {
                 StopContactPaymentApp();
                 StopContactlessPaymentApp();
+                StopQRCodePollPaymentApp();
 
                 #region Merge EMV Lists
-                if(discretionaryData!=null)
+                if (discretionaryData!=null)
                     if(data!=null)
                         data.Children.AddListToList(discretionaryData.Children);
                 #endregion
 
-                TxCompleted?.Invoke(this, new TxCompletedEventArgs(txResult, interFaceType, Optional<TLV>.Create(data)));
+                TxCompleted?.Invoke(this, new TxCompletedEventArgs(txResult, interFaceType, Optional<TLV>.Create(data), Optional<QRDEList>.Create(qrData)));
             }
         }
         #endregion
 
         #region UI Code
+        private void Start()
+        {
+            txResult = TxResult.Error;
+            cancellationTokenForStatusMessage = new CancellationTokenSource();
+
+            //txtPin.Text = "";
+            txtPin.Text = "4315";
+
+            StartStatusMessageProcessor();
+            StartContactPaymentApp(contactDeviceId);
+            StartContactlessPaymentApp(contactlessDeviceId);
+
+            UpdateView(ViewState.Step2TapCard);//call after TransactionRequest is created
+        }
+        private void CmdNextToPaymentApp_Clicked(object sender, EventArgs e)
+        {
+            long amount;
+            if (!Int64.TryParse(totalAmount.Total, out amount))
+            {
+                lblStatusAskAmount.Text = "Enter the amount below without decimals";
+                return;
+            }
+
+            long amountOther = 0;
+            tr = new TransactionRequest(amount + amountOther, amountOther, TransactionTypeEnum.PurchaseGoodsAndServices);
+            totalAmount.Total = Convert.ToString(tr.GetAmountAuthorized_9F02());
+
+            Start();
+        }
+        private void UpdateView(ViewState viewState)
+        {
+            lblStatusTapPaymentCard.Text =
+                "Complete the transaction by:\n" +
+                "Tapping or Inserting their card on/in your card reader or\n" +
+                "Tapping their phone on your card reader";
+
+            switch (viewState)
+            {
+                case ViewState.Step1TransactDetails:
+                    gridTransactDetails.IsVisible = true;
+                    gridTapInsertCard.IsVisible = false;
+                    gridAppList.IsVisible = false;
+                    gridPin.IsVisible = false;
+                    break;
+
+                case ViewState.AppList:
+                    gridAppList.IsVisible = true;
+                    gridPin.IsVisible = false;
+                    gridTransactDetails.IsVisible = false;
+                    gridTapInsertCard.IsVisible = false;
+                    break;
+
+                case ViewState.Pin:
+                    gridPin.IsVisible = true;
+                    gridAppList.IsVisible = false;
+                    gridTransactDetails.IsVisible = false;
+                    gridTapInsertCard.IsVisible = false;
+                    break;
+
+                case ViewState.Step2TapCard:
+                    gridTransactDetails.IsVisible = false;
+                    gridTapInsertCard.IsVisible = true;
+                    gridAppList.IsVisible = false;
+                    gridPin.IsVisible = false;
+                    break;
+            }
+
+            switch (qrCodeMode)
+            {
+                case QRCodeMode.PresentAndPoll:
+                    lblStatusTapPaymentCard.Text = lblStatusTapPaymentCard.Text + " or\nHaving them scan this QR Code";
+                    gridBarcode.IsVisible = true;
+                    barcodeValue = PresentBarcode(accountNumberInUse);
+                    cmdPollForQRCodeResult.IsVisible = true;
+                    cmdScanQRCode.IsVisible = false;
+                    break;
+
+                case QRCodeMode.ScanAndProcess:
+                    if (qrCodeScanned)
+                    {
+                        lblStatusTapPaymentCard.Text = "";
+                        SetStatusLabel(new UIMessageEventArgs(MessageIdentifiersEnum.Authorizing, StatusEnum.EndProcessing), InterFaceType.QRCodeScanned);
+                    }
+                    gridBarcode.IsVisible = false;
+                    cmdPollForQRCodeResult.IsVisible = false;
+                    cmdScanQRCode.IsVisible = true;
+                    break;
+
+                case QRCodeMode.None:
+                    gridBarcode.IsVisible = false;
+                    cmdPollForQRCodeResult.IsVisible = false;
+                    cmdScanQRCode.IsVisible = false;
+                    break;
+            }
+        }
         public void SetTxFinalResultLabel(String message)
         {
             Device.BeginInvokeOnMainThread(() =>
@@ -473,7 +743,7 @@ namespace DCEMV.TerminalCommon
                 if (ui.MessageIdentifiers == message.MessageIdentifiers)
                     return;
             }
-            Logger.Log("SetStatusLabel: " + interFaceType + " - " + message.MessageIdentifiers);
+            Logger.Log("SetStatusLabel: " + interFaceType + " - " + message.MessageIdentifiers + " additional mesage:" + message.AdditionalMessage);
             if (message.MessageIdentifiers == MessageIdentifiersEnum.SeePhone)
                 SetTxFinalResultLabel("See Phone");
             statusMessages.Enqueue(message);
@@ -489,7 +759,7 @@ namespace DCEMV.TerminalCommon
                         UIMessageEventArgs e = statusMessages.Dequeue();
                         Device.BeginInvokeOnMainThread(() =>
                         {
-                            lblStatusPaymentApp.Text = MapMessageIdentifier(e.MessageIdentifiers);//.MakeMessage();
+                            lblStatusPaymentApp.Text = MapMessageIdentifier(e.MessageIdentifiers) + (String.IsNullOrEmpty(e.AdditionalMessage)? "" : " - " + e.AdditionalMessage);
                         });
 
                         if (e.MessageIdentifiers != MessageIdentifiersEnum.ClearDisplay)
@@ -555,48 +825,80 @@ namespace DCEMV.TerminalCommon
         #endregion
 
         #region App Start, Stop and Events
-        public void Start(TransactionRequest tr, 
-            ICardInterfaceManger contactCardInterfaceManger, string contactDeviceId, 
+        public void Init(ICardInterfaceManger contactCardInterfaceManger, string contactDeviceId,
             ICardInterfaceManger contactlessCardInterfaceManger, string contactlessDeviceId,
-            IConfigurationProvider configProvider, IOnlineApprover onlineContactEMVApprover, TCPClientStream tcpClientStream)
+            QRCodeMode qrCodeMode, string accountNumberInUse,
+            IConfigurationProvider configProvider, IOnlineApprover onlineContactEMVApprover, 
+            TCPClientStream tcpClientStream, TransactionRequest tr = null)
         {
-            txResult = TxResult.Error;
+            qrCodeScanned = false;
 
-            if (contactCardInterfaceManger == null && contactlessCardInterfaceManger == null)
-                throw new EMVProtocolException("EMVTest: cannot have both CardInterfaceManger's as null");
-
+            this.contactDeviceId = contactDeviceId;
+            this.contactlessDeviceId = contactlessDeviceId;
+            this.qrCodeMode = qrCodeMode;
             this.contactCardInterfaceManger = contactCardInterfaceManger;
             this.contactlessCardInterfaceManger = contactlessCardInterfaceManger;
             this.configProvider = configProvider;
             this.onlineContactEMVApprover = onlineContactEMVApprover;
             this.tcpClientStream = tcpClientStream;
-            uiProvider = new UICallbackProvider(ContactApp_DisplayAppsOnCard);
+            this.accountNumberInUse = accountNumberInUse;
 
-            gridAppList.IsVisible = false;
-            gridPin.IsVisible = false;
-            gridProgress.IsVisible = false;
-            totalAmount = new TotalAmountViewModel();
-            txtPin.Text = "";
-            lblTotal.BindingContext = totalAmount;
-            totalAmount.Total = Convert.ToString(tr.GetAmountAuthorized_9F02());
-            lblStatusTapPaymentCard.Text = "Please Tap or Insert the card you wish to make the payment with.";
-
-            txtPin.Text = "4315";
-            //txtPin.Text = "7320";
-
-            cancellationTokenForStatusMessage = new CancellationTokenSource();
-            StartStatusMessageProcessor();
-
-            StartContactPaymentApp(tr, contactDeviceId);
-            StartContactlessPaymentApp(tr, contactlessDeviceId);
+            if (tr != null)
+            {
+                this.tr = tr;
+                totalAmount.Total = Convert.ToString(tr.GetAmountAuthorized_9F02());
+                Start();
+            }
+            else
+                UpdateView(ViewState.Step1TransactDetails);
         }
+
+        public void SetASkAmountInstruction(string message)
+        {
+            lblStatusAskAmount.Text = message;
+        }
+
+        public void SetHeaderInstruction(string message)
+        {
+            lblStatusTapPaymentCard.Text = message;
+        }
+
+        
+        private async void cmdScanQRCode_Clicked(object sender, EventArgs e)
+        {
+            //StartQRCodeScanPaymentApp(BuildQRCodeValue(2000, "5906374433f04eb5b67d25c3e50487dc", GuidBuilder.Create()));
+            //qrCodeScanned = true;
+            barcodeScannerPage = new ZXingScannerPage();
+            barcodeScannerPage.OnScanResult += (result) =>
+            {
+                barcodeScannerPage.IsScanning = false;
+
+                Device.BeginInvokeOnMainThread(() =>
+                {
+                    Navigation.PopAsync();
+                    StartQRCodeScanPaymentApp(result.Text);
+                    qrCodeScanned = true;
+                });
+            };
+            await Navigation.PushAsync(barcodeScannerPage);
+        }
+
+        private void cmdPollForQRCodeResult_Clicked(object sender, EventArgs e)
+        {
+            StartQRCodePollPaymentApp();
+        }
+
         public void Stop()
         {
             StopContactPaymentApp();
             StopContactlessPaymentApp();
+            StopQRCodePollPaymentApp();
 
             if (cancellationTokenForStatusMessage != null && !cancellationTokenForStatusMessage.IsCancellationRequested)
                 cancellationTokenForStatusMessage.Cancel();
+
+            qrCodeScanned = false;
+            UpdateView(ViewState.Step1TransactDetails);
         }
         private void cmdCancelTx_Clicked(object sender, EventArgs e)
         {
@@ -604,7 +906,7 @@ namespace DCEMV.TerminalCommon
             txResult = TxResult.Cancelled;
             SetTxFinalResultLabel("");
             SetStatusLabel(new UIMessageEventArgs(MessageIdentifiersEnum.ClearDisplay, StatusEnum.EndProcessing), InterFaceType.Cancelled);
-            TxCompleted?.Invoke(this, new TxCompletedEventArgs(txResult, InterFaceType.Cancelled, Optional<TLV>.CreateEmpty()));
+            TxCompleted?.Invoke(this, new TxCompletedEventArgs(txResult, InterFaceType.Cancelled, Optional<TLV>.CreateEmpty(), Optional<QRDEList>.CreateEmpty()));
         }
         #endregion
     }

@@ -41,19 +41,25 @@ namespace DCEMV.SPDHProtocol
             this.port = port;
         }
 
-        public ApproverResponse DoReversal(ApproverRequest request, bool isOnline)
+        public ApproverResponseBase DoReversal(ApproverRequestBase request, bool isOnline)
         {
             throw new NotImplementedException();
         }
 
-        public ApproverResponse DoAdvice(ApproverRequest request, bool isOnline)
+        public ApproverResponseBase DoAdvice(ApproverRequestBase request, bool isOnline)
         {
             throw new NotImplementedException();
         }
 
-        public ApproverResponse DoAuth(ApproverRequest request)
+        public ApproverResponseBase DoCheckAuthStatus(ApproverRequestBase request)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ApproverResponseBase DoAuth(ApproverRequestBase requestIn)
         {
             bool isMagStripe;
+            EMVApproverRequest request = ((EMVApproverRequest)requestIn);
             TLV cryptogram = request.EMV_Data.Children.Get(EMVTagsEnum.CRYPTOGRAM_INFORMATION_DATA_9F27_KRN.Tag);
             if (cryptogram != null)
                 isMagStripe = false;
@@ -202,7 +208,7 @@ namespace DCEMV.SPDHProtocol
 
             TLV issuerAuthDataTLV = TLV.Create(EMVTagsEnum.ISSUER_AUTHENTICATION_DATA_91_KRN.Tag, Formatting.HexStringToByteArray(issuerAuthData));
 
-            return new ApproverResponse()
+            return new EMVApproverResponse()
             {
                 IsApproved = responseCode,
                 ResponseMessage = responseMessage,

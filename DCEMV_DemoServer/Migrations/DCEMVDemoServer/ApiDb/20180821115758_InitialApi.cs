@@ -1,27 +1,6 @@
-﻿/*
-*************************************************************************
-DC EMV
-Open Source EMV
-Copyright (C) 2018  Vicente Da Silva
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License as published
-by the Free Software Foundation, either version 3 of the License, or
-any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Affero General Public License for more details.
-
-You should have received a copy of the GNU Affero General Public License
-along with this program.  If not, see http://www.gnu.org/licenses/
-*************************************************************************
-*/
-using System;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DCEMV.DemoServer.Migrations.DCEMVDemoServer.ApiDb
 {
@@ -34,15 +13,15 @@ namespace DCEMV.DemoServer.Migrations.DCEMVDemoServer.ApiDb
                 columns: table => new
                 {
                     AccountNumberId = table.Column<string>(nullable: false),
-                    AccountState = table.Column<int>(nullable: false),
+                    CredentialsId = table.Column<string>(nullable: false),
                     Balance = table.Column<long>(nullable: false),
                     BalanceUpdateTime = table.Column<DateTime>(nullable: false),
-                    BusinessName = table.Column<string>(maxLength: 200, nullable: true),
-                    CompanyRegNumber = table.Column<string>(maxLength: 200, nullable: true),
-                    CredentialsId = table.Column<string>(nullable: false),
                     CustomerType = table.Column<int>(nullable: false),
+                    AccountState = table.Column<int>(nullable: false),
                     FirstName = table.Column<string>(maxLength: 200, nullable: true),
                     LastName = table.Column<string>(maxLength: 200, nullable: true),
+                    BusinessName = table.Column<string>(maxLength: 200, nullable: true),
+                    CompanyRegNumber = table.Column<string>(maxLength: 200, nullable: true),
                     TaxNumber = table.Column<string>(maxLength: 200, nullable: true)
                 },
                 constraints: table =>
@@ -56,14 +35,14 @@ namespace DCEMV.DemoServer.Migrations.DCEMVDemoServer.ApiDb
                 {
                     CardId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    AccountNumberIdRef = table.Column<string>(nullable: false),
-                    AvailableMonthlySpendLimit = table.Column<long>(nullable: false),
-                    AvailablegDailySpendLimit = table.Column<long>(nullable: false),
                     CardSerialNumberId = table.Column<string>(nullable: true),
-                    CardState = table.Column<int>(nullable: false),
-                    DailySpendLimit = table.Column<long>(nullable: false),
                     FreindlyName = table.Column<string>(maxLength: 200, nullable: true),
-                    MonthlySpendLimit = table.Column<long>(nullable: false)
+                    DailySpendLimit = table.Column<long>(nullable: false),
+                    AvailablegDailySpendLimit = table.Column<long>(nullable: false),
+                    MonthlySpendLimit = table.Column<long>(nullable: false),
+                    AvailableMonthlySpendLimit = table.Column<long>(nullable: false),
+                    CardState = table.Column<int>(nullable: false),
+                    AccountNumberIdRef = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -82,10 +61,10 @@ namespace DCEMV.DemoServer.Migrations.DCEMVDemoServer.ApiDb
                 {
                     TopUpTransactionId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    AccountNumberIdToRef = table.Column<string>(nullable: false),
                     Amount = table.Column<long>(nullable: false),
+                    TransactionDateTime = table.Column<DateTime>(nullable: false),
                     EMV_Data = table.Column<string>(nullable: false),
-                    TransactionDateTime = table.Column<DateTime>(nullable: false)
+                    AccountNumberIdToRef = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -104,9 +83,9 @@ namespace DCEMV.DemoServer.Migrations.DCEMVDemoServer.ApiDb
                 {
                     InventoryGroupId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    AccountNumberIdRef = table.Column<string>(nullable: false),
+                    Name = table.Column<string>(nullable: false),
                     Description = table.Column<string>(nullable: false),
-                    Name = table.Column<string>(nullable: false)
+                    AccountNumberIdRef = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -125,14 +104,15 @@ namespace DCEMV.DemoServer.Migrations.DCEMVDemoServer.ApiDb
                 {
                     TransactionId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    AccountNumberIdFromRef = table.Column<string>(nullable: false),
-                    AccountNumberIdToRef = table.Column<string>(nullable: false),
-                    Amount = table.Column<long>(nullable: false),
-                    CardFromEMVData = table.Column<string>(nullable: false),
                     CardSerialNumberIdFrom = table.Column<string>(nullable: true),
                     CardSerialNumberIdTo = table.Column<string>(nullable: true),
+                    Amount = table.Column<long>(nullable: false),
                     TransactionDateTime = table.Column<DateTime>(nullable: false),
-                    TransactionType = table.Column<int>(nullable: false)
+                    TransactionType = table.Column<int>(nullable: false),
+                    CardFromEMVData = table.Column<string>(nullable: false),
+                    TrackingId = table.Column<string>(nullable: true),
+                    AccountNumberIdFromRef = table.Column<string>(nullable: false),
+                    AccountNumberIdToRef = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -157,12 +137,12 @@ namespace DCEMV.DemoServer.Migrations.DCEMVDemoServer.ApiDb
                 {
                     InventoryItemId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    AccountNumberIdRef = table.Column<string>(nullable: false),
-                    Barcode = table.Column<string>(nullable: false),
-                    Description = table.Column<string>(nullable: false),
-                    InventoryGroupIdRef = table.Column<int>(nullable: false),
                     Name = table.Column<string>(nullable: false),
-                    Price = table.Column<long>(nullable: false)
+                    Description = table.Column<string>(nullable: false),
+                    Barcode = table.Column<string>(nullable: false),
+                    Price = table.Column<long>(nullable: false),
+                    InventoryGroupIdRef = table.Column<int>(nullable: false),
+                    AccountNumberIdRef = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -187,9 +167,9 @@ namespace DCEMV.DemoServer.Migrations.DCEMVDemoServer.ApiDb
                 {
                     POSTransactionId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    AccountNumberIdFromRef = table.Column<string>(nullable: false),
-                    AccountNumberIdToRef = table.Column<string>(nullable: false),
                     TransactionDateTime = table.Column<DateTime>(nullable: false),
+                    AccountNumberIdToRef = table.Column<string>(nullable: false),
+                    AccountNumberIdFromRef = table.Column<string>(nullable: false),
                     TransactionIdRef = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -221,11 +201,11 @@ namespace DCEMV.DemoServer.Migrations.DCEMVDemoServer.ApiDb
                 {
                     POSTransactionItemId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Amount = table.Column<long>(nullable: false),
-                    InventoryItemId = table.Column<int>(nullable: false),
+                    Quantity = table.Column<int>(nullable: false),
                     Name = table.Column<string>(nullable: false),
-                    POSTransactionIdRef = table.Column<int>(nullable: false),
-                    Quantity = table.Column<int>(nullable: false)
+                    InventoryItemId = table.Column<int>(nullable: false),
+                    Amount = table.Column<long>(nullable: false),
+                    POSTransactionIdRef = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -247,7 +227,8 @@ namespace DCEMV.DemoServer.Migrations.DCEMVDemoServer.ApiDb
                 name: "IX_DCEMV_Cards_CardSerialNumberId",
                 table: "DCEMV_Cards",
                 column: "CardSerialNumberId",
-                unique: true);
+                unique: true,
+                filter: "[CardSerialNumberId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_DCEMV_CCTopUpTransactions_AccountNumberIdToRef",

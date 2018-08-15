@@ -35,68 +35,35 @@ namespace DCEMV.DemoApp
 
     public partial class TopUpView : ModalPage
     {
-        private TransactionRequest tr;
-        private TotalAmountViewModel totalAmount;
-
-        //for EMVTxCtl
-        private IConfigurationProvider configProvider;
-        private ICardInterfaceManger contactCardInterfaceManger;
-        private ICardInterfaceManger contactlessCardInterfaceManger;
         private IOnlineApprover onlineApprover;
-        private TCPClientStream tcpClientStream;
-
+       
         public TopUpView(ICardInterfaceManger contactCardInterfaceManger, ICardInterfaceManger contactlessCardInterfaceManger, IConfigurationProvider configProvider, IOnlineApprover onlineApprover, TCPClientStream tcpClientStream)
         {
             InitializeComponent();
 
-            this.contactCardInterfaceManger = contactCardInterfaceManger;
-            this.contactlessCardInterfaceManger = contactlessCardInterfaceManger;
-            this.configProvider = configProvider;
             this.onlineApprover = onlineApprover;
-            this.tcpClientStream = tcpClientStream;
-
-            emvTxCtl.TxCompleted += EmvTxCtl_TxCompleted;
-
-            totalAmount = new TotalAmountViewModel();
-            totalAmount.Total = "100";
             gridProgress.IsVisible = false;
-            txtAmount.BindingContext = totalAmount;
-            lblStatusAskAmount.Text = "Enter the amount below that you wish to top up with.";
-            UpdateView(ViewState.Step1TransactDetails);
-        }
 
-        private void cmdNextToCC_Clicked(object sender, EventArgs e)
-        {
+            emvTxCtl.Init(contactCardInterfaceManger, SessionSingleton.ContactDeviceId,
+               contactlessCardInterfaceManger, SessionSingleton.ContactlessDeviceId,
+               QRCodeMode.None, SessionSingleton.Account.AccountNumberId,
+               configProvider, onlineApprover, tcpClientStream);
+            emvTxCtl.TxCompleted += EmvTxCtl_TxCompleted;
+            emvTxCtl.SetASkAmountInstruction("Enter the amount below that you wish to top up with.");
             emvTxCtl.SetTxStartLabel("Please Tap the Visa or MasterCard card you wish to make the TopUp payment with.");
-            UpdateView(ViewState.Step2TapCard);
-
-            long amount = Convert.ToInt64(totalAmount.Total);
-            long amountOther = 0;
-            tr = new TransactionRequest(amount + amountOther, amountOther, TransactionTypeEnum.PurchaseGoodsAndServices);
-
-            emvTxCtl.Start(tr, contactCardInterfaceManger, SessionSingleton.ContactDeviceId,
-                contactlessCardInterfaceManger, SessionSingleton.ContactlessDeviceId,
-                configProvider, onlineApprover, tcpClientStream);
+            UpdateView(ViewState.StepTxCtl);
         }
 
         private void UpdateView(ViewState viewState)
         {
             switch (viewState)
             {
-                case ViewState.Step1TransactDetails:
-                    gridTransactDetails.IsVisible = true;
-                    emvTxCtl.IsVisible = false;
-                    gridTransactSummary.IsVisible = false;
-                    break;
-
-                case ViewState.Step2TapCard:
-                    gridTransactDetails.IsVisible = false;
+                case ViewState.StepTxCtl:
                     emvTxCtl.IsVisible = true;
                     gridTransactSummary.IsVisible = false;
                     break;
 
-                case ViewState.Step3Summary:
-                    gridTransactDetails.IsVisible = false;
+                case ViewState.StepSummary:
                     emvTxCtl.IsVisible = false;
                     gridTransactSummary.IsVisible = true;
                     break;
@@ -107,21 +74,25 @@ namespace DCEMV.DemoApp
         {
             try
             {
-                long? amount = Convert.ToInt64(totalAmount.Total);
-
                 if ((e as TxCompletedEventArgs).EMV_Data.IsPresent())
                 {
                     if ((e as TxCompletedEventArgs).TxResult == TxResult.Approved ||
                         (e as TxCompletedEventArgs).TxResult == TxResult.ContactlessOnline)
                     {
                         TLV data = (e as TxCompletedEventArgs).EMV_Data.Get();
+
+                        TLV _9F02 = data.Children.Get(EMVTagsEnum.AMOUNT_AUTHORISED_NUMERIC_9F02_KRN.Tag);
+                        if (_9F02 == null)
+                            throw new Exception("No Amount found");
+
+                        long amount = Formatting.BcdToLong(_9F02.Value);
                         try
                         {
                             await CallTopUpWebService(SessionSingleton.Account.AccountNumberId, amount, "000", data);
                             Device.BeginInvokeOnMainThread(() =>
                             {
                                 lblStatusTopUp.Text = "Transaction Completed Succesfully";
-                                UpdateView(ViewState.Step3Summary);
+                                UpdateView(ViewState.StepSummary);
                             });
                         }
                         catch
@@ -129,7 +100,7 @@ namespace DCEMV.DemoApp
                             Device.BeginInvokeOnMainThread(() =>
                             {
                                 lblStatusTopUp.Text = "Declined, could not go online.";
-                                UpdateView(ViewState.Step3Summary);
+                                UpdateView(ViewState.StepSummary);
                             });
                         }
                     }
@@ -138,7 +109,7 @@ namespace DCEMV.DemoApp
                         Device.BeginInvokeOnMainThread(() =>
                         {
                             lblStatusTopUp.Text = (e as TxCompletedEventArgs).TxResult.ToString();
-                            UpdateView(ViewState.Step3Summary);
+                            UpdateView(ViewState.StepSummary);
                         });
                     }
                 }
@@ -147,7 +118,7 @@ namespace DCEMV.DemoApp
                     Device.BeginInvokeOnMainThread(() =>
                     {
                         lblStatusTopUp.Text = "Declined";
-                        UpdateView(ViewState.Step3Summary);
+                        UpdateView(ViewState.StepSummary);
                     });
                 }
             }
@@ -156,7 +127,7 @@ namespace DCEMV.DemoApp
                 Device.BeginInvokeOnMainThread(() =>
                 {
                     lblStatusTopUp.Text = ex.Message;
-                    UpdateView(ViewState.Step3Summary);
+                    UpdateView(ViewState.StepSummary);
                 });
             }
         }
@@ -198,7 +169,7 @@ namespace DCEMV.DemoApp
         {
             emvTxCtl.Stop();
 
-            UpdateView(ViewState.Step1TransactDetails);
+            UpdateView(ViewState.StepTxCtl);
 
             base.OnDisappearing();
         }

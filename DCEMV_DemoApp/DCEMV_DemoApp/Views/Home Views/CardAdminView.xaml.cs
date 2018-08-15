@@ -167,7 +167,7 @@ namespace DCEMV.DemoApp
             {
                 TransactionRequest tr = new TransactionRequest(0, 0, TransactionTypeEnum.PurchaseGoodsAndServices);
                 //cannot use contact interface to add a DC EMV card
-                emvTxCtl.Start(tr, null, "", contactlessCardInterfaceManger,SessionSingleton.ContactlessDeviceId, configProvider, onlineApprover, tcpClientStream);
+                emvTxCtl.Init(null, "", contactlessCardInterfaceManger,SessionSingleton.ContactlessDeviceId, QRCodeMode.None, "", configProvider, onlineApprover, tcpClientStream, tr);
             }
             catch (Exception ex)
             {

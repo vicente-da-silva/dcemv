@@ -37,16 +37,16 @@ namespace DCEMV.ServerShared
         public long Balance { get; set; }
 
         public ObservableCollection<Card> Cards {get;set;}
-        public List<TransferTransaction> TransferFromTransactions { get; set; }
-        public List<TransferTransaction> TransferToTransactions { get; set; }
+        public List<CardTransferTransaction> TransferFromTransactions { get; set; }
+        public List<CardTransferTransaction> TransferToTransactions { get; set; }
         public List<CCTopUpTransaction> TopUpTransactions { get; set; }
         public List<POSTransaction> POSTransactions { get; set; }
 
         public Account()
         {
             Cards = new ObservableCollection<Card>();
-            TransferFromTransactions = new List<TransferTransaction>();
-            TransferToTransactions = new List<TransferTransaction>();
+            TransferFromTransactions = new List<CardTransferTransaction>();
+            TransferToTransactions = new List<CardTransferTransaction>();
             TopUpTransactions = new List<CCTopUpTransaction>();
             POSTransactions = new List<POSTransaction>();
         }

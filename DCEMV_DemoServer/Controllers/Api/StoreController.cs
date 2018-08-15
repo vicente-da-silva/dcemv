@@ -232,18 +232,22 @@ namespace DCEMV.DemoServer.Controllers.Api
             _posRepository.DeleteInventoryGroup(id, GetCurrentUserId());
         }
 
-        //[HttpGet]
-        //[Route("store/sale")]
-        //public POSTransaction GetPOSTransaction(int id)
-        //{
-        //    return _posRepository.GetPOSTransaction(id, GetCurrentUserId());
-        //}
+        [HttpPost]
+        [Route("store/salebyqrcode")]
+        public void AddQRCodeBasedPOSTransaction(string jsonTx, string jsonPosTx)
+        {
+            QRCodeTransferTransaction transaction = QRCodeTransferTransaction.FromJsonString(jsonTx);
+            POSTransaction posDetail = POSTransaction.FromJsonString(jsonPosTx);
+
+            if (transaction.Amount == 0)
+                throw new ValidationException("Invalid Amount");
+        }
 
         [HttpPost]
-        [Route("store/sale")]
-        public void AddPOSTransaction(string jsonTx, string jsonPosTx)
+        [Route("store/salebycard")]
+        public void AddCardBasedPOSTransaction(string jsonTx, string jsonPosTx)
         {
-            TransferTransaction transaction = TransferTransaction.FromJsonString(jsonTx);
+            CardTransferTransaction transaction = CardTransferTransaction.FromJsonString(jsonTx);
             POSTransaction posDetail = POSTransaction.FromJsonString(jsonPosTx);
 
             if (transaction.Amount == 0)
