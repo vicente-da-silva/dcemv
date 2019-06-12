@@ -25,7 +25,7 @@ using DCEMV.ServerShared;
 
 namespace DCEMV.TerminalCommon
 {
-    class CardStateToObjectConverter<T> : IValueConverter
+    public class CardStateToObjectConverter<T> : IValueConverter
     {
         public T Active { set; get; }
 

@@ -29,7 +29,7 @@ namespace DCEMV.TerminalCommon
         In,
         Out,
     }
-    class TxFlowToObjectConverter<T> : IValueConverter
+    public class TxFlowToObjectConverter<T> : IValueConverter
     {
         public T In { set; get; }
 

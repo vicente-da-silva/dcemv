@@ -24,7 +24,7 @@ using Xamarin.Forms;
 
 namespace DCEMV.TerminalCommon
 {
-    class BooleanToObjectConverter<T> : IValueConverter
+    public class BooleanToObjectConverter<T> : IValueConverter
     {
         public T FalseObject { set; get; }
 

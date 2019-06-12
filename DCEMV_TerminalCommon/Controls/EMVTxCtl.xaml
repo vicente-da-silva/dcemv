@@ -250,9 +250,9 @@ along with this program.  If not, see http://www.gnu.org/licenses/
             </Grid>
         </Grid>
 
-        <common:WaitControl x:Name="gridProgress">
+        <!--<common:WaitControl x:Name="gridProgress">
 
-        </common:WaitControl>
+        </common:WaitControl>-->
 
     </Grid>
 
