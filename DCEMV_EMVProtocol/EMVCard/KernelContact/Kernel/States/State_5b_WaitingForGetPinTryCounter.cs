@@ -110,7 +110,7 @@ namespace DCEMV.EMVProtocol.Kernels.K
 
                 byte[] pinData = PinProcessing.BuildPlainTextPinBlock(pin);
 
-                //fire off verify for enciphered pin
+                //fire off verify for plain text pin
                 EMVVerifyRequest request = new EMVVerifyRequest(VerifyCommandDataQualifier.Plaintext_PIN, pinData);
                 cardQManager.EnqueueToInput(new CardRequest(request, CardinterfaceServiceRequestEnum.ADPU));
 

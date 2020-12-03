@@ -20,7 +20,7 @@ along with this program.  If not, see http://www.gnu.org/licenses/
 *************************************************************************
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="1" android:versionName="1.0" package="DCEMV.PersoApp.Android" android:installLocation="auto">
-	<uses-sdk android:minSdkVersion="21" />
+	<uses-sdk android:minSdkVersion="21" android:targetSdkVersion="28" />
 	<uses-permission android:name="android.permission.NFC" />
 	<uses-permission android:name="android.permission.INTERNET" />
 	<application android:label="DC EMV Perso App"></application>

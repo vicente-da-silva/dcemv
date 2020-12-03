@@ -31,10 +31,10 @@ namespace DCEMV.PersoApp.Android
 	{
 		protected override void OnCreate (Bundle bundle)
 		{
-			TabLayoutResource = Resource.Layout.Tabbar;
-			ToolbarResource = Resource.Layout.Toolbar;
+			TabLayoutResource = DCEMV.PersoApp.Android.Resource.Layout.Tabbar;
+			ToolbarResource = DCEMV.PersoApp.Android.Resource.Layout.Toolbar;
 
-            base.SetTheme(Resource.Style.MainTheme);
+            base.SetTheme(DCEMV.PersoApp.Android.Resource.Style.MainTheme);
             base.OnCreate (bundle);
 
 			global::Xamarin.Forms.Forms.Init (this, bundle);

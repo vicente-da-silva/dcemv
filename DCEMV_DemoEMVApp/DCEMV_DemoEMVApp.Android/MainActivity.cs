@@ -34,10 +34,10 @@ namespace DCEMV.DemoEMVApp.Android
     {
         protected override void OnCreate(Bundle bundle)
         {
-            TabLayoutResource = Resource.Layout.Tabbar;
-            ToolbarResource = Resource.Layout.Toolbar;
+            TabLayoutResource = DCEMV.DemoEMVApp.Android.Resource.Layout.Tabbar;
+            ToolbarResource = DCEMV.DemoEMVApp.Android.Resource.Layout.Toolbar;
 
-            base.SetTheme(Resource.Style.MainTheme);
+            base.SetTheme(DCEMV.DemoEMVApp.Android.Resource.Style.MainTheme);
             base.OnCreate(bundle);
 
             global::Xamarin.Forms.Forms.Init(this, bundle);

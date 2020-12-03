@@ -636,7 +636,7 @@ namespace DCEMV.TerminalCommon
             cancellationTokenForStatusMessage = new CancellationTokenSource();
 
             //txtPin.Text = "";
-            txtPin.Text = "4315";
+            txtPin.Text = "27943";
 
             StartStatusMessageProcessor();
             StartContactPaymentApp(contactDeviceId);

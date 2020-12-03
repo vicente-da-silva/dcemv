@@ -23,7 +23,6 @@
       <DependentUpon>ConfirmCodeView.xaml</DependentUpon>
     </Compile>
     <Compile Update="Controls\WaitControl.xaml.cs">
-      <SubType>Code</SubType>
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
   </ItemGroup>

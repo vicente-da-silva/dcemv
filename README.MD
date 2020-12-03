@@ -1,4 +1,9 @@
 # DC EMV Open Source EMV Implementation
+## V1.3
+Updated projects to work with Visual Studio 16.8.2, targeting Windows SDK 18362 for UWP projects and targeting Android 9 for Android projects
+
+
+# DC EMV Open Source EMV Implementation
 ## V1.2
 
 >DC EMV Decoded Book available in DCEMV_Documentation folder This will help you to quickly get up and running with the various applications and understand the various capabilities of the system.
