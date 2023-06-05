@@ -57,7 +57,7 @@ along with this program.  If not, see http://www.gnu.org/licenses/
                                     </Grid.ColumnDefinitions>
 
                                     <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding CardSerialNumberId}" />
-                                    <Label Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" Text="{Binding FreindlyName}"/>
+                                    <Label Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" Text="{Binding FriendlyName}"/>
 
                                     <Label Grid.Row="1" Grid.Column="0" Text="Daily Spend Limit:" />
                                     <Label Grid.Row="1" Grid.Column="1" Text="{Binding DailySpendLimit, Converter={StaticResource currencyConverter}}"/>
@@ -131,7 +131,7 @@ along with this program.  If not, see http://www.gnu.org/licenses/
 
                 <Label Grid.Row="0" Text="Update Card Details" FontSize="Large"/>
 
-                <Entry Grid.Row="1" Grid.Column="0" Placeholder="Freindly Name" Text="{Binding Path=FreindlyName, Mode=TwoWay}" x:Name="txtFreindlyName" >
+                <Entry Grid.Row="1" Grid.Column="0" Placeholder="Friendly Name" Text="{Binding Path=FriendlyName, Mode=TwoWay}" x:Name="txtFriendlyName" >
                     <Entry.Behaviors>
                         <common:NameValidatorBehavior x:Name="nameValidator"/>
                     </Entry.Behaviors>
@@ -140,7 +140,7 @@ along with this program.  If not, see http://www.gnu.org/licenses/
                     <Image.Triggers>
                         <MultiTrigger TargetType="Image">
                             <MultiTrigger.Conditions>
-                                <BindingCondition Binding="{Binding Source={x:Reference txtFreindlyName}, Path=Text }" Value="" />
+                                <BindingCondition Binding="{Binding Source={x:Reference txtFriendlyName}, Path=Text }" Value="" />
                             </MultiTrigger.Conditions>
                             <MultiTrigger.Setters>
                                 <Setter Property="IsVisible" Value="False" />
@@ -152,7 +152,7 @@ along with this program.  If not, see http://www.gnu.org/licenses/
                     <Label.Triggers>
                         <MultiTrigger TargetType="Label">
                             <MultiTrigger.Conditions>
-                                <BindingCondition Binding="{Binding Source={x:Reference txtFreindlyName}, Path=Text }" Value="" />
+                                <BindingCondition Binding="{Binding Source={x:Reference txtFriendlyName}, Path=Text }" Value="" />
                             </MultiTrigger.Conditions>
                             <MultiTrigger.Setters>
                                 <Setter Property="IsVisible" Value="False" />

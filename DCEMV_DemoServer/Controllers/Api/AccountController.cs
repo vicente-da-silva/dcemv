@@ -138,7 +138,7 @@ namespace DCEMV.DemoServer.Controllers.Api
                     CardState = x.CardState,
                     DailySpendLimit = x.DailySpendLimit,
                     MonthlySpendLimit = x.MonthlySpendLimit,
-                    FreindlyName = x.FreindlyName,
+                    FriendlyName = x.FriendlyName,
                 };
                 accountDetails.Cards.Add(cd);
             });

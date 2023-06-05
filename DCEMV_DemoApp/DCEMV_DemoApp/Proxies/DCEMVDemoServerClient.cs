@@ -2814,7 +2814,7 @@ namespace DCEMV.DemoApp.Proxies
         public string CardSerialNumberId { get; set; }
 
         [Newtonsoft.Json.JsonProperty("freindlyName", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string FreindlyName { get; set; }
+        public string FriendlyName { get; set; }
 
         [Newtonsoft.Json.JsonProperty("dailySpendLimit", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public long? DailySpendLimit { get; set; }

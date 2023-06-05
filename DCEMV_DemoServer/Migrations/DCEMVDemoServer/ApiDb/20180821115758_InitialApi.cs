@@ -36,7 +36,7 @@ namespace DCEMV.DemoServer.Migrations.DCEMVDemoServer.ApiDb
                     CardId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     CardSerialNumberId = table.Column<string>(nullable: true),
-                    FreindlyName = table.Column<string>(maxLength: 200, nullable: true),
+                    FriendlyName = table.Column<string>(maxLength: 200, nullable: true),
                     DailySpendLimit = table.Column<long>(nullable: false),
                     AvailablegDailySpendLimit = table.Column<long>(nullable: false),
                     MonthlySpendLimit = table.Column<long>(nullable: false),
