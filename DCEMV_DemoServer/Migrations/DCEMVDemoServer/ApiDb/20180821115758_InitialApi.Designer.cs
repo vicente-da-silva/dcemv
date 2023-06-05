@@ -76,7 +76,7 @@ namespace DCEMV.DemoServer.Migrations.DCEMVDemoServer.ApiDb
 
                     b.Property<long>("DailySpendLimit");
 
-                    b.Property<string>("FreindlyName")
+                    b.Property<string>("FriendlyName")
                         .HasMaxLength(200);
 
                     b.Property<long>("MonthlySpendLimit");

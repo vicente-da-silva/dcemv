@@ -35,7 +35,7 @@ namespace DCEMV.DemoApp
 {
     public class CardViewModel
     {
-        public string FreindlyName { get; set; }
+        public string FriendlyName { get; set; }
         public string DailySpendLimit { get; set; }
         public string MonthlySpendLimit { get; set; }
         public string CardSerialNumberId { get; set; }
@@ -276,7 +276,7 @@ namespace DCEMV.DemoApp
                 DailySpendLimit = Validate.CentsToAmount(cardToEdit.DailySpendLimit),
                 MonthlySpendLimit = Validate.CentsToAmount(cardToEdit.MonthlySpendLimit),
                 CardSerialNumberId = cardToEdit.CardSerialNumberId,
-                FreindlyName = cardToEdit.FreindlyName,
+                FriendlyName = cardToEdit.FriendlyName,
             };
             gridEditCard.BindingContext = this.card;
         }
@@ -289,7 +289,7 @@ namespace DCEMV.DemoApp
                 Card cardDto = new Card()
                 {
                     CardSerialNumberId = card.CardSerialNumberId,
-                    FreindlyName = card.FreindlyName,
+                    FriendlyName = card.FriendlyName,
                     DailySpendLimit = Convert.ToInt64(card.DailySpendLimit),
                     MonthlySpendLimit = Convert.ToInt64(card.MonthlySpendLimit)
                 };
@@ -301,7 +301,7 @@ namespace DCEMV.DemoApp
                         await client.CardUpdatecarddetailsPostAsync(cardDto.ToJsonString());
 
                         Card cardRepo = SessionSingleton.Account.Cards.ToList().Find(x => x.CardSerialNumberId == card.CardSerialNumberId);
-                        cardRepo.FreindlyName = card.FreindlyName;
+                        cardRepo.FriendlyName = card.FriendlyName;
                         cardRepo.DailySpendLimit = Convert.ToInt64(card.DailySpendLimit);
                         cardRepo.MonthlySpendLimit = Convert.ToInt64(card.MonthlySpendLimit);
                     }

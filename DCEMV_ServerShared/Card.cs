@@ -26,7 +26,7 @@ namespace DCEMV.ServerShared
     public class Card
     {
         public string CardSerialNumberId { get; set; }
-        public string FreindlyName { get; set; }
+        public string FriendlyName { get; set; }
         public long DailySpendLimit { get; set; }
         public long MonthlySpendLimit { get; set; }
         public CardState CardState { get; set; }

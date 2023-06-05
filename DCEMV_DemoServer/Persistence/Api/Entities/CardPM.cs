@@ -35,7 +35,7 @@ namespace DCEMV.DemoServer.Persistence.Api.Entities
         public string CardSerialNumberId { get; set; }
 
         [StringLength(200)]
-        public string FreindlyName { get; set; }
+        public string FriendlyName { get; set; }
 
         public long DailySpendLimit { get; set; }
         public long AvailablegDailySpendLimit { get; set; }
@@ -60,7 +60,7 @@ namespace DCEMV.DemoServer.Persistence.Api.Entities
         {
             DailySpendLimit = card.DailySpendLimit;
             MonthlySpendLimit = card.MonthlySpendLimit;
-            FreindlyName = card.FreindlyName;
+            FriendlyName = card.FriendlyName;
         }
     }
 }

@@ -79,7 +79,7 @@ namespace DCEMV.DemoServer.Controllers.Api
                 new CardPM()
                 {
                     CardSerialNumberId = card.CardSerialNumberId,
-                    FreindlyName = card.FreindlyName,
+                    FriendlyName = card.FriendlyName,
                     DailySpendLimit = card.DailySpendLimit,
                     MonthlySpendLimit = card.MonthlySpendLimit,
                 }, GetCurrentUserId());
